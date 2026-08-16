@@ -1,0 +1,43 @@
+[ENABLE]
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+label(IMAGE_POLE)
+registersymbol(IMAGE_POLE)
+
+newmem:
+mov [006A7440],eax
+push edi
+push IMAGE_POLE_String
+push IMAGE_POLE
+call LoadImage
+
+originalcode:
+lea esi,[ebp-28]
+
+exit:
+jmp returnhere
+
+align 04,00
+IMAGE_POLE:
+dd 00000000
+
+IMAGE_POLE_String:
+db 'IMAGE_POLE' 00
+
+475901:
+jmp newmem
+nop 3
+returnhere:
+
+
+
+
+[DISABLE]
+dealloc(newmem)
+unregistersymbol(IMAGE_POLE)
+475901:
+db 8D 75 D8 A3 40 74 6A 00
+//lea esi,[ebp-28]
+//mov [006A7440],eax

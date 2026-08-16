@@ -1,0 +1,220 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(DestroyIceball)
+registersymbol(DestroyIceball)
+label(DestroyFireball)
+registersymbol(DestroyFireball)
+
+newmem:
+push edi
+push ebx
+mov eax,[edi+4]
+call AddAFireBallByOriginalBall
+mov edx,[edi]
+jmp 00535B87
+
+AddAFireBallByOriginalBall:
+push ebx
+mov ebx,[esp+8+4]//Zombie* theBoss
+push edi
+mov edi,[esp+4+8]//Reanimation* theBall
+push esi
+mov esi,eax
+add esi,0000011C
+call 0041E1C0
+mov [eax+08],0000000D
+movzx ecx,byte [ebx+14C]
+mov [eax+C],ecx//是否为火球
+mov ecx,[ebx+148]
+mov [eax+14],ecx//火球行数
+mov ecx,[ebx+ZombieClassSize-4]
+mov [eax+18],ecx//僵王编号
+mov ecx,[edi+68]
+mov [eax+1C],ecx//火球图层
+mov ecx,[edi+9C]
+mov [eax+34],ecx//火球动画编号
+movzx ecx,byte [ebx+B8]
+mov [eax+3C],ecx//火球所属阵营
+mov byte ptr [edi+64],01//火球被使用
+mov ecx,ebx
+mov ebx,eax
+call 52BEE0
+movzx eax,al
+mov [ebx+40],eax
+mov eax,ebx
+pop esi
+pop edi
+pop ebx
+ret 0008
+{
+push //Zombie* theBoss
+push //Reanimation* theBall
+eax = Board* this
+
+eax = Griditem* aFireball
+}
+align 10,CC
+
+DestroyIceball:
+//sub esp,08
+push ebx
+push esi
+push edi
+mov ebx,eax
+mov esi,ebx
+mov ecx,[ebx+34]
+mov eax,[ebx]
+call 453CB0
+test eax,eax
+je short DestroyIceball_End
+mov edi,eax
+mov eax,4D
+mov ecx,00061A80
+mov edx,[ebx]
+sub esp,08
+fld dword ptr [edi+38]
+fld qword ptr [00679820]
+fadd st(1),st(0)
+fxch st(1)
+fstp dword ptr [esp+04]
+fadd dword ptr [edi+2C]
+fstp dword ptr [esp]
+call 453C80
+mov ecx,edi
+call 4733F0
+mov ebx,[ebx+04]
+mov edi,0000004E
+call 41DA50
+DestroyIceball_End:
+call 44D000
+pop edi
+pop esi
+pop ebx
+//add esp,08
+ret
+{
+mov eax,Griditem* this
+}
+align 10,CC
+
+DestroyFireball:
+push ebp
+mov ebp,esp
+and esp,-08
+sub esp,14
+push ebx
+push esi
+push edi
+mov edx,[ebp+08]
+mov ecx,[edx+34]
+mov eax,[edx]
+call 453CB0
+test eax,eax
+je DestroyFireball_End
+fld dword ptr [eax+2C]
+xor ebx,ebx
+fadd qword ptr [00679820]
+mov [esp+0C],ebx
+fstp dword ptr [esp+18]
+fld dword ptr [eax+38]
+fadd qword ptr [006794C8]
+fstp dword ptr [esp+14]
+//jmp short DestroyFireball_MainWhile
+DestroyFireball_While:
+mov edx,[ebp+08]
+//DestroyFireball_MainWhile:
+fild dword ptr [esp+0C]
+mov ecx,[edx]
+mov edx,[ecx+00000820]
+mov esi,[edx+08]
+fmul qword ptr [006794F0]
+fdiv qword ptr [006793B8]
+fadd qword ptr [00679310]
+fstp dword ptr [esp+0C]
+call 00474680
+mov edi,eax
+mov [edi+60],esi
+mov [edi+68],00061A80
+push 00
+push 22
+call 004735E0
+fld dword ptr [esp+14]
+mov eax,[006A9EE8]
+add esp,08
+mov [edi],00000022
+lea esi,[eax+00000220]
+call 00639F90
+fstp dword ptr [esp+10]
+fld dword ptr [esp+10]
+push ecx
+fmul qword ptr [00679708]
+fadd dword ptr [esp+18]
+fstp dword ptr [esp+14]
+fld dword ptr [esp+14]
+fstp dword ptr [esp]
+fld dword ptr [esp+10]
+call 0063A180
+fstp dword ptr [esp+14]
+fld dword ptr [esp+14]
+push ecx
+fmul qword ptr [00679708]
+mov eax,esi
+fadd dword ptr [esp+20]
+fstp dword ptr [esp+18]
+fld dword ptr [esp+18]
+fstp dword ptr [esp]
+push edi
+call 00471B00
+fld dword ptr [0067953C]
+fstp dword ptr [edi+04]
+push ecx
+fld dword ptr [00679674]
+mov [edi+10],00000004
+fstp dword ptr [esp]
+call 005AF410
+fadd qword ptr [00679338]
+fstp dword ptr [edi+08]
+add ebx,01
+add esp,04
+mov [esp+0C],ebx
+cmp ebx,06
+jl DestroyFireball_While
+mov esi,[ebp+08]
+mov eax,[esi]
+mov ecx,[esi+34]
+call 453CF0
+mov ebx,[esi+04]
+mov edi,0000004F
+call 41DA50
+DestroyFireball_End:
+mov esi,[ebp+08]
+call 44D000
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 0004
+{
+push Griditem* this
+}
+
+
+0053545B:
+jmp 00535484//僵王不销毁原火球
+00416838:
+jmp 00416870//僵王自身不绘制火球
+535B79:
+jmp newmem
+nop
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+0053545B:
+je 00535484
+00416838:
+je 00416870
+535B79:
+mov ecx,[ebx+0000009C]
+//Alt: db 8B 8B 9C 00 00 00

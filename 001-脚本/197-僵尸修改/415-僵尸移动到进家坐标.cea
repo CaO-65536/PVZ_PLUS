@@ -1,0 +1,80 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+cmp [eax+08],000005DC
+jg 0052AF4A
+push edi
+mov edi,eax
+
+push 1
+push ecx
+fld [esi+168]
+fstp [esp]
+push ecx
+fld [esi+170]
+fstp [esp]
+mov edx,A
+mov ecx,5DC
+mov eax,[edi+8]
+call 511BF0
+fstp [esi+2C]
+add esp,C
+
+push 1
+push ecx
+fld [esi+16C]
+fstp [esp]
+push ecx
+fld [esi+174]
+fstp [esp]
+mov edx,A
+mov ecx,5DC
+mov eax,[edi+8]
+call 511BF0
+fstp [esi+30]
+add esp,C
+
+mov ecx,[esi+4]
+mov ecx,[ecx+0000554C]
+cmp ecx,4
+je short ture
+cmp ecx,5
+jne short false
+ture:
+push 1
+push C8
+push 0
+mov edx,A
+mov ecx,5DC
+mov eax,[edi+08]
+call 00511C40
+mov [esp],eax
+fild [esp]
+fstp [esi+84]
+add esp,0C
+false:
+
+cmp [edi+8],5DC
+jne short az1
+mov [esi+20],000497CA
+az1:
+
+pop edi
+jmp 52AF6A
+
+52AF41:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+52AF41:
+cmp [eax+08],000005DC
+//Alt: db 81 78 08 DC 05 00 00

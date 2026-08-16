@@ -1,0 +1,10 @@
+[ENABLE]
+528797:
+//nop 2
+5287B9:
+db EB
+[DISABLE]
+528797:
+je 5287BB
+5287B9:
+db 75

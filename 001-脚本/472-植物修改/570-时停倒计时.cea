@@ -1,0 +1,47 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+mov eax,[ebp+00005748]
+test eax,eax
+jle 00415F77
+dec eax
+mov [ebp+00005748],eax
+mov esi,[ebp+00000144]
+mov edi,[esi+24]
+test edi,edi
+jle 00416064
+lea esi,[esi+28]
+xor ebx,ebx
+while:
+mov eax,[esi+34]
+cmp eax,30
+jne short next
+mov eax,[esi+38]
+next:
+cmp eax,SEED_APPLE_TIME_STOPPER
+je short NextCard
+mov eax,esi
+call 487250
+NextCard:
+inc ebx
+add esi,50
+cmp ebx,edi
+jne short while
+jmp 00416064
+
+415F6B:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+415F6B:
+db 39 9D 48 57 00 00
+//cmp [ebp+00005748],ebx

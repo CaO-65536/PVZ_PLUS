@@ -1,0 +1,6 @@
+[ENABLE]
+52F964:
+call ApplyChillNoMatterMindControlled
+[DISABLE]
+52F964:
+call 00530950

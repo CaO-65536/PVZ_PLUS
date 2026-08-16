@@ -1,0 +1,166 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push ebx
+push edi
+mov edi,eax
+fld [edi+2C]
+fistp [edi+8]
+push [edi+1C]
+call 531880
+fist [edi+C]
+fstp [edi+30]
+mov eax,[edi]
+mov eax,[eax+82C]
+mov eax,[eax+PlayerInfo_GameSetting_Offset+0*4]
+test al,al
+je NotMindControlled
+originalcode:
+mov eax,[edi]
+call 4537D0
+test al,al
+jne short NotMindControlled
+mov byte ptr [edi+B8],1
+NotMindControlled:
+
+mov eax,[edi]
+mov eax,[eax+82C]
+mov eax,[eax+PlayerInfo_GameSetting_Offset+1*4]
+test al,al
+je short DoNotStand
+//关闭操控非僵王僵尸
+cmp [edi+24],19
+jne short DoNotStand
+//关闭操控非僵王僵尸
+mov byte [edi+15D],1
+mov ecx,[ebp+04]
+mov ecx,[ecx+00000138]
+mov eax,[edi+ZombieClassSize-4]
+mov [ecx+4C],eax
+cmp [edi+24],19
+je DoNotStand
+mov eax,edi
+xor ecx,ecx
+call ZombieStartStandAnim
+DoNotStand:
+
+mov eax,[edi+24]
+cmp eax,19
+jne short SnorkelJumpinPool
+fldz
+fist [edi+0C]
+fstp [edi+30]
+xor al,al
+cmp [edi+B8],al
+je short ZombossSetX
+ZombossMindControlled:
+mov [edi+0000008C],00000000
+//fld [679FE4]
+//fadd [679498]
+ZombossSetX:
+fldz
+fadd [FLOATHALFEXSCREENWIDTH]
+fist [edi+08]
+fstp [edi+2C]
+SnorkelJumpinPool:
+cmp eax,B
+jne short DolphinRiderJumpinPool
+mov [edi+28],0000003A { 58 }
+fld dword ptr [0067953C] { (0.20) }
+fstp dword ptr [edi+34]
+fld dword ptr [00679798] { (16.00) }
+push ecx
+fstp dword ptr [esp]
+push 14
+push 03
+push 0066ED84 { ("anim_jumpinpool") }
+call 00528B00
+jmp exit
+
+DolphinRiderJumpinPool:
+cmp eax,E
+jne short BungeewithSomething
+fld dword ptr [00679798] { (16.00) }
+push ecx
+fstp dword ptr [esp]
+push 14 { 20 }
+push 03 { 3 }
+push 0066ED84 { ("anim_jumpinpool") }
+mov [edi+28],00000034 { 52 }
+call 00528B00
+jmp exit
+
+BungeewithSomething:
+mov eax,[ebp+04]
+mov ecx,[eax+00000138]
+cmp [ecx+28],#66
+jne exit
+cmp [ecx+2C],-1
+je exit
+mov eax,[ecx+2C]
+call 42B530
+test al,al
+je short plant
+push 0//行(瞎写）
+mov eax,[ecx+2C]
+call 42A040
+push eax//种类
+mov eax,[edi+4]
+mov ebx,[edi+6C]
+call 40DDC0
+push eax
+mov cl,[ebx+B8]
+mov [eax+B8],cl
+mov edx,[edi+4]
+mov edx,[edx+13C]
+mov eax,[edx+28]//行
+mov ecx,[edx+24]//列
+mov ebx,edi
+call 524970
+jmp exit
+plant:
+or eax,-1
+push eax//为模仿者时的目标
+push [ecx+2C]//种类
+push eax//行(瞎写）
+push eax//列(瞎写）
+mov eax,[edi+4]
+call 40CE20
+mov cl,[edi+B8]
+xor cl,1
+mov [eax+00000147],cl
+push eax
+mov edx,[eax+4]
+mov edx,[edx+13C]
+mov eax,[edx+28]//行
+mov ecx,[edx+24]//列
+mov ebx,edi
+call BungeeDropPlant
+
+exit:
+pop edi
+pop ebx
+mov eax,[ebp+04]
+mov ecx,[eax+00000138]
+jmp returnhere
+
+42A42A:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+42A42A:
+mov eax,[ebp+04]
+mov ecx,[eax+00000138]
+//Alt: db 8B 45 04 8B 88 38 01 00 00

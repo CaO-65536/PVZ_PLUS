@@ -1,0 +1,34 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov eax,[ebp+8]
+mov ecx,[eax+ZombieClassSize-4]
+mov [esi+F4],ecx
+
+originalcode:
+fld dword ptr [esi+30]
+fsub qword ptr [00679368]
+
+exit:
+jmp returnhere
+
+535275:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+535275:
+fld dword ptr [esi+30]
+fsub qword ptr [00679368]
+//Alt: db D9 46 30 DC 25 68 93 67 00

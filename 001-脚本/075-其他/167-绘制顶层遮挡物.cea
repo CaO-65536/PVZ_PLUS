@@ -1,0 +1,84 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp eax,1A
+jne short Next01
+mov ecx,[ebx]
+push 0
+mov eax,[ebp+0C]
+push eax
+call 472E40
+jmp 0041732E
+
+Next01:
+cmp eax,1B
+jne short originalcode
+push 01
+push 64
+push 000000FF
+mov eax,[ebp+10]
+mov eax,[eax+30]
+mov ecx,FFFFFE84
+xor edx,edx
+call 511C40
+mov [color+0C],eax
+add esp,0C
+push ebx
+push 00
+push 00000350
+mov eax,[ebx]
+test eax,eax
+jne short Next01_L1
+mov ebx,[IMAGE_POLE]
+jmp short Next01_L2
+Next01_L1:
+mov ebx,[IMAGE_POLE_NIGHT]
+Next01_L2:
+mov eax,[ebp+0C]
+mov cl,01
+call 586D10
+mov ecx,eax
+mov eax,color
+call 586CC0
+mov eax,ecx
+call 587150
+mov eax,[ebp+0C]
+xor cl,cl
+call 586D10
+pop ebx
+jmp 0041732E
+
+originalcode:
+cmp eax,00000018
+ja 0041732E
+
+
+
+exit:
+jmp returnhere
+
+align 04,00
+color:
+dd 000000FF 000000FF 000000FF 000000FF
+
+
+
+416FA6:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+416FA6:
+db 0F 87 82 03 00 00
+//ja 0041732E

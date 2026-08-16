@@ -1,0 +1,322 @@
+[ENABLE]
+alloc(CheatDialog,4096)
+label(CheatDialogEditListener)
+label(SetCheatDialog)
+label(KillCheatDialog)
+label(CheatDialogAllowChar)
+label(DoCheatDialog)
+registersymbol(DoCheatDialog)
+registersymbol(KillCheatDialog)
+define(DIALOG_CHEAT,23)
+registersymbol(DIALOG_CHEAT)
+
+
+CheatDialog:
+SetCheatDialog:
+push ebp
+mov ebp,esp
+sub esp,90
+push esi
+push edi
+mov edi,[ebp+C]//LawnApp
+lea ecx,[esp+8]//空地址
+push CheatDialog_string1//字符串
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+call 404450//eax=字符串对象
+lea ecx,[esp+8+1C]//空地址
+push CheatDialog_string2//字符串
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+call 404450//eax=字符串对象
+lea ecx,[esp+8+1C+1C]//空地址
+push CheatDialog_string3//字符串
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+call 404450//eax=字符串对象
+lea edx,[esp+8+1C]
+lea ecx,[esp+8+1C+1C]
+push 2
+push eax
+push edx
+push 1
+push DIALOG_CHEAT
+push edi
+push [ebp+8]
+call 456A80//初始化对话
+mov esi,eax
+mov [esi+170],edi
+mov byte [esi+169],0//不显示介绍
+mov [esi],CheatDialogListener
+mov [esi+16C],CheatDialogEditListener
+push esi
+lea eax,[esi+16C]
+push eax
+call 4567B0//为对话创建输入框
+add esp,8
+mov [esi+174],eax
+mov [eax+F0],C
+mov ecx,eax
+push #220
+push [6A77F8]
+call 53CF40//设置字体
+
+lea eax,[esp+8+1C+1C+1C]//空地址
+cmp [edi+7F8],0
+je short az1
+mov ecx,[edi+7F8]
+push esi
+push ecx//填充物*n
+push CheatDialog_string4//被处理字符串 %s(字符串)；%d(数字)；%Xd(数字补零至X位)；%.Xf(保留X位小数)；%%(百分号)
+mov esi,eax//输出地址
+call 5B0CA0//eax=字符串对象
+add esp,8//+4*n
+pop esi
+jmp short az3
+az1:
+mov eax,edi
+call 454170
+test al,al
+je short az2
+lea eax,[esp+8+1C+1C+1C]//空地址
+mov ecx,[edi+82C]
+mov ecx,[ecx+24]
+call 453670
+mov ecx,eax//字符串对象
+call 4042D0//eax=字符串
+push esi
+push eax//填充物*n
+push CheatDialog_string5//被处理字符串 %s(字符串)；%d(数字)；%Xd(数字补零至X位)；%.Xf(保留X位小数)；%%(百分号)
+lea esi,[esp+C+8+1C+1C+1C+1C]//输出地址
+call 5B0CA0//eax=字符串对象
+add esp,8//+4*n
+pop esi
+jmp short az3
+az2:
+lea eax,[esp+8+1C+1C+1C]//空地址
+mov ecx,[edi+82C]
+mov ecx,[ecx+24]
+call 453670
+az3:
+push 0
+push eax
+mov ecx,[esi+174]
+mov edx,[ecx]
+mov edx,[edx]
+mov edx,[edx+124]
+call 53CFC0//设置默认文字
+
+push 28
+push 6E
+call 456F30//设置大小
+
+lea ecx,[esp+8]//字符串对象
+call 404420
+lea ecx,[esp+8+1C]//字符串对象
+call 404420
+lea ecx,[esp+8+1C+1C]//字符串对象
+call 404420
+lea ecx,[esp+8+1C+1C+1C]//字符串对象
+call 404420
+lea ecx,[esp+8+1C+1C+1C+1C]//字符串对象
+call 404420
+mov eax,esi
+pop edi
+pop esi
+mov esp,ebp
+pop ebp
+ret 8
+
+CheatDialog_string1:
+db 00
+
+CheatDialog_string2:
+db 'Enter New Level:' 00
+
+CheatDialog_string3:
+db 'CHEAT' 00
+
+CheatDialog_string4:
+db 'C%d' 00
+
+CheatDialog_string5:
+db 'F%s' 00
+
+{
+push //LawnApp
+push //CheatDialog
+}
+align 10,CC
+
+
+KillCheatDialog:
+push ebx
+mov bl,[esp+8]//should_delete
+push esi
+mov esi,ecx
+mov ecx,[esi+174]
+test ecx,ecx
+je short az4
+mov eax,[ecx]
+mov edx,[eax]
+push ebx
+call edx
+az4:
+mov ecx,esi
+call 456EA0
+test bl,bl
+je short az6
+push esi
+call 61C19A
+add esp,04
+az6:
+pop esi
+pop ebx
+ret 4
+
+{
+push //should_delete
+mov ecx,//CheatDialog
+}
+align 10,CC
+
+CheatDialogAllowChar:
+push ebx
+mov bl,[esp+0C]
+movsx eax,bl
+push eax
+call 0061CB12
+add esp,04
+test eax,eax
+jne short ture
+cmp bl,2D//-
+je short ture
+cmp bl,43//C
+je short ture
+cmp bl,46//F
+je short ture
+cmp bl,63//c
+je short ture
+cmp bl,66//f
+je short ture
+xor al,al
+pop ebx
+ret 0008
+ture:
+mov al,01
+pop ebx
+ret 0008
+
+{
+mov ecx,//CheatDialog
+}
+align 10,CC
+
+DoCheatDialog:
+push -01
+push 0064CF5B
+mov eax,fs:[00000000]
+push eax
+mov fs:[00000000],esp
+push ecx
+push ebx
+push ebp
+push esi
+
+push DIALOG_CHEAT
+mov ecx,edi
+mov eax,[edi]
+mov edx,[eax+00000134]
+call edx//删除先前的窗口
+
+push 00000178
+call 0061C130
+add esp,04
+mov [esp+0C],eax
+xor esi,esi
+cmp eax,esi
+mov [esp+18],esi
+je az5
+push edi
+push eax
+call SetCheatDialog
+mov esi,eax
+az5:
+mov [esp+18],FFFFFFFF
+mov ecx,esi
+call CenterDialog
+{mov ecx,[esi+3C]
+mov ebx,[esi+38]
+mov ebp,[esi]
+mov eax,00000258
+sub eax,ecx
+cdq
+sub eax,edx
+sar eax,1
+push ecx
+push ebx
+push eax
+mov eax,0000042A
+sub eax,ebx
+cdq
+sub eax,edx
+sar eax,1
+push eax
+mov eax,[ebp+000000A0]
+mov ecx,esi
+call eax}
+mov edx,[edi]
+mov eax,[edx+0000012C]
+push esi
+push DIALOG_CHEAT
+mov ecx,edi
+call eax
+mov ecx,[edi+00000320]
+mov edx,[ecx]
+mov eax,[edx+20]
+push [esi+174]
+call eax
+
+mov ecx,[esp+10]
+pop esi
+pop ebp
+mov fs:[00000000],ecx
+pop ebx
+add esp,10
+ret
+
+{
+mov edi,//LawnApp
+}
+align 10,CC
+
+
+CheatDialogListener:
+dd KillCheatDialog//00456E80
+dd 00537010 00537030 005370A0 005371C0 00537160 00539D90 00536FB0 00539D90 005374F0 00537510 005376B0 00537780 00537850 00537960 00537A90 00537E90 00537BE0 00537C20 00537C00
+dd 0045D870//NewUserDialog::AddedToManager//00457160
+dd 0045D8E0//NewUserDialog::RemovedFromManager//004571B0
+dd 00457280 00537F60 00539D90 005380F0
+dd 45D970//NewUserDialog::Draw//004575A0
+dd 00538240 00538430 005509A0 00540C80 005398D0 005399C0 00539920 005404B0 00539B50 00539AE0 00539C90 00539DA0 00539C30
+dd 45D910//NewUserDialog::Resize//004573D0
+dd 00539C60 00539C80 00539900 00539D90 00539D10 00539D20 00539D90 00457340 00539D90 005509A0 005509A0 00539E40 00540E10 004566E0 00540F60 00447AE0 004566F0 00540E50 00539D90 005398C0 00539F40 00539EC0 0053A050 0053A0A0 0053A0E0 0053A100 0053A120 0053A230 0053A270 00540540 00540590 005405C0 00540750 00540FA0 00540FB0 00457230 00457320
+
+
+CheatDialogEditListener:
+dd 0045D9D0 0042FBC0 CheatDialogAllowChar 0042FBC0
+
+
+[DISABLE]
+dealloc(CheatDialogListener)
+unregistersymbol(CheatDialogListener)
+unregistersymbol(CheatDialogEditListener)
+unregistersymbol(SetCheatDialog)
+unregistersymbol(DoCheatDialog)
+unregistersymbol(DIALOG_CHEAT)

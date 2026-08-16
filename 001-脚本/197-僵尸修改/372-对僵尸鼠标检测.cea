@@ -1,0 +1,137 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov edx,[esp+34]
+mov eax,[esp+2C]
+push edx
+push edi
+push eax
+mov esi,ebp
+call MouseHitTestZombie
+test al,al
+jne 004117BE
+
+originalcode:
+mov edx,[esp+34]
+mov eax,[esp+2C]
+
+exit:
+jmp returnhere
+
+align 10,CC
+MouseHitTestZombie:
+sub esp,14
+push ebx
+push ebp
+push edi
+mov eax,[esi+0000008C]
+mov eax,[eax+00000320]
+cmp [eax+E8],2
+je short MouseHitTestZombie_False
+mov eax,[esi+00000138]
+mov eax,[eax+30]
+test eax,eax
+jne short MouseHitTestZombie_False
+mov ebx,[esp+28]
+mov ebp,[esp+24]
+push ebx
+push ebp
+mov edi,esi
+call SpecialZombieHitTest
+test eax,eax
+je MouseHitTestZombie_NoSpecialZombie
+mov ecx,[esp+2C]
+mov [ecx],eax
+mov [ecx+04],HITRESULTTYPE_SPECIALZOMBIE//特殊僵尸
+mov al,01
+pop edi
+pop ebp
+pop ebx
+add esp,14
+ret 000C
+MouseHitTestZombie_NoSpecialZombie:
+MouseHitTestZombie_False:
+xor al,al
+pop edi
+pop ebp
+pop ebx
+add esp,14
+ret 000C
+
+SpecialZombieHitTest:
+push ebp
+mov ebp,esp
+push esi
+push 0//开始序号(写0从头，写指针从后一个开始
+SpecialZombieHitTest_star:
+mov esi,esp
+mov edx,edi
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short SpecialZombieHitTest_end
+mov esi,[esi]//esi=遍历对象的指针
+mov eax,[esi]
+call 4537D0
+cmp [esi+B8],al
+je short SpecialZombieHitTest_star
+push edi
+sub esp,10
+mov edi,esp
+mov ebx,esi
+call 5320B0
+mov edx,[ebp+8]
+mov esi,[ebp+C]
+call 41DC40
+add esp,10
+pop edi
+test eax,eax
+je short SpecialZombieHitTest_star
+cmp [ebx+28],F//持盒小丑
+jne short SpecialZombieHitTest_Next
+cmp [ebx+BC],al
+je short SpecialZombieHitTest_star
+cmp [ebx+68],1
+jle short SpecialZombieHitTest_star
+mov eax,ebx
+jmp short SpecialZombieHitTest_End
+SpecialZombieHitTest_Next:
+cmp [ebx+24],1C//辣椒
+je short SpecialZombieHitTest_Next_True
+cmp [ebx+24],25//寒冰菇
+je short SpecialZombieHitTest_Next_True
+cmp [ebx+24],26//毁灭菇
+jne short SpecialZombieHitTest_star
+SpecialZombieHitTest_Next_True:
+cmp [ebx+28],0
+jne short SpecialZombieHitTest_star
+mov eax,ebx
+jmp short SpecialZombieHitTest_End
+SpecialZombieHitTest_end:
+xor eax,eax
+SpecialZombieHitTest_End:
+add esp,4
+pop esi
+mov esp,ebp
+pop ebp
+ret 08
+
+411ABD:
+jmp newmem
+nop 3
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+411ABD:
+db 8B 54 24 34 8B 44 24 2C
+//mov edx,[esp+34]
+//mov eax,[esp+2C]

@@ -1,0 +1,89 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push edi
+push ebp
+push 0
+mov edi,date
+mov ebp,BushesRowNum
+mov eax,esi
+call 41C0D0
+test al,al
+jne short while
+dec ebp
+while:
+mov ecx,[esp]
+mov eax,[esi+ecx*4+mBushesAnimID_Offset]
+test eax,eax
+jne short While_Next
+imul eax,ecx,2710
+add eax,4BED7
+push eax//图层
+sub esp,8
+fld [edi+04]
+fstp [esp+4]//列
+fld [edi]
+fadd [FLOATHALFEXSCREENWIDTH]
+fstp [esp]//行
+mov ebx,[edi+0C]//id
+mov eax,esi
+call 41C010
+test al,al
+je short next
+add ebx,3
+next:
+mov eax,[esi+0000008C]
+call 453C30//eax为该动画指针
+fldz
+fstp [eax+08]
+mov [eax+10],0
+mov cl,1
+mov [eax+64],cl
+mov eax,[eax+0000009C]
+mov ecx,[esp]
+mov [esi+ecx*4+mBushesAnimID_Offset],eax
+While_Next:
+add edi,10
+inc [esp]
+cmp [esp],ebp
+jne short while
+pop ecx
+pop ebp
+pop edi
+
+originalcode:
+mov eax,[esi+0000554C]
+
+exit:
+jmp returnhere
+
+InitOverCover:
+
+date:
+dd (float)712.0 (float)-18.0 (float)1.0 0000008F
+dd (float)724.0 (float)110.0 (float)1.0 00000091
+dd (float)728.0 (float)198.0 (float)1.0 00000090
+dd (float)734.0 (float)320.0 (float)1.0 0000008F
+dd (float)725.0 (float)401.0 (float)1.0 00000091//dd (float)740.0-15 (float)401.0 (float)1.0
+dd (float)740.0 (float)450.0 (float)1.0 00000090//350.0 (float)1.0 00000090
+
+
+40A63A:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+40A63A:
+db 8B 86 4C 55 00 00
+//mov eax,[esi+0000554C]

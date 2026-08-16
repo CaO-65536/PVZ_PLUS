@@ -1,0 +1,276 @@
+[ENABLE]
+alloc(ControlZombie,2048)
+registersymbol(ControlZombie)
+label(ZombieStartStandAnim)
+registersymbol(ZombieStartStandAnim)
+label(anim_run)
+registersymbol(anim_run)
+
+ControlZombie:
+push ebx
+push edi
+mov ebx,ecx
+mov edi,eax
+cmp [eax+24],19
+jne short NoBoss
+call ControlBoss
+jmp short end
+NoBoss:
+xchg eax,ecx
+call KeyToOrder
+xchg eax,ecx
+call ControlZombieMove
+end:
+pop edi
+pop ebx
+ret
+// eax = *Zombis , ecx = theKey
+align 10,CC
+
+KeyToOrder:
+cmp eax,41
+jne short NotLeftWalking
+mov eax,0
+jmp short KeyToOrderEnd
+NotLeftWalking:
+cmp eax,42
+jne short NotRightWalking
+mov eax,1
+jmp short KeyToOrderEnd
+NotRightWalking:
+KeyToOrderEnd:
+ret
+//eax = theKey
+//Return: eax = Order
+align 10,CC
+
+ControlZombieMove:
+push ebx
+push esi
+push edi
+mov ebx,ecx
+mov edi,eax
+mov eax,[edi]
+mov ecx,[edi+00000118]
+call 453CB0
+test eax,eax
+je ControlZombieMoveEnd
+mov esi,eax
+{mov eax,[edi+28]
+cmp eax,C
+je ControlZombieMoveEnd
+cmp eax,1E}
+call IsZombieCannotBeControled
+test al,al
+jne ControlZombieMoveEnd
+{cmp ebx,41//a
+je short walk
+cmp ebx,44//d
+jne short Next
+walk:
+cmp ebx,41
+je short Left
+Right:
+mov eax,1
+jmp short SetDirection
+Left:
+xor eax,eax}
+SetDirection:
+mov [edi+15E],bl
+mov [edi+188],1//行走
+push esi
+mov esi,edi
+call 52F050
+pop esi
+cmp [edi+28],4D
+jne short NotSettingLadder
+mov [edi+28],4C
+NotSettingLadder:
+cmp byte [edi+51],0
+jne EatingtoWalking
+mov eax,edi
+call GetZombieWalkingAnimName
+mov edx,eax
+call 4745B0
+test al,al
+jne ControlZombieMoveEnd
+mov eax,edi
+mov esi,14
+call 52F2E0
+jmp short ControlZombieMoveEnd
+EatingtoWalking:
+call 52F440
+jmp short ControlZombieMoveEnd
+Next:
+ControlZombieMoveEnd:
+pop edi
+pop esi
+pop ebx
+ret
+// eax = *Zombis , ecx = theOrder
+align 10,CC
+
+GetZombieWalkingAnimName:
+push esi
+push edi
+mov edi,eax
+mov eax,[edi+28]
+
+cmp eax,4C
+jne short anim_walk_nopaper
+mov eax,0066F224 { ("anim_ladderwalk") }
+jmp short GetZombieWalkingAnimNameEnd
+anim_walk_nopaper:
+cmp eax,1F
+jne short Flying
+mov eax,0066F234 { ("anim_walk_nopaper") }
+jmp short GetZombieWalkingAnimNameEnd
+
+Flying:
+cmp eax,49
+jne short run
+mov eax,006580D4 { ("anim_idle") }
+jmp short GetZombieWalkingAnimNameEnd
+
+run:
+cmp eax,B
+jne short swim
+mov eax,anim_run { ("anim_run") }
+jmp short GetZombieWalkingAnimNameEnd
+
+swim:
+cmp byte ptr [edi+000000BD],00
+je short dig
+cmp eax,0C
+je short dig
+cmp eax,20
+je short dig
+cmp eax,28
+je short dig
+cmp eax,46
+je short dig
+mov eax,0066EDB4 { ("anim_swim") }
+jmp short GetZombieWalkingAnimNameEnd
+
+dig:
+cmp eax,20
+jne short dance
+mov eax,0066EA5C { ("anim_dig") }
+jmp short GetZombieWalkingAnimNameEnd
+
+dance:
+mov eax,[edi+24]
+test eax,eax
+je short normalwalk
+cmp eax,02
+je short normalwalk
+cmp eax,04
+jne short normalwalk
+mov eax,[edi+04]
+cmp byte ptr [eax+00005765],00
+je short normalwalk
+mov eax,0066F248 { ("anim_dance") }
+jmp short GetZombieWalkingAnimNameEnd
+
+normalwalk:
+mov eax,0066918C { ("anim_walk") }
+GetZombieWalkingAnimNameEnd:
+pop edi
+pop esi
+ret
+anim_run://("anim_run")
+db 61 6E 69 6D 5F 72 75 6E 00
+// eax = *Zombie
+align 10,CC
+
+ZombieStartStandAnim:
+push ebx
+mov ebx,ecx
+push edi
+mov edi,eax
+push esi
+mov [edi+188],0//站立
+mov eax,[edi]
+mov ecx,[edi+00000118]
+call 453CB0
+test eax,eax
+je ZombieStartStandAnimEnd
+mov esi,eax
+call IsZombieCannotBeControled
+test al,al
+jne ZombieStartStandAnimEnd
+
+//无杆撑杆站立动作
+mov eax,[edi+28]
+mov ecx,[edi+24]
+cmp eax,D
+je short ZombieStandingbyWalkingAnim
+cmp eax,1F
+je short ZombieStandingbyWalkingAnim
+cmp eax,20
+je short ZombieStandingbyWalkingAnim
+cmp ecx,15
+je short NormalWalking
+cmp ecx,18
+jne short OtherZombie
+NormalWalking:
+test eax,eax
+je short ZombieStandingbyWalkingAnim
+OtherZombie:
+jne short GetZombieStandingAnimNameNext
+ZombieStandingbyWalkingAnim:
+fldz
+push ecx
+fst [esp]
+push ebx
+push 00
+mov eax,edi
+call GetZombieWalkingAnimName
+push eax//0066918C
+call 00528B00//0速率行走动画
+push ecx
+fstp [esp]
+mov eax,edi
+call 52EFD0
+jmp short ZombieStartStandAnimEnd
+
+GetZombieStandingAnimNameNext:
+mov edx,006580D4
+call 4745B0
+test al,al
+jne ZombieStartStandAnimEnd
+fld dword ptr [00679388]
+push ecx
+fstp dword ptr [esp]
+push ebx
+push 00
+push 006580D4
+call 00528B00//站立动画
+ZombieStartStandAnimEnd:
+pop esi
+pop edi
+pop ebx
+ret
+// eax = *Zombie , ecx = theBlendTime
+align 10,CC
+
+IsZombieCannotBeControled:
+xor al,al
+cmp [edi+28],C
+je short IsZombieCannotBeControled_Yes
+cmp [edi+28],1E
+//je short IsZombieCannotBeControled_Yes
+//cmp [edi+28],1E
+jne short IsZombieCannotBeControled_End
+IsZombieCannotBeControled_Yes:
+mov al,1
+IsZombieCannotBeControled_End:
+ret
+//edi = *Zombie
+align 10,CC
+
+[DISABLE]
+dealloc(ControlZombie)
+unregistersymbol(ControlZombie)
+unregistersymbol(ZombieStartStandAnim)
+unregistersymbol(anim_run)

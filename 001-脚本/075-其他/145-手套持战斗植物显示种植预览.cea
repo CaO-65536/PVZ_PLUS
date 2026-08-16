@@ -1,0 +1,80 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov esi,[ebx]
+cmp [esi+000007F8],2B
+je originalcode
+cmp [esi+000007F8],32
+je originalcode
+mov ecx,[edi+00000138]
+mov ecx,[ecx+38]
+lea edx,[edi+000000AC]
+call 41DF00
+test eax,eax
+je 00438FA4
+sub esp,58
+lea edx,[esp]
+mov ecx,[eax+24]
+mov [edx],ecx
+mov [edx+04],00
+mov [edx+20],00
+mov [edx+24],03
+push eax
+call IsPlantLeft
+movzx eax,al
+mov [edx+10],eax
+push 00
+push ecx
+fld1
+fst [esp]
+push edx
+cmp [edx],21
+je short NoPot
+mov ecx,[edi+0000013C]
+mov eax,[ecx+24]
+mov ecx,[ecx+28]
+mov edx,edi
+call 40CE00
+test al,al
+je short NotInWater
+NoPot:
+mov byte [esp+08],0
+NotInWater:
+sub esp,08
+fst dword ptr [esp+04]
+fstp dword ptr [esp]
+push ebp
+mov edx,[esi+0000081C]
+push edx
+call 51D110
+add esp,58
+jmp 00439033
+
+originalcode:
+mov eax,edi
+mov ecx,[eax+00000138]
+
+exit:
+jmp returnhere
+
+438F19:
+jmp newmem
+nop 5
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+438F19:
+db 8B 33 8B C7 8B 88 38 01 00 00
+//mov esi,[ebx]
+//mov eax,edi
+//mov ecx,[eax+00000138]

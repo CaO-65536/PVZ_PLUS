@@ -1,0 +1,32 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+mov [eax],ebx
+mov [eax+04],edi
+cmp [eax+24],SEED_DUPLICATOR
+jne short exit
+lea edx,[eax+D8]
+mov [edx],ebx
+mov [edx+04],edi
+
+exit:
+jmp returnhere
+
+481D38:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+481D38:
+db 89 18 89 78 04
+//mov [eax],ebx
+//mov [eax+04],edi

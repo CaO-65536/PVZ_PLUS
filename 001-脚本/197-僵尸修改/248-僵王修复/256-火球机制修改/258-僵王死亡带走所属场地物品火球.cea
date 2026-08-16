@@ -1,0 +1,44 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+push 0//开始序号(写0从头，写指针从后一个开始
+star:
+mov esi,esp
+mov edx,[edi+4]
+call 41CAD0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short end
+mov esi,[esi]//esi=遍历对象的指针
+cmp [esi+8],D
+jne short star
+mov ecx,[edi+ZombieClassSize-4]
+cmp [esi+18],ecx
+jne short star
+mov ecx,[esi+18]
+mov edx,[esi+4]
+call 41C7F0
+test eax,eax
+je short star
+mov ecx,[esi+34]
+mov [eax+140],ecx
+push eax
+call 535630
+call 5356D0
+call 44D000
+jmp short star
+end:
+add esp,4
+jmp 0053673B
+
+5366F2:
+jmp newmem
+nop 3
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+5366F2:
+mov ecx,[edi]
+mov eax,[edi+00000140]
+//Alt: db 8B 0F 8B 87 40 01 00 00

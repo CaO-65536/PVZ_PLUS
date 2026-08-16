@@ -1,0 +1,56 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp eax,#49
+jne originalcode
+mov eax,[ebp+0C]
+test eax,eax
+jne originalcode
+push 19
+push string
+lea ecx,[esp+34]
+call 00404330
+push 00000170
+call 0061C130
+add esp,04
+mov [esp+0C],eax
+test eax,eax
+mov byte ptr [esp+0000008C],06
+je 004137D1
+push 01
+lea edx,[esp+30]
+push edx
+push eax
+call 00457BC0
+jmp 004137D3
+
+originalcode:
+cmp eax,3C
+je 004136F5
+
+exit:
+jmp returnhere
+
+align 04,00
+string:
+db '[SQUIRRELS_DEATH_MESSAGE]' 00
+
+4136CD:
+jmp newmem
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4136CD:
+db 83 F8 3C 74 23
+//cmp eax,3C
+//je 004136F5

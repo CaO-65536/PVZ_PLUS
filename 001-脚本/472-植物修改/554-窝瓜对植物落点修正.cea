@@ -1,0 +1,48 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+test eax,eax
+jne short exit
+push esi
+call FindSquashTargetPlant
+test eax,eax
+je 00460B3D
+{sub esp,10
+mov ecx,eax
+lea eax,[esp]
+call 467EF0
+mov ecx,[eax]
+add esp,10}
+mov ecx,[eax+28]
+lea ecx,[ecx+ecx*4]
+shl ecx,4
+add ecx,28
+cmp [eax+24],2F
+jne 00460B37
+add ecx,28
+jmp 00460B37
+
+exit:
+fld dword ptr [0066541C]
+jmp returnhere
+
+460B13:
+jmp newmem
+nop 5
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+460B13:
+db 85 C0 74 26 D9 05 1C 54 66 00
+//test eax,eax
+//je 00460B3D
+//fld dword ptr [0066541C]

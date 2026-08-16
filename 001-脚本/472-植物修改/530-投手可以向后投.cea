@@ -1,0 +1,7 @@
+[ENABLE]
+46750D:
+fstp st(0)
+nop 2
+[DISABLE]
+46750D:
+fstp dword ptr [esp+34]

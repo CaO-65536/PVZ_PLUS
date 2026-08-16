@@ -1,0 +1,51 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov esi,[esp+40]
+mov eax,[esi]
+cmp [eax+000007F8],24
+jne short originalcode
+mov eax,[esp+44]
+push 000000AE
+push 00000165+HALFEXSCREENWIDTH
+mov ebx,[IMAGE_GOOGLYEYE]
+call 587150
+mov eax,[esp+44]
+push 000000AE
+push 00000204+HALFEXSCREENWIDTH
+mov ebx,[IMAGE_GOOGLYEYE]
+call 587150
+
+originalcode:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,2C
+
+exit:
+jmp returnhere
+
+424F9F:
+jmp newmem
+nop 2
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+424F9F:
+db 5F 5E 5D 5B 83 C4 2C
+//pop edi
+//pop esi
+//pop ebp
+//pop ebx
+//add esp,2C

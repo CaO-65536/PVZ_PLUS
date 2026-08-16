@@ -1,0 +1,36 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp edi,HITRESULTTYPE_DUPLICATORCARD
+jne short originalcode
+mov edx,[esp+14]
+lea edx,[edx+D8]
+jmp 0040F47A
+
+originalcode:
+cmp edi,04
+jne 0040F23C
+
+exit:
+jmp returnhere
+
+40F46D:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+40F46D:
+db 83 FF 04 0F 85 C6 FD FF FF
+//cmp edi,04
+//jne 0040F23C

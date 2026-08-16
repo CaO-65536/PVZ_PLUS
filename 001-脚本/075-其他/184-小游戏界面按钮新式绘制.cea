@@ -1,0 +1,465 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(exit)
+
+newmem:
+While:
+mov edx,[esp+20]
+push ebx
+push esi
+push edx
+call DrawNewButton//0042E920
+add ebx,01
+cmp ebx,NUM_CHALLENGE_MODES
+jl short While
+
+exit:
+jmp 0042F4E4
+
+align 10,CC
+
+align 10,CC
+DrawNewButton:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+mov edi,[ebp+08]
+mov esi,[ebp+0C]
+mov eax,ChallengeBuutonsDrawRect
+call 587820
+
+sub esp,08
+mov ebx,[IMAGE_CHALLENGE_NAME_BACK]
+mov ecx,[ebp+10]
+mov eax,[edi+ecx*4+mChallengeButtons_Offset]
+cmp byte ptr [eax+54],00
+je DrawNewButton_End
+mov edx,[eax+30]
+mov [esp],edx
+mov edx,[eax+34]
+mov [esp+04],edx
+cmp byte ptr [eax+58],00
+je short DrawNewButton_Next1
+mov eax,1
+add [esp],eax
+add [esp+04],eax
+DrawNewButton_Next1:
+
+push esi
+mov esi,[ebp+10]
+push edi
+call 42E8A0
+pop esi
+cmp eax,01
+jg DrawNewButton_DrawBlank
+
+mov ecx,[ebp+10]
+mov eax,[edi+ecx*4+mChallengeButtons_Offset]
+cmp byte [eax+56],00
+je short DrawNewButton_Next4
+mov eax,5C
+mov [esi+30],eax
+mov [esi+34],eax
+mov [esi+38],eax
+mov cl,01
+mov eax,esi
+call 586D10
+DrawNewButton_Next4:
+mov ecx,[ebp+10]
+cmp [edi+000001D8],ecx
+jne short DrawNewButton_Next5
+cmp [edi+000001D0],01
+jne short DrawNewButton_Next6
+mov eax,5C
+mov [esi+30],eax
+mov [esi+34],eax
+mov [esi+38],eax
+jmp short DrawNewButton_Next7
+DrawNewButton_Next6:
+push 01
+push FF
+push 5C
+mov eax,[edi+000001D4]
+mov ecx,19
+mov edx,32
+call 511C40
+add esp,0C
+mov [esi+30],eax
+mov [esi+34],eax
+mov [esi+38],eax
+DrawNewButton_Next7:
+mov cl,01
+mov eax,esi
+call 586D10
+DrawNewButton_Next5:
+
+mov ecx,[esp+04]
+add ecx,0B
+push ecx
+mov ecx,[esp+04]
+add ecx,0B
+push ecx
+push esi
+mov eax,[ebp+10]
+lea eax,[eax+eax*2]
+lea eax,[eax*8+ChallengeNewDefinition]
+mov eax,[eax+04]
+cmp [edi+000001C8],0
+jne short DrawNewButton_Next2
+mov ecx,[006A7840]
+jmp short DrawNewButton_Next3
+DrawNewButton_Next2:
+mov ecx,[006A7614]
+{push #165
+push #85
+fild [esp]
+fidiv [esp+04]
+add esp,08
+fstp [esi+10]
+push #140
+push #64
+fild [esp]
+fidiv [esp+04]
+add esp,08
+fstp [esi+14]}
+DrawNewButton_Next3:
+call 587E50
+
+xor cl,cl
+mov eax,esi
+call 586D10
+mov ecx,[esp+04]
+push ecx
+mov ecx,[esp+04]
+push ecx
+mov eax,esi
+call 587150
+
+mov ecx,[ebp+10]
+mov eax,[edi+ecx*4+mChallengeButtons_Offset]
+cmp byte ptr [eax+56],00
+jne short DrawNewButton_NextA
+mov ecx,[ebp+10]
+cmp [edi+000001D8],ecx
+jne short DrawNewButton_Next8
+cmp [edi+000001D0],01
+jne short DrawNewButton_Next8
+DrawNewButton_NextA:
+sub esp,1C
+mov ecx,esp
+push Text//字符串
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+call 404450//eax=字符串对象
+jmp short DrawNewButton_Next9
+DrawNewButton_Next8:
+sub esp,1C
+mov ecx,esp
+mov eax,[ebp+10]
+lea eax,[eax+eax*2]
+lea eax,[eax*8+ChallengeNewDefinition]
+mov eax,[eax+14]
+push eax//字符串
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+call 404450//eax=字符串对象
+DrawNewButton_Next9:
+mov esi,[ebp+0C]
+mov ecx,[esp+1C]
+mov edx,[esp+04+1C]
+add ecx,00000082
+add edx,32
+sub esp,10
+mov [esp],FF
+mov [esp+04],FF
+mov [esp+08],FF
+mov [esp+0C],FF
+push 00
+mov ebx,[006A79F4]
+push edx
+mov edx,eax
+push esi
+call 511CE0
+add esp,1C
+mov ecx,esp
+call 404420
+add esp,1C
+
+mov eax,[edi+000001C0]
+mov eax,[eax+0000082C]
+mov ecx,[ebp+10]
+mov eax,[eax+ecx*4+30]
+cmp [edi+000001D8],ecx
+jne DrawNewButton_NotUnlocked
+mov ebx,[006A7774]
+cmp [edi+000001D0],02
+jne DrawNewButton_Unlocked_Next1
+mov ebx,[006A74B4]
+sub esp,10
+push 01
+push 00
+push FF
+mov eax,[edi+000001D4]
+xor ecx,ecx
+mov edx,19
+call 511C40
+add esp,0C
+mov [esp+0C],eax
+mov eax,FF
+mov [esp],eax
+mov [esp+04],eax
+mov [esp+08],eax
+mov eax,esp
+mov ecx,esi
+call 586CC0
+add esp,10
+mov cl,01
+mov eax,esi
+call 586D10
+DrawNewButton_Unlocked_Next1:
+fld dword ptr [00679928]//  (0.70)
+sub esp,10
+fst dword ptr [esp+0C]
+mov eax,ebx
+fstp dword ptr [esp+08]
+fild dword ptr [esp+14]
+fadd qword ptr [num1]// (15.00)
+fadd dword ptr [edi+000001E0]
+fstp dword ptr [esp+04]
+fild dword ptr [esp+10]
+fadd qword ptr [00679350]// (24.00)
+fadd dword ptr [edi+000001DC]
+mov ecx,esi
+fstp dword ptr [esp]
+call 00512950
+add esp,10
+jmp DrawNewButton_End1
+DrawNewButton_NotUnlocked:
+test eax,eax
+jle DrawNewButton_locked
+mov edx,eax
+mov ecx,[ebp+10]
+lea ecx,[ecx+ecx*2]
+lea ecx,[ecx*8+ChallengeNewDefinition]
+mov eax,[ecx]
+push edx
+push eax
+mov ecx,[edi+000001C0]
+call 454120
+pop ecx
+pop edx
+test al,al
+je short DrawNewButton_Record_Next1
+mov ebx,[006A7860]
+mov ecx,[esp+04]
+sub ecx,02
+push ecx
+mov ecx,[esp+04]
+sub ecx,02
+push ecx
+mov eax,esi
+call 587150
+jmp DrawNewButton_End
+DrawNewButton_Record_Next1:
+push ecx
+call IsSurvivalEndless
+test al,al
+je DrawNewButton_Record_Next2
+sub esp,1C
+push edx
+lea ecx,[esp+04]
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+push ecx
+mov ecx,00656624//  ("[COUNT_FLAGS]")
+mov edi,00656634//  ("[ONE_FLAG]")
+call 455AA0
+mov edx,eax
+mov ecx,[esp+1C]
+mov eax,[esp+04+1C]
+add eax,30
+add ecx,30
+sub esp,10
+mov [esp],FF
+mov [esp+04],FF
+mov [esp+08],FF
+mov [esp+0C],FF
+push 02
+mov ebx,[006A7734]
+push eax
+push esi
+call 511CE0
+add esp,1C
+mov edx,esp
+mov ecx,[esp+1C]
+mov eax,[esp+04+1C]
+add eax,30
+add ecx,30
+sub esp,10
+mov [esp],FF
+mov [esp+04],00
+mov [esp+08],00
+mov [esp+0C],FF
+push 02
+mov ebx,[006A7384]
+push eax
+push esi
+call 511CE0
+add esp,1C
+mov ecx,esp
+call 404420
+add esp,1C
+mov edi,[ebp+08]
+jmp DrawNewButton_End
+DrawNewButton_Record_Next2:
+cmp ecx,3C
+je short DrawNewButton_Record_Next3
+cmp ecx,46
+jne DrawNewButton_End
+DrawNewButton_Record_Next3:
+sub esp,1C*2
+push edx//int theNumber
+lea ecx,[esp+04]
+push 00657920//  ("[LONGEST_STREAK]")
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+call 404450//eax=字符串对象
+mov edx,eax//const std::string& theText
+lea ecx,[esp+1C+04]
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],F
+push ecx//_Out_ std::string&& aFinalString
+mov ecx,00655E04//  ("{STREAK}") const char* theStringToFind
+call 00513720
+add esp,08
+mov ecx,esp
+call 404420
+add esp,1C
+mov ecx,[esp+1C]
+mov edx,[esp+1C+04]
+add edx,0F
+sub esp,10*2
+mov ebx,esp
+mov [ebx],ecx
+mov [ebx+04],edx
+mov [ebx+08],60
+mov [ebx+0C],C8
+lea esi,[esp+10]
+mov eax,FF
+mov [esi],eax
+mov [esi+04],eax
+mov [esi+08],eax
+mov [esi+0C],eax
+push 02
+lea edx,[esp+04+10*2]
+push [006A7734]
+push [ebp+0C]
+call 51A040
+add esp,0C
+xor eax,eax
+mov [esi+04],eax
+mov [esi+08],eax
+push 02
+lea edx,[esp+04+10*2]
+push [006A7384]
+push [ebp+0C]
+call 51A040
+add esp,0C
+add esp,10*2
+mov ecx,esp
+call 404420
+add esp,1C
+jmp DrawNewButton_End
+DrawNewButton_locked:
+mov ecx,[ebp+10]
+mov eax,[edi+ecx*4+mChallengeButtons_Offset]
+cmp byte ptr [eax+56],00
+je short DrawNewButton_End
+mov ebx,[006A7774]
+fld dword ptr [00679928]//  (0.70)
+sub esp,10
+fst dword ptr [esp+0C]
+mov eax,ebx
+fstp dword ptr [esp+08]
+fild dword ptr [esp+14]
+fadd qword ptr [num1]// (15.00)
+//fadd dword ptr [edi+000001E0]
+fstp dword ptr [esp+04]
+fild dword ptr [esp+10]
+fadd qword ptr [00679350]// (24.00)
+//fadd dword ptr [edi+000001DC]
+mov ecx,esi
+fstp dword ptr [esp]
+call 00512950
+add esp,10
+
+DrawNewButton_End1:
+DrawNewButton_End:
+mov ecx,[ebp+0C]
+call 587760
+add esp,08
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 0C
+DrawNewButton_DrawBlank:
+mov ebx,[IMAGE_CHALLENGE_BUTTON_DOTTED]
+mov ecx,[esp+04]
+push ecx
+mov ecx,[esp+04]
+push ecx
+mov eax,esi
+call 587150
+jmp short DrawNewButton_End
+
+{
+push //int theChallengeIndex
+push //Graphics* g
+push //ChallengeScreen* this
+}
+
+align 10,CC
+IsSurvivalEndless:
+mov eax,[esp+04]
+cmp eax,0A
+jl short IsSurvivalEndless_False
+cmp eax,0E
+jg short IsSurvivalEndless_False
+mov al,01
+ret 04
+IsSurvivalEndless_False:
+xor al,al
+ret 04
+
+align 04,00
+num1:
+dq (double)15
+
+Text:
+db CE B4 BD E2 CB F8 00//未解锁
+
+42F4CE:
+jmp newmem
+nop
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+42F4CE:
+db 8B FF 8B 54 24 20
+//mov edi,edi
+//mov edx,[esp+20]

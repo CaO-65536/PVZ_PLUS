@@ -1,0 +1,75 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp [esi+28],#17
+jne short originalcode
+yes:
+mov ecx,esi
+call 5346A0
+test eax,eax
+jne short originalcode
+pushad
+xor ebp,ebp
+inc ebp
+az2:
+imul eax,ebp,4
+mov ecx,[esi+eax+F0]
+test ecx,ecx
+je short az1
+mov edx,[esi+4]
+call 41C7F0//eax为指针
+test eax,eax
+je az1//无
+mov cl,[esi+B8]
+mov [eax+B8],cl
+push ebp
+fild [esp]
+mov [esp],32
+fimul [esp]
+add esp,4
+push eax
+mov ecx,esi
+call 52BEE0
+test al,al
+pop eax
+je short az3
+fchs
+az3:
+fadd [esi+2C]
+fstp [eax+2C]
+az1:
+inc ebp
+cmp ebp,4
+jne az2
+popad
+
+originalcode:
+
+exit:
+mov eax,[edi+28]
+cmp eax,13
+push edi
+jne 5280D0
+jmp returnhere
+
+52805A:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+52805A:
+cmp eax,13
+push edi
+jne 5280D0
+//Alt: db 83 F8 13 57 75 70

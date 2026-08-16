@@ -1,0 +1,38 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+originalcode:
+push edi
+call FindCatapultZombieTarget
+test eax,eax
+push ecx
+jne short exit//00525B35
+push edi
+call 525890
+test eax,eax
+je 525B35
+
+exit:
+jmp 525B0C
+
+525B01:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+525B01:
+push edi
+call 00525890
+//Alt: db 57 E8 89 FD FF FF

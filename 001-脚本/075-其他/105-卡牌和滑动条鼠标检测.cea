@@ -1,0 +1,81 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(exit)
+
+newmem:
+push ebx
+push esi
+mov ebx,[esp+20]
+mov esi,[esp+1C]
+sub ebx,[ebp+0C]
+sub esi,[ebp+08]
+mov eax,[ebp+24]
+mov [esp+10],eax
+test eax,eax
+jle exit
+dec eax
+lea eax,[eax+eax*4]
+shl eax,4
+lea edx,[ebp+eax+28]
+mov [esp+18],edx
+az1:
+cmp esi,5A-C
+jl short az2
+cmp esi,0000024D
+jg short az2
+mov eax,[esp+18]
+call 00488F90
+test al,al
+jne 00489A07
+az2:
+mov eax,[esp+10]
+sub dword ptr [esp+18],50
+dec eax
+mov [esp+10],eax
+test eax,eax
+jg short az1
+mov edx,[ebp+SeedBankMax*50+mSeedPacket_Offest+10]
+test edx,edx
+je 4899F0
+mov ecx,[edx+30]
+sub ecx,[ebp+08]
+cmp esi,ecx
+jl 4899F0
+add ecx,[edx+38]
+cmp esi,ecx
+jg 4899F0
+mov ecx,[edx+34]
+sub ecx,[ebp+0C]
+cmp ebx,ecx
+jl 4899F0
+add ecx,[edx+3C]
+cmp ebx,ecx
+jg 4899F0
+pop esi
+pop ebx
+mov [edi],edx
+mov [edi+04],HITRESULTTYPE_SEEDBANKSLIDER
+pop edi
+mov al,01
+pop ebp
+pop ecx
+ret 000C
+
+exit:
+jmp 4899F0
+
+48999F:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+48999F:
+cmp dword ptr [ebp+24],00
+push ebx
+//Alt: db 83 7D 24 00 53

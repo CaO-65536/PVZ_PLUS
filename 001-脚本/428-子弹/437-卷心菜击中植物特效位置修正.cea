@@ -1,0 +1,45 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push edi
+call 46CD40
+test eax,eax
+jne short originalcode
+push edi
+call 46CAA0
+test eax,eax
+je short originalcode
+fadd qword ptr [0067A288]
+fstp dword ptr [esp+14]
+fld dword ptr [esp+1C]
+fadd qword ptr [num1]
+jmp 0046E30C
+
+originalcode:
+fsub qword ptr [0067A288]
+
+exit:
+jmp returnhere
+
+num1:
+dq (double)50
+
+46E2F8:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+46E2F8:
+db DC 25 88 A2 67 00
+//fsub qword ptr [0067A288]

@@ -1,0 +1,60 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+define(HITRESULTTYPE_SPECIALZOMBIE,16)
+define(HITRESULTTYPE_DUPLICATORCARD,17)
+define(HITRESULTTYPE_SEEDBANKSLIDER,18)
+define(HITRESULTTYPE_WEAPON,19)
+registersymbol(HITRESULTTYPE_SPECIALZOMBIE)
+registersymbol(HITRESULTTYPE_DUPLICATORCARD)
+registersymbol(HITRESULTTYPE_SEEDBANKSLIDER)
+registersymbol(HITRESULTTYPE_WEAPON)
+
+newmem:
+cmp eax,HITRESULTTYPE_SPECIALZOMBIE
+je 0040E64B
+cmp eax,HITRESULTTYPE_DUPLICATORCARD
+je 0040E64B
+{cmp eax,HITRESULTTYPE_SEEDBANKSLIDER
+jne short originalcode
+mov ecx,[esp+10]
+mov eax,[ecx+C4]
+mov edx,ebx
+//sub edx,[eax+0C]
+add edx,[ecx+34]
+push edx
+mov edx,esi
+//sub edx,[eax+08]
+push edx
+call SliderThumbTestMouse
+test al,al
+jne 0040E64B}
+
+originalcode:
+cmp eax,04
+jne 0040E67C
+
+exit:
+jmp returnhere
+
+40E639:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+unregistersymbol(HITRESULTTYPE_SPECIALZOMBIE)
+unregistersymbol(HITRESULTTYPE_DUPLICATORCARD)
+unregistersymbol(HITRESULTTYPE_SEEDBANKSLIDER)
+unregistersymbol(HITRESULTTYPE_WEAPON)
+40E639:
+db 83 F8 04 75 3E
+//cmp eax,04
+//jne 0040E67C

@@ -1,0 +1,39 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(IsBowlingPlant,1024)
+registersymbol(IsBowlingPlant)
+
+IsBowlingPlant:
+push ebp
+mov ebp,[esp+8]
+mov eax,[ebp+24]
+cmp eax,03
+je short IsBowlingPlant_Next
+cmp eax,31
+je short IsBowlingPlant_Next
+cmp eax,32
+jne short IsBowlingPlant_False
+IsBowlingPlant_Next:
+mov eax,[ebp+3C]
+cmp eax,STATE_BOWLING_NORMAL
+je short IsBowlingPlant_True
+cmp eax,1C
+je short IsBowlingPlant_True
+cmp eax,1D
+jne short IsBowlingPlant_False
+IsBowlingPlant_True:
+mov al,01
+pop ebp
+ret 4
+IsBowlingPlant_False:
+xor al,al
+pop ebp
+ret 4
+{
+push //*Plant
+}
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(IsBowlingPlant)
+unregistersymbol(IsBowlingPlant)

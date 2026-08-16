@@ -1,0 +1,1261 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(PlantCanBeChilled,4096)
+registersymbol(PlantCanBeChilled)
+label(PlantCanBeFrozen)
+registersymbol(PlantCanBeFrozen)
+label(PlantRemoveIceTrap)
+registersymbol(PlantRemoveIceTrap)
+label(PlantRemoveColdEffects)
+registersymbol(PlantRemoveColdEffects)
+label(PlantApplyChill)
+registersymbol(PlantApplyChill)
+label(PlantHitIceTrap)
+registersymbol(PlantHitIceTrap)
+label(PlantApplyButter)
+registersymbol(PlantApplyButter)
+label(PlantTakeDamage)
+registersymbol(PlantTakeDamage)
+label(NormallyHitPlant)
+registersymbol(NormallyHitPlant)
+label(SunLootUpdate)
+registersymbol(SunLootUpdate)
+label(PlantApplyBurn)
+registersymbol(PlantApplyBurn)
+label(PlantEffectedByDamage)
+registersymbol(PlantEffectedByDamage)
+label(PlantFindTargetPlant)
+registersymbol(PlantFindTargetPlant)
+label(FindSquashTargetPlant)
+registersymbol(FindSquashTargetPlant)
+label(DoSquashDamageToPlant)
+registersymbol(DoSquashDamageToPlant)
+label(FindStarFruitTargetPlant)
+registersymbol(FindStarFruitTargetPlant)
+label(PlantIsStop)
+registersymbol(PlantIsStop)
+label(PlantIsRealStop)
+registersymbol(PlantIsRealStop)
+label(PlantSetMindControlled)
+registersymbol(PlantSetMindControlled)
+
+PlantCanBeChilled:
+mov al,1
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantCanBeFrozen:
+//mov ecx,[eax+24]
+mov al,1
+{cmp ecx,5
+je short PlantCanBeFrozen_Cannot
+cmp ecx,E
+je short PlantCanBeFrozen_Cannot
+cmp ecx,2C
+jne short PlantCanBeFrozen_End
+PlantCanBeFrozen_Cannot:
+xor al,al
+PlantCanBeFrozen_End:}
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantRemoveIceTrap:
+mov [eax+14C],0
+ret
+{
+mov eax,//Plant* this
+}
+
+PlantRemoveColdEffects:
+mov [eax+14C],0
+mov [eax+154],0
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantApplyChill:
+sub esp,08
+push esi
+push edi
+mov esi,eax
+mov edi,eax
+call PlantCanBeChilled
+test al,al
+je short PlantApplyChill_End
+cmp [edi+154],0
+jne short PlantApplyChill_L1
+mov eax,[edi]
+mov esi,12
+call 453630
+PlantApplyChill_L1:
+mov eax,000003E8
+cmp byte ptr [esp+14],00
+je short PlantApplyChill_L2
+mov eax,000007D0
+PlantApplyChill_L2:
+mov ecx,[edi+154]
+cmp ecx,eax
+jg short PlantApplyChill_End
+mov [edi+154],eax
+PlantApplyChill_End:
+pop edi
+pop esi
+add esp,08
+ret 4
+{
+push //bool theIsIceTrap
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantHitIceTrap:
+push ebx
+push esi
+push edi
+mov esi,eax
+xor bl,bl
+cmp dword ptr [esi+14C],00
+push edi
+jg short PlantHitIceTrap_L1
+cmp dword ptr [esi+154],00
+je short PlantHitIceTrap_L1
+mov bl,01
+PlantHitIceTrap_L1:
+call PlantApplyChill
+mov eax,esi
+call PlantCanBeFrozen
+test al,al
+je short PlantHitIceTrap_End
+mov eax,[esi+1C]
+mov ecx,[esi+28]
+mov edx,[esi+04]
+call 40CE00
+test al,al
+je short PlantHitIceTrap_L2
+mov [esi+0000014C],0000012C
+jmp short PlantHitIceTrap_L3
+PlantHitIceTrap_L2:
+test bl,bl
+je short PlantHitIceTrap_L4
+mov eax,00000065
+call 005AF400
+add eax,0000012C
+jmp short PlantHitIceTrap_L5
+PlantHitIceTrap_L4:
+mov eax,000000C9
+call 005AF400
+add eax,00000190
+PlantHitIceTrap_L5:
+mov [esi+0000014C],eax
+PlantHitIceTrap_L3:
+push 14
+mov eax,00000011//10清除尸体+1不攻击二类
+call NormallyHitPlant//PlantTakeDamage
+PlantHitIceTrap_End:
+pop edi
+pop esi
+pop ebx
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantRemoveButter:
+//
+
+PlantApplyButter:
+push esi
+mov esi,eax
+//cmp byte ptr [esi+000000BA],00
+//je short PlantApplyButter_End
+call PlantCanBeFrozen
+test al,al
+je short PlantApplyButter_End
+mov eax,[esi+24]
+cmp eax,19
+je short PlantApplyButter_End
+mov [esi+00000150],00000190
+PlantApplyButter_End:
+pop esi
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantTakeDamage:
+push 0//4 * bool IsRemainingAlife
+sub esp,10
+push ebx
+push edi
+push ebp
+mov ebx,eax
+mov ebp,[esp+4+1C+4]
+cmp byte ptr [esi+00000142],00
+jne PlantTakeDamage_End
+cmp dword ptr [esi+00000134],02
+je PlantTakeDamage_End
+cmp byte ptr [esi+00000141],00
+jne PlantTakeDamage_End
+mov eax,ebp
+test eax,eax
+jle short PlantTakeDamage_End
+//飞行单位
+{cmp eax,23
+jne short NotFlyingPlant
+test bl,08
+jne short FlyingPlant_L1
+mov [esi+54],00000019
+FlyingPlant_L1:
+NotFlyingPlant:}
+push ebx
+lea ebx,[esp+4+C]
+push [esi+1C]//行
+push [esi+28]//列
+mov edx,[esi+04]
+call 40D2A0
+mov edi,ebx
+pop ebx
+mov eax,ebp
+cmp [edi+04],0//判断南瓜(二类)
+je short NoPumpkin
+test bl,01
+je short Pumpkin
+cmp [edi+0C],0
+jne short NoPumpkin
+Pumpkin:
+push eax
+mov eax,ebx
+mov esi,[edi+4]
+call NormallyHitPlant
+mov byte [edi+11],dl
+test bl,02
+je short NoPumpkin
+mov eax,ebp
+NoPumpkin:
+test eax,eax
+jle short PlantTakeDamage_End
+cmp [edi+0C],0//判断普通(一类)
+je short NoNormal
+push eax
+mov eax,ebx
+mov esi,[edi+C]
+call NormallyHitPlant
+mov byte [edi+13],dl
+NoNormal:
+test eax,eax
+jle short PlantTakeDamage_End
+cmp [edi],0//判断底端(本体)
+je short PlantTakeDamage_End
+push eax
+mov eax,ebx
+mov esi,[edi]
+call NormallyHitPlant
+mov byte [edi+10],dl
+PlantTakeDamage_End:
+mov eax,[esp+C+10]
+pop ebp
+pop edi
+pop ebx
+add esp,10+4
+ret 4
+{
+push //int theDamage
+mov esi,//Plant* this
+mov eax,//unsigned int theDamageFlags
+ret: eax = 4 * bool IsRemainingAlife
+}
+align 10,CC
+
+NormallyHitPlant:
+push ebp
+mov ebp,[esp+4+4]
+push ebx
+mov ebx,eax
+test bl,08
+jne short NormallyHitPlant_L1
+cmp [esi+B8],19
+jnl short NormallyHitPlant_L1
+mov [esi+B8],19
+NormallyHitPlant_L1:
+test bl,40
+jne short NormallyHitPlant_NotSpecial
+cmp byte ptr [esi+00000143],00
+jne short NormallyHitPlant_PotatoMine
+mov eax,[esi+24]
+cmp eax,2
+je NormallyHitPlant_End
+cmp eax,0E
+je NormallyHitPlant_End
+cmp eax,0F
+je NormallyHitPlant_End
+cmp eax,14
+je NormallyHitPlant_End
+cmp eax,1B
+je NormallyHitPlant_End
+NormallyHitPlant_PotatoMine:
+cmp eax,04
+jne short NormallyHitPlant_NotSpecial
+test bl,1
+jne short NormallyHitPlant_NotSpecial
+test bl,2
+jne short NormallyHitPlant_NotSpecial
+cmp dword ptr [esi+3C],00
+jne NormallyHitPlant_End
+NormallyHitPlant_NotSpecial:
+test bl,04
+je short NormallyHitPlant_L3
+push 0
+mov eax,esi
+call PlantApplyChill
+NormallyHitPlant_L3:
+mov eax,[esi+40]
+mov ecx,eax
+cmp eax,ebp
+jl short NormallyHitPlant_L2
+mov ecx,ebp
+NormallyHitPlant_L2:
+sub ebp,ecx
+mov eax,ebp
+push eax
+push ecx
+mov eax,[esi]
+call 004537D0
+test al,al
+je short DoNotLootSun
+push esi
+push ecx
+call SunLootUpdate
+DoNotLootSun:
+pop ecx
+pop eax
+mov dl,1
+sub [esi+40],ecx
+jne short NormallyHitPlant_End
+xor dl,dl
+test bl,10
+je short NormallyHitPlant_End
+push eax
+push esi
+call 4679B0//植物死亡
+pop eax
+NormallyHitPlant_End:
+pop ebx
+pop ebp
+ret 4
+{
+push //int theDamage
+mov esi,//Plant* this
+mov eax,//unsigned int theDamageFlags
+ret: eax = int aDamageRemaining , dl = bool IsRemainingAlife
+}
+align 10,CC
+
+SunLootUpdate:
+push ebp
+mov ebp,esp
+push edi
+push esi
+push ebx
+mov esi,[ebp+C]
+mov eax,[esi]
+call 004537D0
+test al,al
+je short no
+cmp [esi+24],1
+jne short no
+mov ecx,[esi+40]
+mov eax,66666667
+imul ecx
+sar edx,04
+mov ecx,edx
+shr ecx,1F
+lea edi,[edx+ecx+01]
+mov ecx,[esi+40]
+sub ecx,[ebp+8]
+mov ebx,ecx
+mov eax,66666667
+imul ecx
+sar edx,04
+mov ecx,edx
+shr ecx,1F
+lea eax,[edx+ecx+01]
+sub edi,eax
+test ebx,ebx
+jg short loot
+//xor edi,edi
+inc edi
+loot:
+az1:
+test edi,edi
+je short no
+push 3//运动  0从天而降1慢一点从天而降2弹出3力更大弹出4被捡5等一下被捡6场外弹出7固定顶端(后续同样)
+push 4{种类  1银币2金币3钻石4阳光5小阳光6大阳光8奖杯9铲子A图鉴B钥匙C罐子D水壶E玉米卷F字条10卡片(调用要设定id)11礼物12钱袋13不消失礼物14钱袋15银向日葵奖杯16金向日葵奖杯17巧克力18不消失巧克力19迷你游戏礼物1A解密礼物1B生存礼物}
+push [esi+C]//列像素
+push [esi+8]//行像素
+mov ecx,[esi+4]
+call 40CB10//eax=该物品指针
+dec edi
+jmp short az1
+no:
+pop ebx
+pop esi
+pop edi
+mov esp,ebp
+pop ebp
+ret 8
+{
+push //植物指针
+push //伤害
+}
+align 10,CC
+
+PlantApplyBurn:
+push ebx
+push esi
+push edi
+mov esi,eax
+call PlantRemoveColdEffects
+push 00000708
+mov eax,4A//40无视硬体+8不闪光+2溅伤
+call NormallyHitPlant
+test dl,dl
+jne PlantApplyBurn_End
+mov eax,[esi+28]
+mov ecx,[esi+1C]
+mov edx,[esi+04]
+call 40CE00
+test al,al
+je short PlantApplyBurn_NotInPool
+push esi
+call 4679B0
+jmp PlantApplyBurn_End
+PlantApplyBurn_NotInPool:
+mov ebx,00000094
+fldz
+PlantApplyBurn_L2:
+mov eax,[esi]
+mov ecx,[esi+ebx]
+call 453CB0
+test eax,eax
+je short PlantApplyBurn_L1
+mov edi,eax
+fst [edi+8]
+cmp ebx,00000094
+jne short PlantApplyBurn_L1
+cmp [esi+24],0F
+jne short PlantApplyBurn_L1
+mov ebx,edi
+mov edi,[edi+58]
+fldz
+push 00668E14 { ("DoomShroom_head1") }
+call 472F30
+lea eax,[eax+eax*2]
+shl eax,05
+fst dword ptr [eax+edi+34]
+push 00668E28 { ("DoomShroom_head2") }
+call 472F30
+lea eax,[eax+eax*2]
+shl eax,05
+fst dword ptr [eax+edi+34]
+push 00668E3C { ("DoomShroom_head3") }
+call 472F30
+lea eax,[eax+eax*2]
+shl eax,05
+fstp dword ptr [eax+edi+34]
+mov ebx,00000094
+PlantApplyBurn_L1:
+add ebx,4
+cmp ebx,000000AC+4
+jne short PlantApplyBurn_L2
+fstp st(0)
+dec [esi+20]//变灰不遮挡其他植物
+mov [esi+4C],0000012C
+xor eax,eax
+mov [esi+000000B0],eax
+mov al,1
+mov [esi+00000142],al
+mov [esi+00000146],al
+mov ebx,esi
+call 463920
+PlantApplyBurn_End:
+pop edi
+pop esi
+pop ebx
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantEffectedByDamage:
+sub esp,10
+push ebx
+mov bl,[esp+18]
+test bl,20
+push edi
+jne short PlantEffectedByDamage_L1
+cmp byte ptr [esi+00000141],00
+jne short PlantEffectedByDamage_False
+cmp byte ptr [esi+00000142],01
+je short PlantEffectedByDamage_False
+cmp byte ptr [esi+00000146],01
+je short PlantEffectedByDamage_False
+//是否打已死亡单位
+PlantEffectedByDamage_L1:
+test bl,bl
+jns short PlantEffectedByDamage_L2
+cmp byte [esi+00000147],01//00
+jne short PlantEffectedByDamage_L3
+PlantEffectedByDamage_False:
+xor al,al
+pop edi
+pop ebx
+add esp,10
+ret 0004
+PlantEffectedByDamage_L2:
+cmp byte ptr [esi+00000147],01//00
+jne short PlantEffectedByDamage_False
+//是否只打魅惑单位
+PlantEffectedByDamage_L3:
+lea eax,[esp+08]
+mov ecx,esi
+call 467EF0
+cmp [esp+08],00000320+HALFEXSCREENWIDTH
+jg short PlantEffectedByDamage_False
+mov bl,[esp+1C]
+mov edi,[esi+24]
+cmp edi,11
+jne short PlantEffectedByDamage_NotPlantOffGround
+mov ecx,[esi+3C]
+cmp ecx,05
+je short PlantEffectedByDamage_PlantOffGround
+cmp ecx,06
+je short PlantEffectedByDamage_PlantOffGround
+cmp ecx,07
+jne short PlantEffectedByDamage_NotPlantOffGround
+PlantEffectedByDamage_PlantOffGround:
+mov ch,1
+jmp short PlantEffectedByDamage_PlantOffGround1
+PlantEffectedByDamage_NotPlantOffGround:
+xor ch,ch
+PlantEffectedByDamage_PlantOffGround1:
+test bl,10
+je short PlantEffectedByDamage_L7
+test ch,ch
+jne short PlantEffectedByDamage_True
+//离地植物
+PlantEffectedByDamage_L7:
+cmp edi,4
+je short PlantEffectedByDamage_ShortPlant
+cmp edi,8
+je short PlantEffectedByDamage_ShortPlant
+cmp edi,9//
+je short PlantEffectedByDamage_ShortPlant
+cmp edi,15
+je short PlantEffectedByDamage_ShortPlant
+cmp edi,18
+je short PlantEffectedByDamage_ShortPlant
+cmp edi,21//
+jne short PlantEffectedByDamage_NotShortPlant
+PlantEffectedByDamage_ShortPlant:
+mov cl,1
+jmp short PlantEffectedByDamage_ShortPlant1
+PlantEffectedByDamage_NotShortPlant:
+xor cl,cl
+PlantEffectedByDamage_ShortPlant1:
+test bl,08
+je short PlantEffectedByDamage_L6
+test cl,cl
+jne short PlantEffectedByDamage_True
+//低矮植物
+PlantEffectedByDamage_L6:
+cmp edi,10
+je short PlantEffectedByDamage_PlantInWater
+cmp edi,13
+jne short PlantEffectedByDamage_PlantNotInWater
+PlantEffectedByDamage_PlantInWater:
+mov dl,1
+jmp short PlantEffectedByDamage_PlantInWater1
+PlantEffectedByDamage_PlantNotInWater:
+xor dl,dl
+PlantEffectedByDamage_PlantInWater1:
+test bl,04
+je short PlantEffectedByDamage_L4
+test dl,dl
+jne short PlantEffectedByDamage_True
+//水中植物
+PlantEffectedByDamage_L4:
+test bl,02
+je short PlantEffectedByDamage_L5
+cmp edi,23
+je short PlantEffectedByDamage_True
+//空中植物
+PlantEffectedByDamage_L5:
+test bl,01
+je PlantEffectedByDamage_False
+cmp edi,23
+je PlantEffectedByDamage_False
+test cl,cl
+jne PlantEffectedByDamage_False
+test ch,ch
+jne PlantEffectedByDamage_False
+test dl,dl
+jne PlantEffectedByDamage_False
+//正常植物
+PlantEffectedByDamage_True:
+mov al,01
+pop edi
+pop ebx
+add esp,10
+ret 0004
+{
+push //unsigned int theDamageRangeFlags
+mov esi,//Plant* this
+}
+align 10,CC
+
+PlantFindTargetPlant:
+push ebp
+mov ebp,esp
+and esp,-08
+sub esp,3C
+push ebx
+push esi
+push edi
+mov edi,[ebp+08]
+push ecx
+mov eax,edi
+call 0045EB10
+push ecx
+mov [esp+28],eax
+lea eax,[esp+2C]
+mov ecx,edi
+call 00467F90
+mov edx,[edi+04]
+xor ebx,ebx
+lea esi,[esp+18]
+mov [esp+20],ebx
+mov [esp+1C],ebx
+mov [esp+18],ebx
+call 41C950
+test al,al
+je PlantFindTargetPlant_End
+PlantFindTargetPlant_NextZombie1:
+mov esi,[esp+18]
+cmp esi,edi
+je PlantFindTargetPlant_NextZombie
+cmp [edi+24],12//三线射手不攻击同列植物
+jne short PlantFindTargetPlant_L0
+cmp [esi+24],2F
+je short PlantFindTargetPlant_L0
+mov eax,[edi+28]
+cmp [esi+28],eax
+je PlantFindTargetPlant_NextZombie
+PlantFindTargetPlant_L0:
+mov ebx,[esi+1C]
+sub ebx,[ebp+0C]
+mov edi,[ebp+08]
+mov byte ptr [esp+13],00//是否为传送门关卡
+{mov eax,[edi]
+cmp dword ptr [eax+000007F8],1A
+jne short PlantFindTargetPlant_L1
+mov byte ptr [esp+13],01
+PlantFindTargetPlant_L1:}
+mov eax,[edi+24]
+cmp eax,2B
+je short PlantFindTargetPlant_L3
+cmp eax,2A
+jne short PlantFindTargetPlant_L2
+cmp ebx,-01
+jl PlantFindTargetPlant_NextZombie
+cmp ebx,01
+jle short PlantFindTargetPlant_L3
+jmp PlantFindTargetPlant_NextZombie
+PlantFindTargetPlant_L2:
+test ebx,ebx
+jne PlantFindTargetPlant_NextZombie
+PlantFindTargetPlant_L3:
+mov eax,[esp+24]
+push eax
+call PlantEffectedByDamage
+test al,al
+je PlantFindTargetPlant_NextZombie
+mov [esp+14],00000000
+mov edx,[edi+24]
+cmp edx,06
+jne short PlantFindTargetPlant_NotChomper
+cmp dword ptr [edi+3C],0A
+jne short PlantFindTargetPlant_NotChomper
+mov [esp+14],0000003C
+PlantFindTargetPlant_NotChomper:
+lea eax,[esp+38]
+mov ecx,esi
+call 467EF0
+mov ecx,eax
+lea edi,[esp+28]
+call 41C820
+mov ecx,[esp+14]
+neg ecx
+cmp eax,ecx
+jl PlantFindTargetPlant_NextZombie
+mov edi,[esp+38]
+mov ecx,[ebp+08]
+mov eax,edi
+push eax
+push ecx
+call IsPlantLeft
+test al,al
+pop eax
+jne short PlantFindTargetPlant_IsPlantLeft
+neg eax
+PlantFindTargetPlant_IsPlantLeft:
+cmp dword ptr [ecx+24],2B
+jne short PlantFindTargetPlant_NotCatTail
+mov eax,[esp+44]
+cdq
+sub eax,edx
+sar eax,1
+add eax,[esp+3C]
+sub esp,10
+mov [esp+24],eax
+mov eax,[esp+50]
+fild dword ptr [esp+24]
+cdq
+sub eax,edx
+sar eax,1
+fstp dword ptr [esp+0C]
+add eax,edi
+mov [esp+24],eax
+fild dword ptr [esp+24]
+fstp dword ptr [esp+08]
+fild dword ptr [ecx+0C]
+fld qword ptr [006794C8]
+fadd st(1),st(0)
+fxch st(1)
+fstp dword ptr [esp+24]
+fld dword ptr [esp+24]
+fstp dword ptr [esp+04]
+fiadd [ecx+08]
+fstp dword ptr [esp+24]
+fld dword ptr [esp+24]
+fstp dword ptr [esp]
+call 407B10
+add esp,10
+call 6397D0
+//mov ecx,[esi+28]
+neg eax
+{cmp ecx,49
+je 00467867
+cmp ecx,4A
+jne 0046786C
+add eax,00002710}//不对飞行植物加权
+PlantFindTargetPlant_NotCatTail:
+cmp dword ptr [esp+1C],00
+je short PlantFindTargetPlant_L4
+cmp eax,[esp+20]
+jle short PlantFindTargetPlant_NextZombie
+PlantFindTargetPlant_L4:
+mov [esp+20],eax
+mov [esp+1C],esi
+PlantFindTargetPlant_NextZombie:
+mov edi,[ebp+08]
+mov edx,[edi+04]
+lea esi,[esp+18]
+call 41C950
+test al,al
+jne PlantFindTargetPlant_NextZombie1
+PlantFindTargetPlant_End:
+mov eax,[esp+1C]
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 0008
+{
+push //int theRow
+push //Plant* this
+mov ecx,//PlantWeapon thePlantWeapon
+}
+align 10,CC
+
+FindSquashTargetPlant:
+sub esp,38
+push ebx
+push ebp
+mov ebp,[esp+44]
+push esi
+push edi
+xor esi,esi
+push esi
+mov eax,ebp
+call 45EB10
+mov [esp+24],eax
+push esi
+lea eax,[esp+2C]
+mov ecx,ebp
+call 467F90
+mov edx,[ebp+04]
+mov [esp+14],esi
+mov [esp+20],esi
+mov [esp+18],esi
+lea esi,[esp+14]
+call 41C950
+test al,al
+je FindSquashTargetPlant_End
+FindSquashTargetPlant_NextZombie1:
+mov ebx,[esp+14]
+mov eax,[ebx+1C]
+sub eax,[ebp+1C]
+test eax,eax
+jne FindSquashTargetPlant_NextZombie
+cmp byte ptr [ebx+00000142],00
+jne FindSquashTargetPlant_NextZombie
+mov eax,[esp+24]
+push eax
+mov esi,ebx
+call PlantEffectedByDamage
+test al,al
+je FindSquashTargetPlant_NextZombie
+lea eax,[esp+38]
+mov ecx,ebx
+call 467EF0
+mov [esp+1C],00000046
+lea edi,[esp+38]
+lea ecx,[esp+28]
+call 41C820
+mov edx,[esp+28]
+mov edi,[esp+38]
+add edi,[esp+40]
+neg eax
+mov ebp,eax
+cmp ebp,[esp+1C]
+jg short FindSquashTargetPlant_L7
+{mov eax,[esp+4C]
+mov ecx,[eax]
+call 4538F0
+test al,al
+je FindSquashTargetPlant_NotVaseBreakerLevel}
+add edx,-3C//全模式60像素左界
+FindSquashTargetPlant_NotVaseBreakerLevel:
+push ebx
+call IsPlantLeft
+test al,al
+jne short FindSquashTargetPlant_NotLookRight
+cmp edi,edx
+jl short FindSquashTargetPlant_L7
+FindSquashTargetPlant_NotLookRight:
+mov ecx,[ebx+PlantClassSize-4]
+mov edx,[esp+4C]
+cmp ebx,edx
+je short FindSquashTargetPlant_L7
+cmp ecx,[edx+0000015C]
+je short FindSquashTargetPlant_SetTargetPlant
+cmp dword ptr [esp+18],00
+je short FindSquashTargetPlant_L6
+cmp ebp,[esp+20]
+jnl short FindSquashTargetPlant_L7
+FindSquashTargetPlant_L6:
+mov [esp+20],ebp
+mov [esp+18],ebx
+mov ebp,edx
+jmp short FindSquashTargetPlant_NextZombie
+FindSquashTargetPlant_L7:
+mov ebp,[esp+4C]
+FindSquashTargetPlant_NextZombie:
+mov edx,[ebp+04]
+lea esi,[esp+14]
+call 41C950
+test al,al
+jne FindSquashTargetPlant_NextZombie1
+FindSquashTargetPlant_End:
+mov eax,[esp+18]
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,38
+ret 0004
+FindSquashTargetPlant_SetTargetPlant:
+pop edi
+pop esi
+pop ebp
+mov eax,ebx
+pop ebx
+add esp,38
+ret 0004
+{
+push //Plant* this
+}
+align 10,CC
+
+DoSquashDamageToPlant:
+sub esp,28
+push ebx
+push ebp
+push esi
+push edi
+mov edi,[esp+3C]
+push 00
+mov eax,edi
+call 45EB10
+mov [esp+14],eax
+push 00
+lea eax,[esp+2C]
+mov ecx,edi
+call 467F90
+mov edx,[edi+04]
+lea esi,[esp+10]
+mov [esp+10],00000000
+call 41C950
+test al,al
+je DoSquashDamageToPlant_End
+DoSquashDamageToPlant_NextZombie1:
+mov ebp,[esp+28]
+mov esi,[esp+10]
+cmp esi,edi
+je short DoSquashDamageToPlant_NextZombie
+mov eax,[esi+1C]
+sub eax,[edi+1C]
+test eax,eax
+jne short DoSquashDamageToPlant_NextZombie
+mov eax,[esp+14]
+push eax
+call PlantEffectedByDamage
+test al,al
+je short DoSquashDamageToPlant_NextZombie
+lea eax,[esp+18]
+mov ecx,esi
+call 467EF0
+mov ecx,[esp+18]
+cmp ebp,ecx
+mov edx,[esp+30]
+jnl short DoSquashDamageToPlant_L1
+lea eax,[edx+ebp]
+mov edx,[esp+20]
+add edx,ecx
+jmp short DoSquashDamageToPlant_L2
+DoSquashDamageToPlant_L1:
+mov eax,[esp+20]
+add eax,ecx
+mov ecx,ebp
+add edx,ebp
+DoSquashDamageToPlant_L2:
+cmp eax,ecx
+jg short DoSquashDamageToPlant_L3
+sub eax,ecx
+jmp short DoSquashDamageToPlant_L4
+DoSquashDamageToPlant_L3:
+cmp eax,edx
+jg short DoSquashDamageToPlant_L5
+sub eax,ecx
+jmp short DoSquashDamageToPlant_L4
+DoSquashDamageToPlant_L5:
+sub edx,ecx
+mov eax,edx
+DoSquashDamageToPlant_L4:
+xor ecx,ecx
+{cmp dword ptr [esi+24],07
+jne 004607A4
+mov ecx,FFFFFFEC}
+cmp eax,ecx
+jle short DoSquashDamageToPlant_NextZombie0
+{push 00000708
+mov eax,00000012
+call NormallyHitPlant}
+push esi
+call 462B80
+DoSquashDamageToPlant_NextZombie0:
+mov edi,[esp+3C]
+DoSquashDamageToPlant_NextZombie:
+mov edx,[edi+04]
+lea esi,[esp+10]
+call 41C950
+test al,al
+jne DoSquashDamageToPlant_NextZombie1
+DoSquashDamageToPlant_End:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,28
+ret 0004
+{
+push //Plant* this
+}
+align 10,CC
+
+FindStarFruitTargetPlant:
+push ebp
+mov ebp,esp
+and esp,-08
+mov ecx,[ebp+08]
+sub esp,38
+//cmp dword ptr [ecx+000000B4],00
+push ebx
+push esi
+push edi
+//jg 0045F6D1
+push 00
+mov eax,ecx
+call 45EB10
+//mov edx,[ecx+04]
+mov [esp+1C],eax
+mov eax,[ecx+08]
+add eax,19
+mov [esp+0C],eax//CenterX
+mov eax,[ecx+0C]
+add eax,19
+mov [esp+14],eax//CenterY
+mov [esp+10],00000000
+push [ebp+08]
+call GetPlantHeightOffsetOfFlowerPots
+mov [esp+44],eax//HeightOffsetOfFlowerPots
+FindStarFruitTargetPlant_While:
+lea esi,[esp+10]
+mov edi,[ebp+08]
+mov edx,[edi+04]
+call 41C950
+test al,al
+je FindStarFruitTargetPlant_NoPlant
+mov ebx,[esp+10]
+cmp edi,ebx
+je short FindStarFruitTargetPlant_While
+lea eax,[esp+30]
+mov ecx,ebx
+call 467EF0
+mov eax,[esp+1C]
+push eax
+mov esi,ebx
+call PlantEffectedByDamage
+test al,al
+je short FindStarFruitTargetPlant_While
+mov eax,[ebx+1C]
+mov ecx,[ebx+28]
+cmp [edi+28],ecx
+je FindStarFruitTargetPlant_True
+cmp [edi+1C],eax
+jne short FindStarFruitTargetPlant_NotInTheSameRow
+sub ecx,[edi+28]
+push edi
+call IsPlantLeft
+test al,al
+je short FindStarFruitTargetPlant_InTheSameRowNotBack
+neg ecx
+FindStarFruitTargetPlant_InTheSameRowNotBack:
+test ecx,ecx
+jge FindStarFruitTargetPlant_True
+
+fld qword [00679998] { (0.52) }
+call 639F90//计算余弦值
+fmul qword [006796A0] { (3.33) }
+push edi
+call IsPlantLeft
+test al,al
+je short FindStarFruitTargetPlant_NotBack
+fchs
+FindStarFruitTargetPlant_NotBack:
+fstp [esp+18]//取斜向横速度
+FindStarFruitTargetPlant_NotInTheSameRow:
+xor edi,edi
+FindStarFruitTargetPlant_AnotherWhile:
+fld qword [00679998] { (0.52) }
+call 63A180//计算正弦值
+fmul qword [006796A0] { (3.33) }
+cmp edi,1
+je short FindStarFruitTargetPlant_L2
+fchs
+FindStarFruitTargetPlant_L2:
+fstp [esp+24]//取斜向纵速度
+fild [esp+0C]//CenterX
+fisub [esp+30]//-PlantX
+fchs
+fdiv [esp+18]//取得横向范围重合的时间
+fldz
+fcomp st(1)
+fnstsw ax
+fmul [esp+24]
+fiadd [esp+14]
+fistp [esp+20]//到达植物左点时射线纵坐标
+test ah,05
+jp FindStarFruitTargetPlant_AnotherWhileNext
+mov eax,[esp+30]
+mov ecx,[esp+20]
+add ecx,3F
+mov edx,[ebp+08]
+mov edx,[edx+04]
+call 41C550
+mov [esp+28],eax
+mov eax,[esp+20]
+add eax,[esp+44]
+mov [esp+20],eax
+fild [esp+0C]//CenterX
+fisub [esp+30]//-PlantX
+fisub [esp+38]//-PlantW
+fchs
+fdiv [esp+18]//取得横向范围重合的时间
+fldz
+fcomp st(1)
+fnstsw ax
+fmul [esp+24]
+fiadd [esp+14]
+fistp [esp+24]//到达植物右点时射线纵坐标
+test ah,05
+jp short FindStarFruitTargetPlant_AnotherWhileNext
+mov eax,[esp+30]
+add eax,[esp+38]
+mov ecx,[esp+24]
+add ecx,3F
+mov edx,[ebp+08]
+mov edx,[edx+04]
+call 41C550
+mov edx,[esp+24]
+add edx,[esp+44]
+mov [esp+24],edx
+mov ecx,[esp+28]
+cmp [esi+1C],eax
+je short FindStarFruitTargetPlant_Next
+cmp [esi+1C],ecx
+jne short FindStarFruitTargetPlant_AnotherWhileNext
+FindStarFruitTargetPlant_Next:
+mov eax,[esp+20]
+cmp [esp+24],eax
+jg short FindStarFruitTargetPlant_L1
+xchg eax,[esp+24]
+mov [esp+20],eax
+FindStarFruitTargetPlant_L1:
+mov ecx,[esp+24]
+sub ecx,[esp+20]
+mov [esp+2C],ecx
+mov ecx,[esp+30]
+mov [esp+20],ecx
+mov ecx,[esp+38]
+mov [esp+28],ecx
+lea eax,[esp+20]
+lea ecx,[esp+30]
+push eax
+push ecx
+call TwoRectIsOverlap
+test al,al
+jne short FindStarFruitTargetPlant_True
+FindStarFruitTargetPlant_AnotherWhileNext:
+inc edi
+cmp edi,2
+jne FindStarFruitTargetPlant_AnotherWhile
+jmp FindStarFruitTargetPlant_While
+FindStarFruitTargetPlant_NoPlant:
+xor al,al
+FindStarFruitTargetPlant_End:
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 0004
+FindStarFruitTargetPlant_True:
+mov al,1
+jmp short FindStarFruitTargetPlant_End
+{
+push //Plant* this
+}
+align 10,CC
+
+PlantIsStop:
+push ebx
+mov ebx,eax
+xor al,al
+cmp byte [ebx+00000142],0
+jne short PlantIsStop_End
+cmp [ebx+14C],0
+jg short PlantIsStop_True
+cmp [ebx+150],0
+jg short PlantIsStop_True
+mov ecx,[ebx+154]
+test ecx,ecx
+jng short PlantIsStop_End
+test cl,1
+je short PlantIsStop_End
+PlantIsStop_True:
+mov al,1
+PlantIsStop_End:
+pop ebx
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantIsRealStop:
+push ebx
+mov ebx,eax
+xor al,al
+cmp byte [ebx+00000142],0
+jne short PlantIsRealStop_End
+cmp [ebx+14C],0
+jg short PlantIsRealStop_True
+cmp [ebx+150],0
+jng short PlantIsRealStop_End
+PlantIsRealStop_True:
+mov al,1
+PlantIsRealStop_End:
+pop ebx
+ret
+{
+mov eax,//Plant* this
+}
+align 10,CC
+
+PlantSetMindControlled:
+push ebx
+mov bl,al
+mov ecx,[esi]
+mov eax,[ecx]
+mov eax,[eax+000000D8]
+mov edx,[006A7AAC]//  (20)
+push edx
+call eax
+mov [esi+00000147],bl
+xor ebx,ebx
+mov [esi+0000012C],ebx
+mov [esi+0000015C],ebx
+pop ebx
+ret
+{
+mov al,//bool MindControlled
+mov esi,//Plant* this
+}
+align 10,CC
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(PlantCanBeChilled)
+unregistersymbol(PlantCanBeChilled)
+unregistersymbol(PlantCanBeFrozen)
+unregistersymbol(PlantRemoveIceTrap)
+unregistersymbol(PlantRemoveColdEffects)
+unregistersymbol(PlantApplyChill)
+unregistersymbol(PlantHitIceTrap)
+unregistersymbol(PlantApplyButter)
+unregistersymbol(PlantTakeDamage)
+unregistersymbol(NormallyHitPlant)
+unregistersymbol(SunLootUpdate)
+unregistersymbol(PlantApplyBurn)
+unregistersymbol(PlantEffectedByDamage)
+unregistersymbol(PlantFindTargetPlant)
+unregistersymbol(FindSquashTargetPlant)
+unregistersymbol(DoSquashDamageToPlant)
+unregistersymbol(FindStarFruitTargetPlant)
+unregistersymbol(PlantIsStop)
+unregistersymbol(PlantIsRealStop)
+unregistersymbol(PlantSetMindControlled)
+//Alt: db CC CC CC CC CC

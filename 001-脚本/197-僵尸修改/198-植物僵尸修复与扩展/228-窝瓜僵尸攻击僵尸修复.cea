@@ -1,0 +1,116 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+mov edi,ebp
+mov [edi+FC],eax
+//cmp byte ptr [edi+B8],1
+//je SquishZombie
+push eax
+push 00
+push ecx
+push eax
+call 52E920
+pop eax
+
+SquishZombie:
+push esi
+push edi
+mov ebx,eax
+push 0//开始序号(写0从头，写指针从后一个开始
+star:
+mov esi,esp
+mov edx,[edi+4]
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je end
+mov esi,[esi]//esi=遍历对象的基址
+push ebx
+push esi
+call IsZombieInThisColumn
+test al,al
+je short star
+cmp [esi+24],19
+je short az3
+mov eax,[esi+1C]
+cmp eax,[edi+1C]
+jne short star
+az3:
+mov al,[edi+B8]
+test al,al
+je short az1
+mov eax,1
+jmp short az2
+az1:
+mov eax,81
+az2:
+push eax//目标
+call 531A80
+test al,al
+je short star
+push 708//伤害
+mov eax,1//形式0正面1非正面2溅伤4正面减速5非正面减速6溅伤减速7溅伤减速8无特效正面9无特效非正面A无特效溅伤B无特效正面10有特效正面并清除尸体11有特效非正面并清除尸体12有特效溅伤并清除尸体
+call 5317C0
+jmp star
+end:
+add esp,4
+pop edi
+pop esi
+jmp 00527E33
+{mov eax,ebp
+mov ecx,[edi+1C]
+mov edx,[edi+4]
+call 40CE00
+test al,al
+je NotInWater
+mov edx,[edi+00]
+mov eax,[edx+00000820]
+mov edx,[eax+08]
+mov eax,[edi+00000144]
+and eax,0000FFFF
+lea esi,[eax+eax*4]
+shl esi,05
+add esi,[edx]
+mov edx,[edi+20]
+inc edx
+push edx
+sub esp,8
+fld [esi+2C]
+fstp [esp]
+fld [esi+38]
+fstp [esp+4]
+mov eax,[edi]
+mov ebx,00000020
+call 00453C30
+mov eax,[edi]
+lea esi,[ebx-1F]
+call 00453630
+mov ecx,[edi]
+mov edx,[ecx]
+mov eax,[006A7AC8]
+mov edx,[edx+000000D8]
+push eax
+call edx
+pop ebp
+pop edi
+pop esi
+jmp 527ECD
+NotInWater:
+pop ebp
+pop edi
+pop esi
+jmp 527E33}
+
+527E28:
+jmp newmem
+nop
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+527E28:
+push 00
+push ecx
+push eax
+mov edi,ebp
+//Alt: db 6A 00 51 50 8B FD

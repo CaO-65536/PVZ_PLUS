@@ -1,0 +1,52 @@
+[ENABLE]
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp eax,32
+je short az2
+cmp eax,31
+jne short az1
+az2:
+dec ecx
+jmp short az1
+az1:
+cmp eax,33
+je short az3
+cmp eax,34
+jne short az4
+az3:
+add ecx,3
+az4:
+imul ecx,ecx,35
+add ecx,16+HALFEXSCREENWIDTH
+originalcode:
+cmp eax,57
+je short az5
+push eax
+call 42B530
+test al,al
+pop eax
+je exit
+az5:
+add ecx,#455
+
+exit:
+jmp returnhere
+
+484440:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+dealloc(newmem)
+484440:
+imul ecx,ecx,35
+add ecx,16
+//Alt: db 6B C9 35 83 C1 16

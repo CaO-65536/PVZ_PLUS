@@ -1,0 +1,88 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push ebx
+push ebp
+mov ebx,[edi+8C]
+
+mov eax,[edi+CC]
+movzx eax,ax
+imul eax,TodParticleSystemClassSize
+mov ecx,[ebx+00000820]
+test ecx,ecx
+je short End//next1
+mov ecx,[ecx]
+mov ecx,[ecx]
+add ecx,eax
+push ecx
+call 5160C0
+next1:
+xor ebp,ebp
+while1:
+mov ecx,[edi+ebp*4+000000D0]//*ReanimationID theReanimationID
+mov eax,ebx//LawnApp* this
+call 453CB0
+test eax,eax
+je short while1_Next
+mov esi,eax
+call 471A20
+while1_Next:
+inc ebp
+cmp ebp,1+6
+jne short while1
+
+xor ebp,ebp
+while2:
+mov ecx,[edi+ebp*4+00000104]//*ReanimationID theReanimationID
+mov eax,ebx//LawnApp* this
+call 453CB0
+test eax,eax
+je short while2_Next
+mov esi,eax
+call 471A20
+while2_Next:
+inc ebp
+cmp ebp,3+2
+jne short while2
+
+{mov ecx,[edi+00000110]//*ReanimationID theReanimationID
+mov eax,ebx//LawnApp* this
+call 453CB0
+mov esi,eax
+call 471A20
+mov ecx,[edi+00000114]//*ReanimationID theReanimationID
+mov eax,ebx//LawnApp* this
+call 453CB0
+mov esi,eax
+call 471A20}
+End:
+pop ebp
+pop ebx
+
+originalcode:
+mov ecx,edi
+call 005397A0
+
+exit:
+jmp returnhere
+
+449E46:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+449E46:
+db 8B CF E8 53 F9 0E 00
+//mov ecx,edi
+//call 005397A0

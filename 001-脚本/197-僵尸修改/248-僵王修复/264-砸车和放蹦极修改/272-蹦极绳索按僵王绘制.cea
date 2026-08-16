@@ -1,0 +1,21 @@
+[ENABLE]
+alloc(newmem,2048)
+
+newmem:
+mov eax,[ebp+F4]
+test eax,eax
+je 0052D911
+mov edx,[ebp+4]
+mov ecx,eax//编号
+call 41C7F0//eax为指针
+test eax,eax
+je 0052D911//无
+jmp 52D856
+52D81B:
+jmp newmem
+nop 5
+[DISABLE]
+dealloc(newmem)
+52D81B:
+mov eax,[ebp+00]
+cmp dword ptr [eax+00000768],00

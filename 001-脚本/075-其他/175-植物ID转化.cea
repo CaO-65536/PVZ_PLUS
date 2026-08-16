@@ -1,0 +1,32 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+call SeedTypeToPlantType
+
+originalcode:
+lea eax,[eax+eax*8]
+mov eax,[eax*4+PlantNewDefinition+10]
+
+exit:
+jmp returnhere
+
+467B9E:
+jmp newmem
+nop 5
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+467B9E:
+db 8D 04 C0 8B 04 85 10 00 69 02
+//lea eax,[eax+eax*8]
+//mov eax,[eax*4+02690010]

@@ -1,0 +1,68 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov eax,[esi+00000138]
+cmp [eax+30],0
+jne short originalcode
+cmp [edi+24],SEED_DUPLICATOR
+jne short originalcode
+mov edx,[esp+24]
+mov ecx,[esp+28]
+lea eax,[edi+D8]
+cmp [eax+34],-1
+je short originalcode
+push esi
+mov esi,ecx
+lea eax,[eax+08]
+call 41DC40
+pop esi
+test al,al
+je short originalcode
+{mov edx,[edi+08]
+add edx,0F
+cmp eax,edx
+jl short originalcode
+add edx,32
+cmp eax,edx
+jg short originalcode
+mov edx,[edi+0C]
+cmp ecx,edx
+jl short originalcode
+add edx,46
+cmp ecx,edx
+jg short originalcode}
+mov eax,[esp+2C]
+mov [eax],edi
+pop edi
+pop ebp
+mov [eax+04],HITRESULTTYPE_DUPLICATORCARD
+mov al,01
+pop ebx
+add esp,14
+ret 000C
+
+originalcode:
+mov eax,[esi+00000138]
+
+exit:
+jmp returnhere
+
+4116D2:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4116D2:
+db 8B 86 38 01 00 00
+//mov eax,[esi+00000138]

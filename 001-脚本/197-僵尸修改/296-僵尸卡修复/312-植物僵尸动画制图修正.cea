@@ -1,0 +1,165 @@
+[ENABLE]
+alloc(newmem,2048)
+label(exit)
+
+newmem:
+cmp edi,20
+jg short True
+cmp edi,1A
+jl exit
+cmp edi,20
+je exit
+True:
+push ebx
+sub esp,ZombieClassSize
+mov esi,esp
+mov eax,esi
+call 522510
+push -3
+push 00
+push 00
+push edi
+push esi
+xor eax,eax
+call 522580
+mov eax,[esi]
+mov ecx,[esi+00000118]
+call 453CB0
+test eax,eax
+je short NoBodyAnim
+fldz
+fst [eax+04]
+fstp [eax+08]
+push ebx
+cmp [esi+24],1E
+je short ImitaterLess
+cmp [esi+24],24
+jne short NeedNotImitaterLess
+ImitaterLess:
+cmp ebx,10
+jne short NeedNotImitaterLess
+mov ebx,1
+NeedNotImitaterLess:
+push edi
+mov edi,ebx
+call 46EF00//加载绘制模式
+pop edi
+pop ebx
+NoBodyAnim:
+mov eax,[esi]
+mov ecx,[esi+00000144]
+call 453CB0
+test eax,eax
+je short NoHeadAnim
+fldz
+fst [eax+04]
+fstp [eax+08]
+cmp [esi+24],22
+jne short NotChomper_Zombie
+fld [num1]
+fstp [eax+04]
+NotChomper_Zombie:
+push edi
+mov edi,ebx
+call 46EF00//加载绘制模式
+pop edi
+NoHeadAnim:
+fldz
+push ecx
+fstp [esp]
+push 00
+push 00
+push 006580D4//  ("anim_idle")
+mov edi,esi
+call 528B00//站立动作
+mov eax,esi
+call 52AE60//call 52C310//更新动画
+mov eax,[esi]
+mov ecx,[esi+00000118]
+call 453CB0
+test eax,eax
+je short NoBodyAnim1
+fld dword ptr [0067959C] { (40.00) }
+//fld [num1]
+fsub [eax+2C]
+fld st(0)
+fadd [eax+2C]
+fstp [eax+2C]
+fld dword ptr [0067959C] { (40.00) }
+//fld [num1]
+fsub [eax+38]
+fld st(0)
+fadd [eax+38]
+fstp [eax+38]
+NoBodyAnim1:
+mov eax,[esi]
+mov ecx,[esi+00000144]
+call 453CB0
+test eax,eax
+je short NoHeadAnim1
+fadd [eax+38]
+fstp [eax+38]
+fadd [eax+2C]
+fstp [eax+2C]
+NoHeadAnim1:
+lea ecx,[esp+00000154+ZombieClassSize+4]
+push ecx
+mov ebx,esi
+call 52E2E0
+mov ecx,esi
+call 530510
+add esp,ZombieClassSize
+pop ebx
+//mov [esp+000001C8],bl
+{cmp dword ptr [esp+0000010C],00
+je short next1
+mov edx,[esp+000000C0]
+mov eax,[edx+04]
+lea edi,[eax+eax*2]
+shl edi,05
+call 513570
+mov ecx,[esp+0000010C]
+mov edx,[eax]
+add [eax+0C],esi
+mov [ecx],edx
+mov [eax],ecx
+next1:}
+mov byte ptr [esp+000001C8],00
+lea ecx,[esp+14]
+call 004733F0
+cmp dword ptr [esp+6C],00
+je 0046FD93
+mov ecx,[esp+20]
+mov eax,[ecx+04]
+lea edi,[eax+eax*2]
+shl edi,05
+call 00513570
+mov ecx,[esp+6C]
+mov edx,[eax]
+add [eax+0C],esi
+mov [ecx],edx
+mov [eax],ecx
+jmp 0046FD93
+exit:
+cmp edi,1
+jne 0046FAD3
+jmp returnhere
+
+num1:
+dd (float)0.150000000
+
+46F9D7:
+jmp newmem
+nop 3
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+46F9D7:
+cmp edi,ebx
+jne 0046FAD3
+//Alt: db 3B FB 0F 85 F4 00 00 00

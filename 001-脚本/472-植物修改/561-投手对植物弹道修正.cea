@@ -1,0 +1,36 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+cmp dword ptr [esp+34],00
+jne 00467441
+mov ecx,[esp+3C]
+push [ebp+1C]
+push ebp
+call PlantFindTargetPlant
+test eax,eax
+je 004674E8
+mov ebx,eax
+mov ecx,ebx
+lea eax,[esp+18]
+call 467EF0
+fild [esp+18]
+fisub [esp+30]
+//fadd qword ptr [00679318]
+fstp [esp+34]
+mov edx,[esp+1C]
+sub edx,esi
+mov [esp+3C],edx
+jmp 0046747D
+//fild [esp+3C]
+//jmp 004674F8
+
+467436:
+jmp newmem
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+467436:
+cmp dword ptr [esp+34],00
+//Alt: db 83 7C 24 34 00

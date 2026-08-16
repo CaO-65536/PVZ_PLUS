@@ -1,0 +1,6 @@
+[ENABLE]
+53405B:
+mov al,1
+[DISABLE]
+53405B:
+xor al,al

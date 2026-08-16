@@ -1,0 +1,36 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov ecx,[ebx+mChallengeScreenSlider_Offset]
+test ecx,ecx
+je short originalcode
+mov eax,[ecx]
+mov edx,[eax]
+push 01
+call edx
+
+originalcode:
+mov esi,[ebx+000001C4]
+
+exit:
+jmp returnhere
+
+42E32B:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+42E32B:
+db 8B B3 C4 01 00 00
+//mov esi,[ebx+000001C4]

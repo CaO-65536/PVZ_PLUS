@@ -1,0 +1,46 @@
+[ENABLE]
+alloc(newmem,2048)
+
+newmem:
+push esi
+push edi
+mov edi,eax
+mov esi,ecx
+and esi,80000007
+jns az1
+dec esi
+or esi,-08
+inc esi
+az1:
+mov eax,[edi+38]
+imul esi,esi,33
+cdq
+sub eax,edx
+sar eax,1
+lea edx,[esi+eax-000000D2]
+mov eax,[esp+08+4]
+mov [eax],edx
+mov eax,ecx
+mov ecx,[esp+0C+4]
+cdq
+and edx,07
+add eax,edx
+sar eax,03
+add eax,[edi+17C]
+imul eax,eax,47
+add eax,72
+mov [ecx],eax
+pop edi
+pop esi
+ret 0008
+
+
+482E70:
+jmp newmem
+nop 4
+[DISABLE]
+dealloc(newmem)
+482E70:
+push esi
+mov esi,ecx
+and esi,80000007

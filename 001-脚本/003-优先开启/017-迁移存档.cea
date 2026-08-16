@@ -1,0 +1,58 @@
+[ENABLE]
+alloc(newmem,128)
+00408CDC:
+MOV EDI,String1
+0046968E:
+MOV EDI,String1
+0046AE1E:
+MOV EDI,String1
+004568F8:
+push String2
+0046943B:
+push String3
+004696FF:
+push String3
+00469837:
+push String3
+0046ABFD:
+MOV EDI,String4
+0046AE95:
+MOV EDI,String4
+005C685F:
+mov edi,String5
+005CA02B:
+mov edi,String5
+newmem:
+String1:
+db 'PVZ_PLUS' 00
+String2:
+db 'PVZ_PLUS\game%d_%d.dat' 00
+String3:
+db 'PVZ_PLUS\user%d.dat' 00
+String4:
+db 'PVZ_PLUS\users.dat' 00
+String5:
+db 'PVZ_PLUS\cached\' 00
+[DISABLE]
+00408CDC:
+MOV EDI,00655D24
+0046968E:
+MOV EDI,00655D24
+0046AE1E:
+MOV EDI,00655D24
+004568F8:
+push 00667D58
+0046943B:
+push 0066908C
+004696FF:
+push 0066908C
+00469837:
+push 0066908C
+0046ABFD:
+MOV EDI,006690D4
+0046AE95:
+MOV EDI,006690D4
+005C685F:
+mov edi,00675470
+005CA02B:
+mov edi,00675470

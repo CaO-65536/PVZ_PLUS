@@ -1,0 +1,29 @@
+[ENABLE]
+alloc(newmem,2048)
+402ED7:
+mov [esp+0000009C],NUM_ZOMBIE_TYPES+1
+newmem:
+cmp edi,NUM_ZOMBIE_TYPES+1
+mov esi,edi
+jmp 0046F902
+newmem1:
+cmp edi,NUM_ZOMBIE_TYPES+1
+jne 0046FD59
+jmp 0046FD52
+
+46F8FD:
+jmp newmem
+46FD4D:
+jmp newmem1
+[DISABLE]
+dealloc(newmem)
+402ED7:
+mov [esp+0000009C],00000022
+46F8FD:
+db 83 FF 22 8B F7
+//cmp edi,22
+//mov esi,edi
+46FD4D:
+db 83 FF 22 75 07
+//cmp edi,22
+//jne 0046FD59

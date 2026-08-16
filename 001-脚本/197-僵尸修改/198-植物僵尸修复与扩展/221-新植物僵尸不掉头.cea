@@ -1,0 +1,32 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+cmp eax,1E
+je 00529EB3
+cmp eax,21
+jl short exit
+cmp eax,NUM_ZOMBIE_TYPES
+jl 00529EB3
+
+exit:
+jmp returnhere
+
+529B30:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+529B30:
+cmp eax,1E
+je 00529EB3
+//Alt: db 83 F8 1E 0F 84 7A 03 00 00

@@ -1,0 +1,51 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+push edi
+push esi
+mov esi,ecx
+mov al,[ebp+8]
+cmp al,6C//l,生成跳关界面
+jne short SetSpeed
+mov edi,[esi+8C]
+call DoCheatDialog
+jmp end
+SetSpeed:
+cmp al,73//s,生成速度更改界面
+jmp short Next
+mov edi,[esi+8C]
+//call DoSetSpeedDialog
+jmp end
+Next:
+cmp al,64//d,切换调试模式//7A//z,切换调试模式
+jne short end
+inc [esi+000055F8]
+cmp [esi+000055F8],4
+jle short end
+mov [esi+000055F8],0
+end:
+pop esi
+pop edi
+mov esp,ebp
+
+exit:
+jmp returnhere
+
+41B953:
+jmp newmem
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+41B953:
+and esp,-08
+mov esp,ebp
+//Alt: db 83 E4 F8 8B E5

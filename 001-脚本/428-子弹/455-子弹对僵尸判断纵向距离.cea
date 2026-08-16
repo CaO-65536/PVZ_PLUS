@@ -1,0 +1,26 @@
+[ENABLE]
+0046CFB6:
+nop 6
+alloc(newmem,2048)
+
+newmem:
+lea ecx,[esp+30]
+push edi
+push ecx
+call TwoRectIsOverlap
+test al,al
+je 0046CE54
+jmp 0046CE39
+
+46CE00:
+jmp newmem
+nop
+ 
+[DISABLE]
+0046CFB6:
+je 0046D04E
+dealloc(newmem)
+46CE00:
+mov ecx,[esp+20]
+cmp ebp,ecx
+//Alt: db 8B 4C 24 20 3B E9

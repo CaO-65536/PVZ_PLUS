@@ -1,0 +1,90 @@
+[ENABLE]
+52D8F7:
+mov [esp+30],0000042C
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push esi
+push ebp
+mov ebp,esi
+push 0//开始序号(写0从头，写指针从后一个开始
+star:
+mov esi,esp
+mov edx,[edi+4]
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je end
+mov esi,[esi]//esi=遍历对象的基址
+cmp [esi+24],14
+//je star
+cmp [esi+24],19
+je star
+cmp [esi+1C],ebx
+jne star
+mov al,[edi+B8]
+test al,al
+je short az1
+mov eax,1
+jmp short az2
+az1:
+mov eax,81
+az2:
+push eax//目标
+call 531A80
+test al,al
+je star
+push ebp
+push esi
+call IsZombieInThisColumn
+test al,al
+je star
+cmp [esi+64],9
+je star
+az3:
+mov eax,[esi+ZombieClassSize-4]
+mov [edi+F0],eax
+mov eax,[esi+20]
+mov [edi+20],eax
+mov [esi+64],9
+mov [esi+18C],1
+mov eax,[edi+80]
+lea eax,[eax+eax*4]
+shl eax,4
+add eax,28
+mov [esi+8],eax
+fild [esi+8]
+fstp [esi+2C]
+jmp StealZombie
+end:
+add esp,4
+pop ebp
+pop esi
+//cmp byte ptr [edi+B8],1
+//je short over
+originalcode:
+push ebx
+push esi
+lea ebx,[esp+18]
+exit:
+jmp returnhere
+StealZombie:
+add esp,4
+pop ebp
+pop esi
+over:
+jmp 00524D5D
+524CD0:
+jmp newmem
+nop
+returnhere:
+[DISABLE]
+52D8F7:
+mov [esp+30],00000320
+dealloc(newmem)
+524CD0:
+push ebx
+push esi
+lea ebx,[esp+18]

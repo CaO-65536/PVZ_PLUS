@@ -1,0 +1,56 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+test byte ptr [esp+1C],40//IsWallNutCause
+je short originalcode
+mov ebx,[esp+14]
+push String//  ("anim_walnutdeath")
+call 004732C0
+test al,al
+je short originalcode
+fld dword ptr [00679748] { (14.00) }
+fstp dword ptr [esp+10]
+mov esi,String
+jmp 00533559
+
+originalcode:
+cmp ebp,63
+jne 0053353D
+
+exit:
+jmp returnhere
+
+String:
+db 'anim_walnutdeath' 00
+
+005334BE:
+mov [esp+1D],bl
+005334C4:
+mov byte ptr [esp+1D],01
+0053350F:
+cmp byte ptr [esp+1D],00
+5334F8:
+jmp newmem
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+005334BE:
+mov [esp+1C],bl
+005334C4:
+mov byte ptr [esp+1C],01
+0053350F:
+cmp byte ptr [esp+1C],00
+5334F8:
+db 83 FD 63 75 40
+//cmp ebp,63
+//jne 0053353D

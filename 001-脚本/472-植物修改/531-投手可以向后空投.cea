@@ -1,0 +1,41 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push ebp
+call IsPlantLeft
+test al,al
+je short originalcode
+fild dword ptr [esp+30]
+fsubr qword ptr [num1]
+jmp short exit
+
+originalcode:
+fild dword ptr [esp+30]
+fsubr qword ptr [0067A290]
+
+exit:
+jmp returnhere
+
+num1:
+dq (double)100
+
+4674E8:
+jmp newmem
+nop 5
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4674E8:
+db DB 44 24 30 DC 2D 90 A2 67 00
+//fild dword ptr [esp+30]
+//fsubr qword ptr [0067A290]

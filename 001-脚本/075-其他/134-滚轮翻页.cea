@@ -1,0 +1,51 @@
+[ENABLE]
+alloc(newmem,2048)
+
+newmem:
+push ebx
+mov ebx,[esp+4+4]
+push edi
+push esi
+mov edi,ecx
+mov esi,[edi+174]
+fld qword [esi+C0]
+call 6397D0//取整
+sub eax,ebx
+setline:
+push eax
+fild [esp]
+fstp qword [esi+C0]
+pop eax
+test eax,eax
+jnl short next
+fldz
+fstp qword [esi+C0]
+jmp short end
+next:
+add eax,7
+cmp [edi+180],eax
+jnl short end
+mov eax,[edi+180]
+sub eax,7
+jmp short setline
+end:
+mov eax,[edi+150]
+mov eax,[eax+320]
+push [eax+E4]
+push [eax+E0]
+mov ecx,esi
+mov edx,[esi]
+mov edx,[edx+D0]
+call edx
+pop esi
+pop edi
+pop ebx
+ret 4
+
+
+66E4F8+EC:
+dd newmem
+[DISABLE]
+dealloc(newmem)
+66E4F8+EC:
+dd 00539D90

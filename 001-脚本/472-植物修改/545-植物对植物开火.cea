@@ -1,0 +1,41 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov ecx,[esp+14+8]
+mov eax,[esp+14+4]
+push eax
+push esi
+call PlantFindTargetPlant
+test eax,eax
+jne 0045EF38
+
+originalcode:
+xor al,al
+pop edi
+pop esi
+pop ebp
+
+exit:
+jmp returnhere
+
+45EF2E:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+45EF2E:
+xor al,al
+pop edi
+pop esi
+pop ebp
+//Alt: db 32 C0 5F 5E 5D

@@ -1,0 +1,19 @@
+[ENABLE]
+51CB21:
+nop 2//默认创建（创建新用户）
+51CEDC:
+jmp 0051CF36//不补充创建（创建新用户）
+0053C3C9:
+lea eax,[eax+edi]
+nop//绘制上限
+0051CCCE:
+push 000000C4//缩小4像素防止触碰到第9项
+[DISABLE]
+51CB21:
+jnl 0051CB7D
+51CEDC:
+jne 0051CF36
+0053C3C9:
+lea eax,[eax+edi+01]
+0051CCCE:
+push 000000C8

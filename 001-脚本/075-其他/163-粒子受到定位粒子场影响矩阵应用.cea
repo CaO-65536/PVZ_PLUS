@@ -1,0 +1,45 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+sub esp,10
+fstp [esp]
+fld dword ptr [esp+10+10]
+fsub dword ptr [esp+3C+10]
+fstp [esp+04]
+mov edx,esp
+lea eax,[esp+08]
+mov ecx,[esi]//TodParticleEmitter
+mov ecx,[ecx+04]//TodParticleSystem
+lea ecx,[ecx+28]
+call 5A3690
+fld [esp+08]
+
+originalcode:
+fadd dword ptr [esi+20]
+fstp dword ptr [esi+20]
+fld [esp+0C]
+add esp,10
+
+exit:
+jmp 00516A4C
+
+516A3E:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+516A3E:
+db D8 46 20 D9 5E 20
+//fadd dword ptr [esi+20]
+//fstp dword ptr [esi+20]

@@ -1,0 +1,97 @@
+[ENABLE]
+alloc(IsZombieInThisColumn,2048)
+registersymbol(IsZombieInThisColumn)
+label(PixelToGridX)
+registersymbol(PixelToGridX)
+
+IsZombieInThisColumn:
+push ebp
+mov ebp,esp
+sub esp,10
+push ebx
+push esi
+push edi
+mov esi,[ebp+8]
+mov ebx,esi
+lea edi,[esp+C]
+call 5320B0
+mov esi,edi
+mov edi,[esi+4]
+add edi,[esi+C]
+mov eax,[esi]
+mov ecx,[ebx+4]
+call PixelToGridX
+push eax
+mov eax,[esi]
+add eax,[esi+8]
+mov ecx,[ebx+4]
+call PixelToGridX
+mov edx,eax
+pop ecx
+mov ebx,[ebp+C]
+cmp ebx,ecx
+jl short no
+cmp ebx,edx
+jg short no
+mov al,1
+jmp short end
+no:
+xor al,al
+end:
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 8
+
+{
+push //theColumn
+push //*theZombie
+}
+
+PixelToGridX:
+push ebx
+mov ebx,eax
+mov eax,[ecx+0000008C]
+cmp dword ptr [eax+000007F8],2B
+jne short InNormalMap
+mov ecx,[ecx+0000554C]
+cmp ecx,06
+je short InGarden
+cmp ecx,08
+je short InGarden
+cmp ecx,07
+jne short InNormalMap
+InGarden:
+mov eax,[eax+0000081C]
+call 00521350
+pop ebx
+ret
+InNormalMap:
+lea ecx,[ebx-28]
+sub ecx,HALFEXSCREENWIDTH
+mov eax,66666667
+imul ecx
+sar edx,05
+mov eax,edx
+shr eax,1F
+add eax,edx
+test eax,eax
+jg short TooBig
+//xor eax,eax
+pop ebx
+ret
+TooBig:
+cmp eax,08
+jl short PixelToGridXEnd
+//mov eax,00000008
+PixelToGridXEnd:
+pop ebx
+ret
+
+
+[DISABLE]
+dealloc(IsZombieInThisColumn)
+unregistersymbol(IsZombieInThisColumn)
+unregistersymbol(PixelToGridX)

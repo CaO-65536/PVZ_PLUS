@@ -1,0 +1,91 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp eax,31
+jne next
+push esi
+mov eax,[ebx]
+mov esi,37//id
+call 453630
+pop esi
+mov edx,[esp+14]
+mov eax,[ebx+1C]
+mov ecx,[ebx+04]
+push edx
+push 01
+push 01
+push 73
+push edi
+push esi
+push eax
+push ecx
+call 0041D8A0
+fild dword ptr [esp+0C]
+mov edx,[ebx]
+mov eax,[edx+00000820]
+mov esi,[eax]
+push 04
+push 00061A80
+sub esp,08
+fstp dword ptr [esp+04]
+fild dword ptr [esp+20]
+fstp dword ptr [esp]
+call 00518A70
+jmp 00466AAA
+next:
+cmp eax,32
+jne originalcode
+mov ecx,[ebx]
+push 64
+call 4560C0
+mov eax,[esp+14]
+mov ecx,[ebx+1C]
+mov edx,[ebx+04]
+push eax
+push 01
+push 03
+push 000000FA
+push edi
+push esi
+push ecx
+push edx
+call 0041D8A0
+fild dword ptr [esp+0C]
+mov eax,[ebx]
+mov ecx,[eax+00000820]
+mov esi,[ecx]
+push 1E
+push 00061A80
+sub esp,08
+fstp dword ptr [esp+04]
+fild dword ptr [esp+20]
+fstp dword ptr [esp]
+call 518A70
+jmp 00466AAA
+
+originalcode:
+cmp eax,1B
+jne 0046670A
+
+exit:
+jmp returnhere
+
+4666E5:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4666E5:
+cmp eax,1B
+jne 0046670A
+//Alt: db 83 F8 1B 75 20

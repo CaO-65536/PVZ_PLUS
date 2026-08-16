@@ -1,0 +1,38 @@
+[ENABLE]
+5354B9:
+ja 005354DE
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov eax,5
+mov ecx,[edi+4]
+mov ecx,[ecx+554C]
+cmp ecx,2
+je short az1
+cmp eax,3
+jne short exit
+az1:
+mov eax,6
+
+originalcode:
+
+exit:
+jmp returnhere
+
+535484:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+5354B9:
+ja 005354E5
+dealloc(newmem)
+535484:
+mov eax,00000005
+//Alt: db B8 05 00 00 00
