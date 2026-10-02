@@ -49,6 +49,7 @@ ret 8
 push //theColumn
 push //*theZombie
 }
+align 10,CC
 
 PixelToGridX:
 push ebx

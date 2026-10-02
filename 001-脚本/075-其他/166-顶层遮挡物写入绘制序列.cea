@@ -7,6 +7,12 @@ label(exit)
 
 newmem:
 mov eax,[ebp+08]
+mov eax,[eax+0000008C]
+mov eax,[eax+0000082C]
+mov eax,[eax+PlayerInfo_GameSetting_Offset+5*4]
+test al,al
+jne originalcode
+mov eax,[ebp+08]
 mov eax,[eax+0000554C]
 test eax,eax
 jl short Roof

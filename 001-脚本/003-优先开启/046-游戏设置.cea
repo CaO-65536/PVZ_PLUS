@@ -1,9 +1,9 @@
 [ENABLE]
 alloc(GameSettingDialog,2048)
 define(GameSettingDialog_Index,34)
-define(GameSettingDialogClassSize,16C+18)
 define(GameSettingDialog_Checkboxes_Offest,170)
-define(GameSettingDialog_CheckboxeNum,5)
+define(GameSettingDialog_CheckboxeNum,A)
+define(GameSettingDialogClassSize,16C+4+4*GameSettingDialog_CheckboxeNum)
 define(NUM_DIALOGS,1)
 label(DoGameSettingDialog)
 registersymbol(DoGameSettingDialog)
@@ -317,7 +317,8 @@ mov [esp+18],edx
 call 005A9230
 call 005A9290}
 xor esi,esi
-push GameSettingDialogClassSize
+lea eax,[GameSettingDialogClassSize]
+push eax
 call 0061C130
 add esp,04
 cmp eax,esi
@@ -399,9 +400,9 @@ push ebx
 mov ebx,[esp+08]
 push esi
 mov esi,ecx
-push ebx
+{push ebx
 mov ecx,esi
-call 00457300
+call 00457300}
 cmp ebx,000003E8
 jne short GameSettingDialogButtonDepress_End
 mov edx,[esi-88+00000150]

@@ -1,6 +1,0 @@
-[ENABLE]
-4334C1:
-nop 3
-[DISABLE]
-4334C1:
-add esi,[eax+24]

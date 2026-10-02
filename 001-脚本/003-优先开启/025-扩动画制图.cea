@@ -60,7 +60,7 @@ jmp 0046FF60
 
 //内存申请
 00452B3F:
-push 000001BC//ReanimatorCacheSize
+push 000001C4//ReanimatorCacheSize
 //初始化
 46FDC0:
 jmp ReanimatorCacheInitialize

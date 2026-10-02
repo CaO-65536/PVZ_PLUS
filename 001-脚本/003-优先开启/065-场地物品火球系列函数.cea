@@ -1,6 +1,8 @@
 [ENABLE]
 //code from here to '[DISABLE]' will be used to enable the cheat
 alloc(newmem,2048)
+label(Destroyball)
+registersymbol(Destroyball)
 label(DestroyIceball)
 registersymbol(DestroyIceball)
 label(DestroyFireball)
@@ -26,6 +28,8 @@ call 0041E1C0
 mov [eax+08],0000000D
 movzx ecx,byte [ebx+14C]
 mov [eax+C],ecx//是否为火球
+or ecx,-1
+mov [eax+10],ecx//火球列数
 mov ecx,[ebx+148]
 mov [eax+14],ecx//火球行数
 mov ecx,[ebx+ZombieClassSize-4]
@@ -53,6 +57,19 @@ push //Reanimation* theBall
 eax = Board* this
 
 eax = Griditem* aFireball
+}
+align 10,CC
+
+Destroyball:
+cmp [eax+0C],01
+jne +06
+call DestroyIceball
+ret
+push eax
+call DestroyFireball
+ret
+{
+mov eax,Griditem* this
 }
 align 10,CC
 

@@ -13,6 +13,7 @@ pop esi
 pop ecx
 ret
 
+align 10,CC
 UpdateFireball:
 push ebx
 push esi
@@ -44,6 +45,14 @@ fld dword ptr [esp+18]
 fstp dword ptr [esp]
 call 41C6C0
 fsub qword ptr [00679B48] { (90.00) }
+mov eax,[edi+04]
+mov ecx,[edi+14]
+cmp [eax+ecx*4],02
+jne short NotinWater
+
+
+
+NotinWater:
 fstp dword ptr [esp+14]
 fld dword ptr [esp+14]
 fstp dword ptr [esi+38]
@@ -89,6 +98,7 @@ fld qword ptr [esp+1C]
 call 6397D0
 call PixelToGridX
 pop edi
+mov [edi+10],eax
 mov ebx,eax
 cmp [edi+0C],1
 jne short NotFireBall
@@ -102,6 +112,42 @@ push edi
 call DestroyFireball
 jmp UpdateFireballEnd
 NotFireBall:
+push esi
+push 00
+FindOtherBall_while:
+mov esi,esp
+mov edx,[edi+04]
+call 41CAD0
+test al,al
+je short FindOtherBall_end
+mov esi,[esi]
+cmp [esi+08],0000000D
+jne short FindOtherBall_while
+mov eax,[esi+14]
+cmp [edi+14],eax
+jne short FindOtherBall_while
+mov eax,[esi+0C]
+cmp [edi+0C],eax
+je short FindOtherBall_while
+mov eax,[esi+3C]
+cmp [edi+3C],eax
+je short FindOtherBall_while
+mov eax,[esi+10]
+cmp eax,-1
+je short FindOtherBall_while
+cmp [edi+10],eax
+jne short FindOtherBall_while
+mov eax,esi
+call Destroyball
+mov eax,edi
+call Destroyball
+add esp,04
+pop esi
+jmp UpdateFireballEnd
+FindOtherBall_end:
+add esp,4
+pop esi
+
 push edi
 mov ecx,[edi+18]
 test ecx,ecx
