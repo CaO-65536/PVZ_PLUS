@@ -1,0 +1,39 @@
+[ENABLE]
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov eax,edi
+call 42B530
+test al,al
+je originalcode
+mov eax,edi
+call 42A040
+push 1
+lea ecx,[esp+38]
+push eax
+push ecx
+call ZombieGetNameString
+jmp 486518
+
+originalcode:
+push edi
+lea ecx,[esp+38]
+
+exit:
+jmp returnhere
+
+48650B:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+dealloc(newmem)
+48650B:
+push edi
+lea ecx,[esp+38]

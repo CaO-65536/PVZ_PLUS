@@ -1,0 +1,57 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+label(IMAGE_DIALOG_SLIDER)
+label(IMAGE_DIALOG_SLIDER_THUMB)
+registersymbol(IMAGE_DIALOG_SLIDER)
+registersymbol(IMAGE_DIALOG_SLIDER_THUMB)
+
+newmem:
+mov [006A7258],eax
+push edi
+push IMAGE_DIALOG_SLIDER_String
+push IMAGE_DIALOG_SLIDER
+call LoadImage
+push edi
+push IMAGE_DIALOG_SLIDER_THUMB_String
+push IMAGE_DIALOG_SLIDER_THUMB
+call LoadImage
+
+originalcode:
+lea esi,[ebp-1C]
+
+exit:
+jmp returnhere
+
+align 04,00
+IMAGE_DIALOG_SLIDER:
+dd 00000000
+IMAGE_DIALOG_SLIDER_THUMB:
+dd 00000000
+
+IMAGE_DIALOG_SLIDER_String:
+db 'IMAGE_DIALOG_SLIDER' 00
+
+IMAGE_DIALOG_SLIDER_THUMB_String:
+db 'IMAGE_DIALOG_SLIDER_THUMB' 00
+
+4783C4:
+jmp newmem
+nop 3
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+unregistersymbol(IMAGE_DIALOG_SLIDER)
+unregistersymbol(IMAGE_DIALOG_SLIDER_THUMB)
+4783C4:
+db 8D 75 E4 A3 58 72 6A 00
+//lea esi,[ebp-1C]
+//mov [006A7258],eax

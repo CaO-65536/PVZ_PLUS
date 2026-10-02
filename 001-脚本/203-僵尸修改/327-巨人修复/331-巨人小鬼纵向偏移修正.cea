@@ -1,0 +1,27 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+fld dword ptr [0067A2B0]
+fadd dword ptr [ebx+84]
+
+exit:
+jmp returnhere
+
+5270BB:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+5270BB:
+db D9 05 B0 A2 67 00
+//fld dword ptr [0067A2B0]

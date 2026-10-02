@@ -1,0 +1,537 @@
+[ENABLE]
+alloc(UnitedBoom,1024)
+label(BoomToPot)
+label(BoomToPlant)
+label(UnitedBurnRow)
+label(BurnRowToPot)
+label(BurnRowToZombieAndLadder)
+label(BurnRowToPlant)
+label(UnitedIce)
+registersymbol(UnitedBoom)
+registersymbol(BoomToPot)
+registersymbol(BoomToPlant)
+registersymbol(UnitedBurnRow)
+registersymbol(BurnRowToPot)
+registersymbol(BurnRowToZombieAndLadder)
+registersymbol(BurnRowToPlant)
+registersymbol(UnitedIce)
+
+UnitedBoom:
+push ebp
+mov ebp,esp
+push ebx
+mov ebx,[ebp+18]
+push edi
+mov edi,[ebp+8]
+push [ebp+1C]//int theRowRange
+push [ebp+18]//int theRadius
+push [ebp+14]//int theY
+push [ebp+10]//int theX
+push [ebp+0C]//int theRow
+push [ebp+08]//Board* this
+call BoomToPot//对罐子
+push [ebp+24]//int theDamageRangeFlags
+push [ebp+20]//bool theBurn
+push [ebp+1C]//int theRowRange
+push [ebp+18]//int theRadius
+push [ebp+14]//int theY
+push [ebp+10]//int theX
+push [ebp+0C]//int theRow
+push [ebp+08]//Board* this
+call 41D8A0//对僵尸和梯子
+//test [ebp+24],80
+//je short UnitedBoom_end
+push [ebp+24]//int theDamageRangeFlags
+push [ebp+20]//bool theBurn
+push [ebp+1C]//int theRowRange
+push [ebp+18]//int theRadius
+push [ebp+14]//int theY
+push [ebp+10]//int theX
+push [ebp+0C]//int theRow
+push [ebp+08]//Board* this
+call BoomToPlant//对植物
+UnitedBoom_end:
+pop edi
+pop ebx
+pop ebp
+ret 20
+{
+push //int theDamageRangeFlags
+push //bool theBurn
+push //int theRowRange
+push //int theRadius
+push //int theY
+push //int theX
+push //int theRow
+push //Board* this
+}
+align 10,CC
+
+BoomToPot:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+mov edi,[ebp+8]
+sub esp,10
+push 0//开始序号(写0从头，写指针从后一个开始
+BoomToPot_star:
+mov esi,esp
+mov edx,edi
+call 41CAD0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short BoomToPot_end
+mov esi,[esi]//esi=遍历对象的指针
+cmp [esi+08],7
+jne short BoomToPot_star
+mov eax,[esi+10]
+lea eax,[eax+eax*4]
+shl eax,4
+add eax,28
+mov [esp+4],eax
+mov eax,[esi+14]//列
+mov ecx,[esi+10]//行
+mov ebx,[esi+4]
+call 41C740
+mov [esp+8],eax
+mov ecx,50
+lea eax,[esp+4]
+mov [eax+8],ecx
+mov [eax+C],ecx
+push [ebp+18]
+mov edx,[ebp+14]
+mov ecx,[ebp+10]
+call 41C850
+add esp,4
+test al,al
+je short BoomToPot_star
+mov eax,[esi+14]
+sub eax,[ebp+C]
+mov ecx,[ebp+1C]
+cmp eax,ecx
+jg short BoomToPot_star
+neg ecx
+cmp eax,ecx
+jl short BoomToPot_star
+push esi
+push [edi+00000160]
+call 429AC0
+jmp short BoomToPot_star
+BoomToPot_end:
+add esp,4+10
+pop edi
+pop esi
+pop ebx
+pop ebp
+ret 18
+{
+push //int theRowRange
+push //int theRadius
+push //int theY
+push //int theX
+push //int theRow
+push //Board* this
+}
+align 10,CC
+
+BoomToPlant:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+mov edi,[ebp+8]
+sub esp,10
+push 0//开始序号(写0从头，写指针从后一个开始
+BoomToPlant_star:
+mov esi,esp
+mov edx,edi
+call 41C950//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short BoomToPlant_end
+mov esi,[esi]//esi=遍历对象的指针
+cmp byte ptr [esi+00000142],00
+jne short BoomToPlant_star
+push [ebp+24]
+call PlantEffectedByDamage
+test al,al
+je short BoomToPlant_star
+lea eax,[esp+4]
+mov ecx,esi
+call 467EF0
+push [ebp+18]
+mov edx,[ebp+14]
+mov ecx,[ebp+10]
+call 41C850
+add esp,4
+test al,al
+je short BoomToPlant_star
+mov eax,[esi+1C]
+sub eax,[ebp+C]
+mov ecx,[ebp+1C]
+cmp eax,ecx
+jg short BoomToPlant_star
+neg ecx
+cmp eax,ecx
+jl short BoomToPlant_star
+cmp byte [ebp+20],0
+jne short BoomToPlant_BurnPlant
+push 00000708
+mov eax,52//40无视硬体+10清除尸体+2溅伤
+call NormallyHitPlant
+test dl,dl
+je short BoomToPlant_PlantDie
+jmp short BoomToPlant_star
+BoomToPlant_BurnPlant:
+mov eax,esi
+call PlantApplyBurn
+BoomToPlant_PlantDie:
+add dword ptr [edi+00005798],01
+jmp BoomToPlant_star
+BoomToPlant_end:
+add esp,4+10
+pop edi
+pop esi
+pop ebx
+pop ebp
+ret 20
+{
+push //int theDamageRangeFlags
+push //bool theBurn
+push //int theRowRange
+push //int theRadius
+push //int theY
+push //int theX
+push //int theRow
+push //Board* this
+}
+align 10,CC
+
+UnitedBurnRow:
+push ebp
+mov ebp,esp
+push [ebp+10]//bool theBurn
+push [ebp+0C]//int theRow
+push [ebp+08]//Board* this
+call BurnRowToPot
+push [ebp+14]//int theDamageRangeFlags
+push [ebp+10]//bool theBurn
+push [ebp+0C]//int theRow
+push [ebp+08]//Board* this
+call BurnRowToZombieAndLadder
+//test [ebp+14],80
+//je short UnitedBurnRow_end
+push [ebp+14]//int theDamageRangeFlags
+push [ebp+10]//bool theBurn
+push [ebp+0C]//int theRow
+push [ebp+08]//Board* this
+call BurnRowToPlant
+UnitedBurnRow_end:
+pop ebp
+ret 10
+{
+push //int theDamageRangeFlags
+push //bool theBurn
+push //int theRow
+push //Board* this
+}
+align 10,CC
+
+BurnRowToPot:
+push ebp
+mov ebp,esp
+push esi
+push edi
+mov edi,[ebp+8]
+push 0//开始序号(写0从头，写指针从后一个开始
+BurnRowToPot_star:
+mov esi,esp
+mov edx,edi
+call 41CAD0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short BurnRowToPot_end
+mov esi,[esi]//esi=遍历对象的指针
+mov eax,[esi+14]
+cmp eax,[ebp+0C]
+jne short BurnRowToPot_star
+cmp [esi+08],7
+jne short BurnRowToPot_star
+push esi
+push [edi+00000160]
+call 429AC0
+jmp short BurnRowToPot_star
+BurnRowToPot_end:
+add esp,4
+pop edi
+pop esi
+pop ebp
+ret 0C
+{
+push //bool theBurn
+push //int theRow
+push //Board* this
+}
+align 10,CC
+
+BurnRowToZombieAndLadder:
+push ebp
+mov ebp,esp
+push esi
+push edi
+mov edi,[ebp+8]
+push 0//开始序号(写0从头，写指针从后一个开始
+BurnRowToZombieAndLadder_ZombieStar:
+mov esi,esp
+mov edx,edi
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short BurnRowToZombieAndLadder_ZombieEnd
+mov esi,[esi]//esi=遍历对象的指针
+cmp [esi+24],19
+je short BurnRowToZombieAndLadder_AllowAllRow
+mov eax,[esi+1C]
+cmp eax,[ebp+0C]
+jne short BurnRowToZombieAndLadder_ZombieStar
+BurnRowToZombieAndLadder_AllowAllRow:
+push [ebp+14]
+call 531A80
+test al,al
+je short BurnRowToZombieAndLadder_ZombieStar
+cmp dword ptr [esi+000000B4],00
+jle short BurnRowToZombieAndLadder_NoIceTrap
+mov eax,esi
+call 532350
+BurnRowToZombieAndLadder_NoIceTrap:
+cmp dword ptr [esi+000000AC],00
+jle short BurnRowToZombieAndLadder_NotCold
+mov [esi+000000AC],00000000
+call 52F050
+BurnRowToZombieAndLadder_NotCold:
+cmp byte [ebp+10],00
+je short BurnRowToZombieAndLadder_NormalHit
+mov ecx,esi
+call 532B70
+jmp short BurnRowToZombieAndLadder_ZombieStar
+BurnRowToZombieAndLadder_NormalHit:
+push 00000708
+mov eax,00000012
+call 005317C0
+jmp short BurnRowToZombieAndLadder_ZombieStar
+BurnRowToZombieAndLadder_ZombieEnd:
+add esp,4
+cmp byte [ebp+10],00
+je short BurnRowToZombieAndLadder_End
+push 0//开始序号(写0从头，写指针从后一个开始
+BurnRowToZombieAndLadder_IceBallStar:
+mov esi,esp
+mov edx,edi
+call 41CAD0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short BurnRowToZombieAndLadder_IceBallEnd
+mov esi,[esi]//esi=遍历对象的指针
+cmp [esi+8],D
+jne short BurnRowToZombieAndLadder_Ladder
+cmp byte [esi+C],0
+jne short BurnRowToZombieAndLadder_IceBallStar
+mov ecx,[ebp+0C]
+cmp [esi+14],ecx
+jne short BurnRowToZombieAndLadder_IceBallStar
+mov al,0
+test [ebp+14],80
+je short BurnRowToZombieAndLadder_FromPlant
+mov al,1
+BurnRowToZombieAndLadder_FromPlant:
+cmp [esi+3C],al
+jne short BurnRowToZombieAndLadder_IceBallStar
+mov eax,esi
+call DestroyIceball
+jmp short BurnRowToZombieAndLadder_IceBallStar
+BurnRowToZombieAndLadder_Ladder:
+cmp [esi+08],3
+jne short BurnRowToZombieAndLadder_IceBallStar
+call 0044D000
+jmp short BurnRowToZombieAndLadder_IceBallStar
+BurnRowToZombieAndLadder_IceBallEnd:
+add esp,4
+BurnRowToZombieAndLadder_End:
+pop edi
+pop esi
+pop ebp
+ret 10
+{
+push //int theDamageRangeFlags
+push //bool theBurn
+push //int theRow
+push //Board* this
+}
+align 10,CC
+
+BurnRowToPlant:
+push ebp
+mov ebp,esp
+push esi
+push edi
+mov edi,[ebp+8]
+push 0//开始序号(写0从头，写指针从后一个开始
+BurnRowToPlant_star:
+mov esi,esp
+mov edx,edi
+call 41C950//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short BurnRowToPlant_end
+mov esi,[esi]//esi=遍历对象的指针
+mov eax,[esi+1C]
+cmp eax,[ebp+0C]
+jne short BurnRowToPlant_star
+cmp byte ptr [esi+00000142],00
+jne short BurnRowToPlant_star
+push [ebp+14]
+call PlantEffectedByDamage
+test al,al
+je short BurnRowToPlant_star
+cmp byte [ebp+10],0
+jne short BurnRowToPlant_BurnPlant
+push 00000708
+mov eax,12//清除尸体+穿透
+call NormallyHitPlant
+test dl,dl
+je short BurnRowToPlant_PlantDie
+jmp short BurnRowToPlant_star
+BurnRowToPlant_BurnPlant:
+mov eax,esi
+call PlantApplyBurn
+BurnRowToPlant_PlantDie:
+add dword ptr [edi+00005798],01
+jmp BurnRowToPlant_star
+BurnRowToPlant_end:
+add esp,4
+pop edi
+pop esi
+pop ebp
+ret 10
+{
+push //int theDamageRangeFlags
+push //bool theBurn
+push //int theRow
+push //Board* this
+}
+align 10,CC
+
+UnitedIce:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+mov edi,[ebp+8]
+xor bl,bl
+mov bh,01
+test [ebp+0C],80
+je short UnitedIce_FromPlant
+mov bl,1
+xor bh,bh
+UnitedIce_FromPlant:
+//对僵尸
+push 0//开始序号(写0从头，写指针从后一个开始
+UnitedIce_ZombieStar:
+mov esi,esp
+mov edx,edi
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short UnitedIce_ZombieEnd
+mov esi,[esi]//esi=遍历对象的指针
+cmp [esi+B8],bl
+jne UnitedIce_ZombieStar
+mov eax,esi
+call HitIceTrapNoMatterMindControlled
+jmp short UnitedIce_ZombieStar
+UnitedIce_ZombieEnd:
+add esp,4
+//对植物
+push 0//开始序号(写0从头，写指针从后一个开始
+UnitedIce_PlantStar:
+mov esi,esp
+mov edx,edi
+call 41C950//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short UnitedIce_PlantEnd
+mov esi,[esi]//esi=遍历对象的指针
+cmp [esi+147],bh
+jne UnitedIce_PlantStar
+{push [ebp+0C]
+call PlantEffectedByDamage
+test al,al
+je short UnitedIce_PlantStar}
+mov eax,esi
+call PlantHitIceTrap
+jmp short UnitedIce_PlantStar
+UnitedIce_PlantEnd:
+add esp,4
+//冻结湖面和天空
+mov [edi+00005618],0000012C
+mov edx,[edi+0000008C]
+mov ecx,[edi+00005620]
+test ecx,ecx
+mov eax,[edx+00000820]
+mov edx,[eax]
+je short UnitedIce_NoPoolParticle
+movzx eax,cx
+cmp eax,[edx+08]
+jae short UnitedIce_NoPoolParticle
+imul eax,eax,TodParticleSystemClassSize
+add eax,[edx]
+cmp [eax+TodParticleSystemClassSize-4],ecx
+jne short UnitedIce_NoPoolParticle
+mov byte ptr [eax+24],01
+UnitedIce_NoPoolParticle:
+//对火球
+push 0//开始序号(写0从头，写指针从后一个开始
+UnitedIce_FireBallStar:
+mov esi,esp
+mov edx,edi
+call 41CAD0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short UnitedIce_FireBallEnd
+mov esi,[esi]//esi=遍历对象的指针
+cmp [esi+8],D
+jne short UnitedIce_FireBallStar
+cmp byte [esi+C],1
+jne short UnitedIce_FireBallStar
+{mov ecx,[ebp+0C]
+cmp [esi+14],ecx
+jne short UnitedIce_FireBallStar}
+mov al,0
+test [ebp+0C],80
+je short UnitedIce_FireBallFromPlant
+mov al,1
+UnitedIce_FireBallFromPlant:
+cmp [esi+3C],al
+jne short UnitedIce_FireBallStar
+push esi
+call DestroyFireball
+jmp short UnitedIce_FireBallStar
+UnitedIce_FireBallEnd:
+add esp,4
+pop edi
+pop esi
+pop ebx
+pop ebp
+ret 08
+{
+push //int theDamageRangeFlags
+push //Board* this
+}
+align 10,CC
+
+[DISABLE]
+dealloc(UnitedBoom)
+unregistersymbol(UnitedBoom)
+unregistersymbol(BoomToPot)
+unregistersymbol(BoomToPlant)
+unregistersymbol(UnitedBurnRow)
+unregistersymbol(BurnRowToPot)
+unregistersymbol(BurnRowToZombieAndLadder)
+unregistersymbol(BurnRowToPlant)
+unregistersymbol(UnitedIce)
+

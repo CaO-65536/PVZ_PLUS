@@ -1,0 +1,77 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov ebp,[esp+24]//Gra
+mov esi,edx//*Board
+mov eax,[esi+8C]
+mov eax,[eax+82C]
+mov eax,[eax+PlayerInfo_GameSetting_Offset+2*4]
+test al,al
+je originalcode
+mov ecx,[esi+13C]
+mov ecx,[ecx+28]
+test ecx,ecx
+jl short originalcode
+push [ebp+8]
+push [ebp+C]
+fild [esi+30]
+fstp [ebp+8]
+fild [esi+34]
+fstp [ebp+C]
+mov cl,1
+mov [ebp+48],cl
+mov [ebp+30],FF
+mov [ebp+34],00
+mov [ebp+38],00
+mov [ebp+3C],FF
+mov eax,esi
+mov ebx,[esi+5558]
+sub ebx,[esi+30]
+sub ebx,7
+push ebx
+push ebx
+fild [esp]
+fstp [esp]
+mov ecx,[esi+13C]
+mov ecx,[ecx+28]
+call 41C6C0
+push eax
+fistp [esp]
+pop eax
+add eax,28
+push eax
+push CobCannonRadius
+mov eax,ebp
+call DrawCircle
+xor cl,cl
+mov [ebp+48],cl
+pop [ebp+C]
+pop [ebp+8]
+
+originalcode:
+mov eax,ebp//[esp+24]
+mov ecx,[006A7204]
+
+exit:
+jmp returnhere
+
+438C8A:
+jmp newmem
+nop 5
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+438C8A:
+mov eax,[esp+24]
+mov ecx,[006A7204]
+//Alt: db 8B 44 24 24 8B 0D 04 72 6A 00

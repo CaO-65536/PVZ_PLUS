@@ -1,0 +1,121 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp eax,HITRESULTTYPE_SEEDBANKSLIDER
+jne short originalcode
+mov ecx,[esp+10]
+mov eax,[ecx+C4]
+mov edx,ebx
+sub edx,[ecx+34]
+push edx
+mov edx,esi
+sub edx,[ecx+30]
+push edx
+call SliderThumbTestMouse
+mov ebx,00000001
+test al,al
+jne 0040E64B
+
+originalcode:
+mov ebx,00000001
+cmp eax,10
+
+exit:
+jmp returnhere
+
+SliderThumbTestMouse:
+push esi
+mov esi,ecx
+cmp byte ptr [esi+000000B0],00
+push edi
+mov edi,[esi+000000A0]
+mov eax,edi
+je SliderThumbTestMouse1
+call 00588A10
+mov ecx,[esi+38]
+sub ecx,eax
+mov [esp+10],ecx
+fild dword ptr [esp+10]
+fmul qword ptr [esi+00000090]
+call 006397D0
+mov edx,[esp+0C]
+mov ecx,eax
+cmp edx,ecx
+jl SliderThumbTestMouse2
+mov eax,edi
+call 00588A10
+add eax,ecx
+cmp edx,eax
+jnl SliderThumbTestMouse2
+{mov edx,[esi+10]
+mov ecx,[edx+5C]
+mov eax,00000002
+call 005548C0}
+mov al,01
+pop edi
+pop esi
+ret 0008
+SliderThumbTestMouse2:
+{mov ecx,[esi+10]
+mov ecx,[ecx+5C]
+xor eax,eax
+call 005548C0}
+xor al,al
+pop edi
+pop esi
+ret 0008
+SliderThumbTestMouse1:
+call 00588A20
+mov edx,[esi+3C]
+sub edx,eax
+mov [esp+0C],edx
+fild dword ptr [esp+0C]
+fmul qword ptr [esi+00000090]
+call 006397D0
+mov edx,[esp+10]
+mov ecx,eax
+cmp edx,ecx
+jl SliderThumbTestMouse3
+mov eax,edi
+call 00588A20
+add eax,ecx
+cmp edx,eax
+jnl SliderThumbTestMouse3
+{mov ecx,[esi+10]
+mov ecx,[ecx+5C]
+mov eax,00000002
+call 005548C0}
+mov al,01
+pop edi
+pop esi
+ret 0008
+SliderThumbTestMouse3:
+{mov edx,[esi+10]
+mov ecx,[edx+5C]
+xor eax,eax
+call 005548C0}
+xor al,al
+pop edi
+pop esi
+ret 0008
+
+40E5EE:
+jmp newmem
+nop 3
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+40E5EE:
+db 83 F8 10 BB 01 00 00 00
+//cmp eax,10
+//mov ebx,00000001

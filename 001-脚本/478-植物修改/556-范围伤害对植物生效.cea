@@ -1,0 +1,127 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+mov edx,[ebp+04]
+lea esi,[esp+40]
+mov [esp+40],00000000
+call 41C950
+test al,al
+je DoRowAreaDamage_End
+DoRowAreaDamage_NextZombie1:
+mov ebx,[esp+40]
+cmp ebx,ebp
+je DoRowAreaDamage_NextZombie
+mov eax,[ebx+1C]
+sub eax,[ebp+1C]
+cmp dword ptr [ebp+24],2A
+jne short DoRowAreaDamage_OneRow
+cmp eax,-01
+jl DoRowAreaDamage_NextZombie
+cmp eax,01
+jle short DoRowAreaDamage_L0
+jmp DoRowAreaDamage_NextZombie
+DoRowAreaDamage_OneRow:
+test eax,eax
+jne DoRowAreaDamage_NextZombie
+DoRowAreaDamage_L0:
+mov ecx,ebp
+call 0045EBD0
+push eax
+mov ecx,ebx
+call 0045EBD0
+pop ecx
+cmp al,cl
+jne 0045EE76
+mov eax,[esp+14]
+push eax
+mov esi,ebx
+call PlantEffectedByDamage
+test al,al
+je DoRowAreaDamage_NextZombie
+lea eax,[esp+18]
+mov ecx,ebx
+call 467EF0
+mov ecx,[esp+18]
+mov edx,[esp+28]
+cmp edx,ecx
+jnl short DoRowAreaDamage_L1
+mov eax,[esp+30]
+add eax,edx
+mov edx,[esp+20]
+add edx,ecx
+jmp short DoRowAreaDamage_L2
+DoRowAreaDamage_L1:
+mov eax,[esp+20]
+mov esi,[esp+30]
+add eax,ecx
+mov ecx,edx
+add edx,esi
+DoRowAreaDamage_L2:
+cmp eax,ecx
+jg short DoRowAreaDamage_L3
+sub eax,ecx
+jmp short DoRowAreaDamage_L4
+DoRowAreaDamage_L3:
+cmp eax,edx
+jg short DoRowAreaDamage_L5
+sub eax,ecx
+jmp short DoRowAreaDamage_L4
+DoRowAreaDamage_L5:
+sub edx,ecx
+mov eax,edx
+DoRowAreaDamage_L4:
+test eax,eax
+jng DoRowAreaDamage_NextZombie
+mov edi,00000014
+{mov eax,[ebx+24]
+cmp eax,0C
+je 0045EDFA
+cmp eax,16
+jne 0045EE1B
+test byte ptr [esp+44],20
+je 0045EE1B
+cmp dword ptr [ebp+24],2E
+mov edi,00000708
+jne 0045EE15
+mov esi,ebp
+call 0045EC00
+jmp 0045EE1B
+push ebp
+call 004679B0}
+mov eax,[esp+44]
+or eax,10
+push edi
+mov esi,ebx
+call NormallyHitPlant
+mov eax,[esi]
+mov esi,1
+call 453630
+DoRowAreaDamage_NextZombie:
+mov edx,[ebp+04]
+lea esi,[esp+40]
+call 41C950
+test al,al
+jne DoRowAreaDamage_NextZombie1
+DoRowAreaDamage_End:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,2C
+ret 0008
+
+45EE8A:
+jmp newmem
+nop 2
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+45EE8A:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,2C
+//Alt: db 5F 5E 5D 5B 83 C4 2C

@@ -1,0 +1,36 @@
+[ENABLE]
+alloc(CenterDialog,2048)
+registersymbol(CenterDialog)
+
+CenterDialog:
+push esi
+mov esi,ecx
+mov ecx,[esi+3C]
+mov eax,00000258
+sub eax,ecx
+cdq
+sub eax,edx
+sar eax,1
+push ecx
+mov ecx,[esi+38]
+push ecx
+push eax
+mov eax,SCREENWIDTH
+sub eax,ecx
+cdq
+sub eax,edx
+sar eax,1
+push eax
+mov eax,[esi]
+mov eax,[eax+000000A0]
+mov ecx,esi
+call eax
+pop esi
+ret
+{
+mov ecx,Dialog* this
+}
+
+[DISABLE]
+dealloc(CenterDialog)
+unregistersymbol(CenterDialog)

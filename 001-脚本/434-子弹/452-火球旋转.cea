@@ -1,0 +1,101 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(exit)
+
+newmem:
+lea eax,[esi+7C]
+call 405480
+test eax,eax
+je originalcode
+push ebx
+mov ebx,eax
+
+{fld [esi+68]
+call 639F90//cos
+fst [ebx+24+00]
+fstp [ebx+24+10]
+fstp st(0)
+fld [esi+68]
+call 63A180//sin
+fst [ebx+24+0C]
+fchs
+fstp [ebx+24+04]
+fstp st(0)}
+push esi
+sub esp,14
+fld [ebx+24+08]
+fstp [esp]
+fld [ebx+24+14]
+fstp [esp+04]
+fld [esi+68]
+fstp [esp+08]
+fld [esi+9C]
+fst [esp+0C]
+fstp [esp+10]
+lea esi,[ebx+24]
+call 5125D0
+add esp,14
+pop esi
+
+sub esp,24+10//
+mov eax,esp
+call 5A3710
+push eax
+push String
+call 472F30
+push ebx
+call 472C00
+fld [ebx+24+08]
+fadd [centerX]
+fstp [esp+24]
+fld [ebx+24+14]
+fadd [centerY]
+fstp [esp+28]
+fld [esp+24]
+fsub [esp+08]
+fstp [esp+2C]
+fld [esp+28]
+fsub [esp+14]
+fstp [esp+30]
+add esp,24+08
+fld dword ptr [esi+38]
+fadd dword ptr [esi+34]
+fadd dword ptr [esp+04]
+fstp dword ptr [esp+04]
+fld dword ptr [esi+30]
+fadd dword ptr [esp]
+fstp dword ptr [esp]
+lea edi,[esi+7C]
+call 00405200
+add esp,08
+pop ebx
+
+originalcode:
+exit:
+jmp 0046E532
+
+align 10,00
+String:
+db 'FirePea' 00
+align 04,00
+centerX:
+dd (float)39.25
+centerY:
+dd (float)38.25
+
+46E50C:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+46E50C:
+db D9 46 38 83 EC 08
+//fld dword ptr [esi+38]
+//sub esp,08

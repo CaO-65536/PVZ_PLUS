@@ -1,0 +1,22 @@
+[ENABLE]
+00482B82:
+push 03
+00482C9D:
+nop 7
+00482CAA:
+nop 3
+00482CB3:
+nop 7
+00482CC7:
+nop 3
+[DISABLE]
+00482B82:
+push 01
+00482C9D:
+mov byte ptr [edx+00000101],01
+00482CAA:
+mov [eax+55],bl
+00482CB3:
+mov byte ptr [ecx+00000101],01
+00482CC7:
+mov [edx+55],bl

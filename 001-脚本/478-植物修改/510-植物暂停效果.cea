@@ -1,0 +1,38 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(exit)
+
+newmem:
+mov eax,ebx
+call 00464DB0
+push ebx
+call 4635C0
+cmp dword ptr [ebx+40],00
+jnl short NotDie
+push ebx
+call PlantDieThing
+push ebx
+call 004679B0
+NotDie:
+mov eax,ebx
+call PlantIsStop
+test al,al
+jne short exit
+mov eax,ebx
+call 00463150
+call 00463920
+exit:
+jmp 463EE8
+
+
+463EC9:
+jmp newmem
+nop 2
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+463EC9:
+mov eax,ebx
+call 00463150
+//Alt: db 8B C3 E8 80 F2 FF FF

@@ -1,0 +1,76 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+cmp eax,4B
+jne az1
+mov eax,1
+ret
+az1:
+cmp eax,4C
+jne az2
+mov eax,5
+ret
+az2:
+cmp eax,4D
+jne az3
+mov eax,9
+ret
+az3:
+cmp eax,4E
+jne az4
+mov eax,A
+ret
+az4:
+cmp eax,4F
+jne az5
+mov eax,B
+ret
+az5:
+cmp eax,50
+jne az6
+mov eax,D
+ret
+az6:
+cmp eax,51
+jne az7
+mov eax,E
+ret
+az7:
+cmp eax,52
+jne az8
+mov eax,F
+ret
+az8:
+cmp eax,53
+jne az9
+mov eax,13
+ret
+az9:
+cmp eax,54
+jne azA
+mov eax,16
+ret
+azA:
+cmp eax,55
+jl azC
+cmp eax,3C+NUM_ZOMBIE_TYPES
+jg azC
+sub eax,3C
+ret
+azC:
+ret
+
+42A0E1:
+jmp newmem
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+42A0E1:
+ret 
+int 3 
+int 3 
+int 3 
+int 3 
+//Alt: db C3 CC CC CC CC

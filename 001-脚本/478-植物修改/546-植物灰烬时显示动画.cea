@@ -1,0 +1,17 @@
+[ENABLE]
+alloc(newmem,2048)
+
+newmem:
+cmp [ebx+00000142],dl
+je 00465BCF
+cmp [ebx+00000146],dl
+jne 00465BCF
+jmp 00465B24
+
+465B18:
+jmp newmem
+nop
+[DISABLE]
+dealloc(newmem)
+465B18:
+cmp [ebx+00000142],dl

@@ -1,0 +1,339 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(originalcode)
+
+newmem:
+cmp dword ptr [edi+08],0D
+jne short originalcode
+call UpdateFireball
+originalcode:
+pop edi
+pop esi
+pop ecx
+ret
+
+align 10,CC
+UpdateFireball:
+push ebx
+push esi
+sub esp,18
+mov eax,[edi]
+mov ecx,[edi+34]
+call 453CB0
+test eax,eax
+je NoReanimation
+
+//运动加载
+mov esi,eax
+call 4738D0
+fstp dword ptr [esp+14]
+fld dword ptr [esi+2C]
+push ecx
+fsub dword ptr [esp+18]
+fstp dword ptr [esp+18]
+fld dword ptr [esp+18]
+fst dword ptr [esi+2C]
+mov ecx,[edi+14]
+mov eax,[edi+04]
+fstp dword ptr [esp+14]
+fld dword ptr [esp+14]
+fadd qword ptr [00679A38] { (75.00) }
+fst qword ptr [esp+1C]
+fstp dword ptr [esp+18]
+fld dword ptr [esp+18]
+fstp dword ptr [esp]
+call 41C6C0
+fsub qword ptr [00679B48] { (90.00) }
+mov eax,[edi+04]
+mov ecx,[edi+14]
+cmp [eax+ecx*4],02
+jne short NotinWater
+
+
+
+NotinWater:
+fstp dword ptr [esp+14]
+fld dword ptr [esp+14]
+fstp dword ptr [esi+38]
+fld dword ptr [006798D0] { (-180.00) }
+cmp byte [edi+40],0
+je short Right
+mov edx,0066F5E8 { ("anim_role") }
+call 4745B0
+test al,al
+je short NotInRole
+fld dword ptr [esi+08]
+fabs
+fchs
+fstp dword ptr [esi+08]
+NotInRole:
+fabs
+fadd dword ptr [00679B54] { (700.00) }
+fadd dword ptr [00679498] { (100.00) }
+fcomp dword ptr [esp+10]
+fnstsw ax
+test ah,41 { 65 }
+je short NotSide
+jmp short BallDie
+Right:
+fcomp dword ptr [esp+10]
+fnstsw ax
+test ah,41
+jne short NotSide
+BallDie:
+push esi
+mov esi,edi
+call 44D000
+pop esi
+NotSide:
+
+//压扁事件
+push edi
+mov ecx,[edi+04]
+fld dword ptr [esp+14]
+call 6397D0
+mov edi,eax
+fld qword ptr [esp+1C]
+call 6397D0
+call PixelToGridX
+pop edi
+mov [edi+10],eax
+mov ebx,eax
+cmp [edi+0C],1
+jne short NotFireBall
+//mov eax,ebx
+mov ecx,[edi+14]
+mov edx,[edi+04]
+call 40CE00
+test al,al
+je short NotFireBall
+push edi
+call DestroyFireball
+jmp UpdateFireballEnd
+NotFireBall:
+push esi
+push 00
+FindOtherBall_while:
+mov esi,esp
+mov edx,[edi+04]
+call 41CAD0
+test al,al
+je short FindOtherBall_end
+mov esi,[esi]
+cmp [esi+08],0000000D
+jne short FindOtherBall_while
+mov eax,[esi+14]
+cmp [edi+14],eax
+jne short FindOtherBall_while
+mov eax,[esi+0C]
+cmp [edi+0C],eax
+je short FindOtherBall_while
+mov eax,[esi+3C]
+cmp [edi+3C],eax
+je short FindOtherBall_while
+mov eax,[esi+10]
+cmp eax,-1
+je short FindOtherBall_while
+cmp [edi+10],eax
+jne short FindOtherBall_while
+mov eax,esi
+call Destroyball
+mov eax,edi
+call Destroyball
+add esp,04
+pop esi
+jmp UpdateFireballEnd
+FindOtherBall_end:
+add esp,4
+pop esi
+
+push edi
+mov ecx,[edi+18]
+test ecx,ecx
+je short NotSquishPlant
+movzx eax,cx
+imul eax,ZombieClassSize
+mov edx,[edi+04]
+mov edx,[edx+90]
+add edx,eax
+mov eax,[edx+ZombieClassSize-4]
+cmp eax,ecx
+jne short NotSquishPlant
+mov ecx,[edi+14]
+push 01
+push ecx
+push ebx
+mov edi,edx
+call 52E920
+NotSquishPlant:
+pop edi
+SquishZombie:
+push esi
+push 0//开始序号(写0从头，写指针从后一个开始
+star:
+mov esi,esp
+mov edx,[edi+4]
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short end
+mov esi,[esi]//esi=遍历对象的基址
+push ebx
+push esi
+call IsZombieInThisColumn
+test al,al
+je short star
+mov eax,[edi+14]
+cmp [esi+1C],eax
+jne short star
+cmp [esi+24],19
+je short star
+mov al,[edi+3C]
+test al,al
+jne short az1
+mov eax,81
+jmp short az2
+az1:
+mov eax,1
+az2:
+push eax//目标
+call 531A80
+test al,al
+je star
+push 708//伤害
+mov eax,1//形式0正面1非正面2溅伤4正面减速5非正面减速6溅伤减速7溅伤减速8无特效正面9无特效非正面A无特效溅伤
+call 5317C0
+jmp short star
+end:
+add esp,4
+SquishMover:
+cmp byte [edi+3C],0
+jne DoNotSquishMover
+fld [esp+14]
+push 0//开始序号(写0从头，写指针从后一个开始
+star1:
+mov esi,esp
+mov edx,[edi+4]
+call 41CA70//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short end1
+mov esi,[esi]//esi=遍历对象的基址
+cmp [esi+2C],3
+je short star1
+cmp byte [esi+2C],3
+je short star1
+mov eax,[esi+14]
+cmp [edi+14],eax
+jne short star1
+fld dword ptr [esi+08]
+fcomp st(0),st(1)
+fnstsw ax
+test ah,41
+jne short star1
+fld dword ptr [esi+08]
+fld st(1)
+fadd qword ptr [00679368] { (50.00) }
+fcompp
+fnstsw ax
+test ah,41
+jne short star1
+mov ecx,esi
+call 458EB0
+jmp short star1
+end1:
+add esp,4
+fstp st(0)
+DoNotSquishMover:
+pop esi
+
+//滚动过渡
+cmp [esi+10],03
+jne short NotRole
+cmp [esi+5C],00
+jle short NotRole
+fld dword ptr [006793E0] { (2.00) }
+push ecx
+fstp dword ptr [esp]
+push 0
+push 0066F5E8 { ("anim_role") }
+xor eax,eax
+call 473BF0
+mov eax,[edi+14]
+imul eax,eax,00002710
+add eax,0004AF38
+//mov [esi+68],eax
+mov [edi+1C],eax
+NotRole:
+
+//创建粒子
+cmp dword ptr [esi+10],00 { 0 }
+jne UpdateFireballEnd
+mov eax,0000000A { 10 }
+call 5AF400
+test eax,eax
+jne UpdateFireballEnd
+fld dword ptr [00679508] { (20.00) }
+sub esp,08 { 8 }
+fstp dword ptr [esp+04]
+fldz
+fstp dword ptr [esp]
+call 511CB0
+fld dword ptr [esp+18]
+fadd qword ptr [006792A0] { (100.00) }
+mov ecx,[edi+14]
+mov eax,[edi+4]
+add esp,04 { 4 }
+faddp
+fstp dword ptr [esp+18]
+fld dword ptr [esp+18]
+fsub qword ptr [006794C8] { (40.00) }
+fstp dword ptr [esp+14]
+fld dword ptr [esp+14]
+fstp dword ptr [esp]
+call 41C6C0
+fadd qword ptr [00679B48] { (90.00) }
+sub esp,08 { 8 }
+fstp qword ptr [esp+20]
+fldz
+fstp dword ptr [esp+04]
+fld dword ptr [00679D2C] { (-50.00) }
+fstp dword ptr [esp]
+call 00511CB0
+fadd qword ptr [esp+20]
+mov eax,0000004E { 78 }
+add eax,[edi+0C]
+mov ecx,[edi+14]
+fstp dword ptr [esp+18]
+fld dword ptr [esp+18]
+mov edx,[edi]
+imul ecx,ecx,00002710 { 10000 }
+fstp dword ptr [esp+04]
+fld dword ptr [esp+1C]
+fstp dword ptr [esp]
+add ecx,000497CE { 301006 }
+call 453C80
+
+NoReanimation:
+UpdateFireballEnd:
+add esp,18
+pop esi
+pop ebx
+ret
+// edi = *FireBall
+
+0053619A:
+nop 5
+44E691:
+jmp newmem
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+0053619A:
+call 00535C60
+44E691:
+pop edi
+pop esi
+pop ecx
+ret 
+int 3 
+//Alt: db 5F 5E 59 C3 CC

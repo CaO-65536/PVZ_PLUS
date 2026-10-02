@@ -1,0 +1,57 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(exit)
+
+newmem:
+mov eax,21
+call 5AF400
+cmp eax,0
+je short newmem
+cmp eax,1
+je short newmem
+cmp eax,9
+je short newmem
+cmp eax,A
+je short newmem
+cmp eax,B
+je short newmem
+cmp eax,D
+je short newmem
+cmp eax,E
+je short newmem
+cmp eax,10
+je short newmem
+cmp eax,11
+je short newmem
+cmp eax,14
+je short newmem
+cmp eax,18
+je short newmem
+cmp eax,19
+je short newmem
+cmp [esi+130],00
+jne short az1
+cmp eax,17
+je short newmem
+cmp eax,20
+je short newmem
+az1:
+mov ecx,[esi+4]
+cmp byte ptr [ecx+5760],1
+jne short exit
+cmp eax,13
+je short newmem
+
+exit:
+jmp 534E0A
+
+534DEB:
+jmp newmem
+nop 2
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+534DEB:
+cmp dword ptr [esi+00000130],00
+//Alt: db 83 BE 30 01 00 00 00

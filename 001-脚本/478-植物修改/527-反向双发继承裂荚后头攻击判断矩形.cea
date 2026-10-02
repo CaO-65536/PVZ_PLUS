@@ -1,0 +1,11 @@
+[ENABLE]
+468014:
+cmp edx,34
+je 00467FF5
+jmp 00468034
+nop
+[DISABLE]
+468014:
+cmp edx,34
+jne 00468034
+mov esi,[ecx+0C]

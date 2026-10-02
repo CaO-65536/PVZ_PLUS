@@ -1,0 +1,149 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp edx,HITRESULTTYPE_SEEDBANKSLIDER
+jne short originalcode
+mov eax,[edi+00000008C]
+cmp [eax+000007FC],03
+jne short originalcode
+mov eax,[edi+000000144]
+mov ecx,[eax+SeedBankMax*50+mSeedPacket_Offest+10]
+test ecx,ecx
+je short originalcode
+mov edx,[esp+28]
+{sub edx,[eax+0C]}
+sub edx,[ecx+34]
+push edx
+mov edx,[esp+24+04]
+{sub edx,[eax+08]}
+sub edx,[ecx+30]
+push edx
+call MySliderMouseDown//53A940
+call 0040E520
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 000C
+
+originalcode:
+cmp edx,05
+je 004122FC
+
+exit:
+jmp returnhere
+
+MySliderMouseDown:
+push ebp
+mov ebp,esp
+and esp,-40
+sub esp,34
+push ebx
+push esi
+mov esi,ecx
+cmp byte ptr [esi+000000B0],00
+mov eax,[esi+000000A0]
+push edi
+je MySliderMouseDown1
+mov ecx,[esi+38]
+mov [esp+3C],ecx
+call 00588A10
+sub ecx,eax
+mov [esp+38],ecx
+fild dword ptr [esp+38]
+fmul qword ptr [esi+00000090]
+call 006397D0
+mov edi,[ebp+08]
+mov ebx,eax
+cmp edi,ebx
+jl MySliderMouseDown2
+mov eax,[esi+000000A0]
+call 00588A10
+add eax,ebx
+cmp edi,eax
+jnl MySliderMouseDown2
+{mov ecx,[esi+10]
+mov ecx,[ecx+5C]
+mov eax,00000002
+call 005548C0}
+sub edi,ebx
+mov byte ptr [esi+000000A4],01
+mov [esi+000000A8],edi
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 000C
+MySliderMouseDown2:
+fild dword ptr [ebp+08]
+fidiv dword ptr [esp+3C]
+jmp MySliderMouseDown3
+MySliderMouseDown1:
+mov ecx,[esi+3C]
+mov [esp+38],ecx
+call 00588A20
+sub ecx,eax
+mov [esp+3C],ecx
+fild dword ptr [esp+3C]
+fmul qword ptr [esi+00000090]
+call 006397D0
+mov edi,[ebp+0C]
+mov ebx,eax
+cmp edi,ebx
+jl MySliderMouseDown4
+mov eax,[esi+000000A0]
+call 00588A20
+add eax,ebx
+cmp edi,eax
+jnl MySliderMouseDown4
+{mov ecx,[esi+10]
+mov ecx,[ecx+5C]
+mov eax,00000002
+call 005548C0}
+sub edi,ebx
+mov byte ptr [esi+000000A4],01
+mov [esi+000000AC],edi
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 000C
+MySliderMouseDown4:
+fild dword ptr [ebp+0C]
+fidiv dword ptr [esp+38]
+MySliderMouseDown3:
+mov edx,[esi]
+mov eax,[edx+00000118]
+sub esp,08
+mov ecx,esi
+fstp qword ptr [esp]
+call eax
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 000C
+
+4122A2:
+jmp newmem
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4122A2:
+db 83 FA 05 74 55
+//cmp edx,05
+//je 004122FC

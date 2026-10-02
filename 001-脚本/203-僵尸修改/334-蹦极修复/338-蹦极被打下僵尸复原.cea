@@ -1,0 +1,47 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+mov ecx,[esi+04]
+mov edx,[esi+F0]
+test edx,edx
+je short exit
+push ecx
+push edx
+xchg ecx,edx
+call 41C7F0
+pop edx
+pop ecx
+cmp [eax+18C],2
+je short ZombieInHand
+mov [eax+64],00000000
+ZombieInHandDie:
+mov [esi+F0],00000000
+ret
+ZombieInHand:
+mov ecx,eax//僵尸指针
+call 530510
+jmp short ZombieInHandDie
+exit:
+mov ecx,[esi+04]
+mov edx,[esi+00000128]
+jmp returnhere
+
+530416:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+530416:
+mov ecx,[esi+04]
+mov edx,[esi+00000128]
+//Alt: db 8B 4E 04 8B 96 28 01 00 00

@@ -1,0 +1,92 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+call 004660B0
+mov eax,[ebx]
+mov eax,[eax+82C]
+mov eax,[eax+PlayerInfo_GameSetting_Offset+2*4]
+test al,al
+je exit
+mov eax,[ebx+04]
+call 40CD10
+cmp eax,2
+je short DrawBoom_L0
+cmp eax,4
+je short DrawBoom_L0
+cmp eax,F
+jne exit
+DrawBoom_L0:
+push [ebp+8]
+push [ebp+C]
+mov ecx,[ebx+4]
+fild [ecx+30]
+fstp [ebp+8]
+fild [ecx+34]
+fstp [ebp+C]
+mov cl,1
+mov [ebp+48],cl
+mov [ebp+30],FF
+mov [ebp+34],00
+mov [ebp+38],00
+mov [ebp+3C],FF
+mov eax,[ebx+24]
+lea eax,[eax+eax*4]
+shl eax,4
+add eax,28*2+HALFEXSCREENWIDTH
+push eax
+mov eax,[ebx+04]
+call 40CD10
+cmp eax,04
+jne short NotMine
+sub [esp],14
+NotMine:
+push ebx
+mov eax,[ebx+28]
+mov ecx,[ebx+24]
+mov ebx,[ebx+4]
+call 41C740
+pop ebx
+add eax,28
+push eax
+
+mov eax,[ebx+04]
+call 40CD10
+cmp eax,2
+jne short DrawBoom_L1
+push CherryBombRadius
+jmp short DrawBoom_L2
+DrawBoom_L1:
+cmp eax,4
+jne short DrawBoom_L3
+push PotatoMineRadius
+jmp short DrawBoom_L2
+DrawBoom_L3:
+push DoomShroomRadius
+DrawBoom_L2:
+mov eax,ebp
+call DrawCircle
+xor cl,cl
+mov [ebp+48],cl
+pop [ebp+C]
+pop [ebp+8]
+
+exit:
+jmp returnhere
+
+43902B:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+43902B:
+call 004660B0
+//Alt: db E8 80 D0 02 00

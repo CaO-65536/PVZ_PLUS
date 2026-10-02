@@ -1,0 +1,57 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push ebp
+call IsPlantLeft
+test al,al
+je short originalcode
+mov eax,[ebp+8]
+mov ecx,#80
+cmp [ebp+24],2F
+jne short az1
+mov ecx,#20
+az1:
+sar ecx,1
+add eax,ecx
+mov edx,eax
+mov ecx,edi
+sub edx,ecx
+add eax,edx
+sub eax,1E
+mov edi,eax
+
+originalcode:
+push ebp
+call GetPlantHeightOffsetOfFlowerPots
+add esi,eax
+push esi
+push edi
+mov eax,[ebp+04]
+call 0040D620
+mov ecx,[ebp+PlantClassSize-4]
+mov [eax+90],ecx
+
+exit:
+jmp returnhere
+
+4672AE:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4672AE:
+push esi
+push edi
+call 0040D620
+//Alt: db 56 57 E8 6B 63 FA FF

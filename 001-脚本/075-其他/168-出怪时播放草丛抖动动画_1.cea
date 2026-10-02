@@ -1,0 +1,65 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push eax
+push esi
+mov ecx,[edi+eax*4+mBushesAnimID_Offset]
+mov eax,[edi+0000008C]
+call 453CB0
+test eax,eax
+je short end
+mov esi,eax
+{mov edx,AnimString
+call 4745B0
+test al,al
+jne short end}
+fld [num]
+push ecx
+fstp [esp]
+push 03
+push AnimString
+mov eax,14
+call 473BF0
+end:
+pop esi
+pop eax
+
+originalcode:
+push eax
+push esi
+mov eax,edi
+call 0040DDC0
+
+exit:
+jmp returnhere
+
+align 04,00
+
+num:
+dd (float)10.0
+
+AnimString:
+db 'anim_rustle' 00
+
+413055:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+413055:
+db 50 56 8B C7 E8 62 AD FF FF
+//push eax
+//push esi
+//mov eax,edi
+//call 0040DDC0

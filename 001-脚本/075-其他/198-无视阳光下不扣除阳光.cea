@@ -1,0 +1,34 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov eax,[edi+0000008C]
+mov eax,[eax+0000082C]
+mov eax,[eax+PlayerInfo_GameSetting_Offset+7*4]
+test al,al
+jne 0041BA7C
+
+originalcode:
+mov esi,[edi+00005560]
+
+exit:
+jmp returnhere
+
+41BA61:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+41BA61:
+db 8B B7 60 55 00 00
+//mov esi,[edi+00005560]

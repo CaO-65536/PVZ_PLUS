@@ -1,0 +1,63 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp ecx,04
+jne short originalcode
+mov edx,[eax+2C]
+mov eax,[eax+28]
+push edx
+push eax
+mov eax,[esp+20]
+push edi
+push ebp
+call 0040D120
+cmp byte ptr [esp+17],00
+mov esi,eax
+je +07
+push 00
+call 0045E860
+mov ecx,[esi]
+mov ecx,[ecx+0000082C]
+mov ecx,[ecx+PlayerInfo_GameSetting_Offset+3*4]
+mov [esi+00000147],cl
+mov ecx,[esp+40]
+mov [esi+00000130],ecx
+mov ecx,[ebp+00000138]
+mov ecx,[ecx+38]
+lea edx,[ebp+000000AC]
+call 41DF00
+test eax,eax
+je 00410AD9
+lea eax,[eax+D8]
+push eax
+call 00488EC0
+pop eax
+mov [eax+28],00001770
+jmp 00410AD9
+
+originalcode:
+cmp ecx,01
+jne 00410AD9
+
+exit:
+jmp returnhere
+
+410A89:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+410A89:
+db 83 F9 01 75 4B
+//cmp ecx,01
+//jne 00410AD9

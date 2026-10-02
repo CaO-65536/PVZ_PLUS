@@ -1,0 +1,46 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push edi
+mov edi,[ebp+04]
+test edi,edi
+je short originalcode
+mov eax,[edi+00000138]
+cmp [eax+30],03
+je short next
+cmp [eax+30],04
+jne short originalcode
+next:
+mov ecx,[ebp+PlantClassSize-4]
+cmp [eax+38],ecx
+jne short originalcode
+call 412330
+
+originalcode:
+pop edi
+cmp dword ptr [ebp+24],23
+je 00467A38
+
+exit:
+jmp returnhere
+
+467A0A:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+467A0A:
+db 83 7D 24 23 74 28
+//cmp dword ptr [ebp+24],23
+//je 00467A38

@@ -1,0 +1,25 @@
+[ENABLE]
+alloc(newmem,2048)
+
+newmem:
+mov ebp,[edi+1C]
+mov ebx,[edi+04]
+mov eax,ebx
+mov ecx,ebp
+fild [edi+8]
+push ecx
+fstp [esp]
+call 41C6C0
+push eax
+fistp [esp]
+pop eax
+jmp 462D7E
+
+462D6F:
+jmp newmem
+nop
+[DISABLE]
+dealloc(newmem)
+462D6F:
+mov ebp,[edi+1C]
+mov ebx,[edi+04]

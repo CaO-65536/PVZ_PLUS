@@ -1,0 +1,77 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp eax,SEED_APPLE_TIME_STOPPER
+jne short next1
+mov [ebx+50],00000064
+jmp 0045E736
+
+next1:
+cmp eax,SEED_DUPLICATOR
+jne short originalcode
+mov [ebx+54],64//切换卡片倒计时
+mov [ebx+D4],-1//当前对于卡槽序号
+push edi
+lea edi,[ebx+D8]
+mov eax,[ebx]
+mov [edi],eax
+mov eax,[ebx+04]
+mov [edi+4],eax
+mov eax,[ebx+08]
+add eax,0F
+mov [edi+08],eax
+mov eax,[ebx+0C]
+mov [edi+0C],eax
+mov [edi+10],32
+mov [edi+14],46
+mov dl,1
+mov [edi+18],dl
+mov [edi+49],dl
+or edx,-1
+mov [edi+1C],edx
+mov [edi+2C],edx
+mov [edi+34],edx
+mov [edi+38],edx
+mov [edi+40],edx
+mov eax,[ebx+20]
+inc eax
+mov [edi+20],eax//61A80
+xor edx,edx
+mov [edi+24],edx
+mov [edi+28],edx
+mov [edi+30],edx
+mov [edi+3C],edx
+mov [edi+48],dl
+//mov [edi+4A],dl//是否来自Board
+mov [edi+4C],edx
+fldz
+fstp [edi+44]
+pop edi
+jmp 0045E736
+
+originalcode:
+cmp eax,02
+je 0045E2E7
+
+exit:
+jmp returnhere
+
+45E2AB:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+45E2AB:
+db 83 F8 02 74 37
+//cmp eax,02
+//je 0045E2E7

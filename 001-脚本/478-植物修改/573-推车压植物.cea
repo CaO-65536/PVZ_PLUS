@@ -1,0 +1,167 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push 0//开始序号(写0从头，写指针从后一个开始
+star:
+mov esi,esp
+mov edx,[ebp+04]
+call 41C950//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je short end
+mov esi,[esi]//esi=遍历对象的指针
+mov eax,[esi+1C]
+cmp [ebp+14],eax
+jne short star
+push 7F
+call PlantEffectedByDamage
+test al,al
+je short star
+lea eax,[esp+20+4]
+mov ecx,esi
+call 467EF0
+lea edi,[esp+10+4]
+lea ecx,[esp+20+4]
+call 41C820
+test eax,eax
+jle short star
+push 7F
+call PlantEffectedByDamage
+test al,al
+je short star
+push esi
+mov eax,ebp
+call MowPlant
+jmp short star
+end:
+add esp,4
+
+originalcode:
+mov eax,[ebp+2C]
+cmp eax,02
+
+exit:
+jmp returnhere
+align 10,CC
+
+MowPlant:
+push esi
+mov esi,eax
+push edi
+mov edi,[esp+0C]
+mov eax,[esi+2C]
+cmp eax,01
+jne short MowPlant_NotReady
+call 458DA0
+mov [esi+20],00000019
+jmp short MowPlant_Next1
+MowPlant_NotReady:
+cmp eax,02
+jne short MowPlant_Next1
+mov [esi+20],00000032
+MowPlant_Next1:
+cmp [esi+34],01
+jne short MowPlant_NotPool
+push esi
+mov eax,[esi]
+mov esi,00000040
+call 453630
+pop esi
+mov eax,[esi]
+mov esi,[esi+1C]
+mov ecx,[eax+00000820]
+mov edx,[ecx+08]
+and esi,0000FFFF
+lea esi,[esi+esi*4]
+shl esi,05
+add esi,[edx]
+push ecx
+fld dword ptr [00679690] { (35.00) }
+fstp [esp]
+push 03
+mov eax,0000000A
+cmp dword ptr [esi+3C],02
+je short MowPlant_NotInPool
+push 006682B8 { ("anim_suck") }
+jmp short MowPlant_Next2
+MowPlant_NotInPool:
+push 006682C4 { ("anim_landsuck") }
+MowPlant_Next2:
+call 473BF0
+push edi
+call 4679B0
+pop edi
+pop esi
+ret 0004
+MowPlant_NotPool:
+push esi
+mov eax,[esi]
+mov esi,00000001
+call 453630
+pop esi
+call PlantMowDown
+pop edi
+pop esi
+ret 0004
+{
+push Plant* thePlant
+mov eax,LawnMower* this
+}
+align 10,CC
+
+PlantMowDown:
+push esi
+sub esp,10
+lea eax,[esp]
+mov ecx,edi
+call 467EF0
+mov esi,eax
+sub esp,08
+mov eax,[esi+08]
+cdq
+sub eax,edx
+sar eax,1
+add [esi],eax
+fild [esi]
+fstp [esp]
+mov eax,[esi+0C]
+cdq
+sub eax,edx
+sar eax,1
+add [esi+04],eax
+fild [esi+04]
+fstp [esp+04]
+mov eax,00000042
+mov ecx,[edi+20]
+inc ecx
+mov edx,[edi]
+call 453C80
+push edi
+call 4679B0
+add esp,10
+pop esi
+ret
+{
+mov edi,LawnMower* this
+}
+align 10,CC
+
+4588B5:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4588B5:
+db 8B 45 2C 83 F8 02
+//mov eax,[ebp+2C]
+//cmp eax,02

@@ -1,0 +1,33 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+fld [006797F0]
+push ecx
+fstp [esp]
+push 14
+push 03
+push 00668D10
+call PlayHeadZombieReanimation
+
+exit:
+jmp 005277D1
+
+52776E:
+jmp newmem
+nop 3
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+52776E:
+mov eax,[edi]
+mov edi,[edi+00000144]
+//Alt: db 8B 07 8B BF 44 01 00 00

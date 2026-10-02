@@ -1,0 +1,111 @@
+[ENABLE]
+467FE3:
+jmp 468192
+46800C:
+jmp 468192
+46802F:
+jmp 468192
+46806B:
+jmp 468192
+4680A1:
+jmp 468192
+4680C7:
+jmp 468192
+4680FF:
+jmp 468192
+468127:
+jmp 468192
+468148:
+jmp 468192
+468171:
+jmp 468192
+4681B3:
+jmp 468192
+4681D2:
+mov [eax+0C],ecx
+jmp 468192
+alloc(newmem,2048)
+label(originalcode)
+
+newmem:
+mov esi,eax
+push ebx
+call IsPlantLeft
+test al,al
+je short originalcode
+cmp [ebx+24],2B
+je short originalcode
+mov edi,[ebx+8]
+mov ecx,[ebx+10]
+sar ecx,1
+add edi,ecx
+mov eax,edi
+mov edx,edi
+mov ecx,[esi]
+sub edx,ecx
+add eax,edx
+sub eax,[esi+8]
+mov [esi],eax
+
+originalcode:
+push ebx
+call GetPlantHeightOffsetOfFlowerPots
+add [esi+4],eax
+mov eax,esi
+pop edi
+pop esi
+pop ebx
+ret 0004
+
+468192:
+jmp newmem
+[DISABLE]
+467FE3:
+pop edi
+pop esi
+ret 0004
+46800C:
+pop edi
+pop esi
+ret 0004
+46802F:
+pop edi
+pop esi
+ret 0004
+46806B:
+pop edi
+pop esi
+ret 0004
+4680A1:
+pop edi
+pop esi
+ret 0004
+4680C7:
+pop edi
+pop esi
+ret 0004
+4680FF:
+pop edi
+pop esi
+ret 0004
+468127:
+pop edi
+pop esi
+468148:
+pop edi
+pop esi
+468171:
+pop edi
+pop esi
+4681B3:
+pop edi
+pop esi
+4681D2:
+mov [eax+0C],ecx
+pop edi
+pop esi
+dealloc(newmem)
+468192:
+pop edi
+pop esi
+ret 0004

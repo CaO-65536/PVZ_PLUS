@@ -1,0 +1,7 @@
+[ENABLE]
+52583D:
+fstp st(0)
+nop 2
+[DISABLE]
+52583D:
+fstp dword ptr [esp+10]

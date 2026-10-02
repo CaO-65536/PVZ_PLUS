@@ -1,0 +1,96 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+push esi
+mov esi,eax
+mov eax,[eax+24]
+cmp eax,1A
+jne short L1
+xor eax,eax
+cmp dword ptr [esp+04+4],01
+setne al
+add eax,01
+jmp FinalEnd
+L1:
+cmp eax,02
+je L2
+cmp eax,14
+je L2
+cmp eax,2F
+je L2
+cmp eax,0F
+je L2
+cmp eax,27
+je L3
+cmp eax,20
+je short L3
+cmp eax,22
+je short L3
+cmp eax,2C
+je short L3
+cmp eax,04
+jne short L4
+mov eax,0000004D
+jmp short FinalEnd
+L4:
+cmp eax,11
+je short L3
+cmp eax,08
+je short L5
+cmp eax,18
+je short L5
+cmp eax,0A
+je short L5
+cmp eax,2A
+je short L5
+cmp eax,06
+je short L5
+cmp eax,2B
+jne short L6
+mov eax,0000000B
+jmp short FinalEnd
+L6:
+cmp eax,13
+jne short L7
+mov eax,00000005
+jmp short FinalEnd
+L7:
+sub eax,32
+neg eax
+sbb eax,eax
+and eax,-10
+add eax,11
+jmp short FinalEnd
+L5:
+mov eax,00000009
+jmp short FinalEnd
+L3:
+mov eax,0000000D
+jmp short FinalEnd
+L2:
+mov eax,0000007F
+FinalEnd:
+cmp byte [esi+147],1
+jne short End
+or eax,00000080
+End:
+pop esi
+ret 0004
+
+45EB10:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+45EB10:
+mov eax,[eax+24]
+cmp eax,1A
+//Alt: db 8B 40 24 83 F8 1A

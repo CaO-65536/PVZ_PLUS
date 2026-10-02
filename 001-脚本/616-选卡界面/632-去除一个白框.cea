@@ -1,0 +1,32 @@
+[ENABLE]
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+originalcode:
+cmp esi,30
+je 004848DD
+cmp esi,35
+je 004848DD
+
+exit:
+jmp returnhere
+
+484844:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+dealloc(newmem)
+484844:
+cmp esi,30
+je 004848DD
+//Alt: db 83 FE 30 0F 84 90 00 00 00

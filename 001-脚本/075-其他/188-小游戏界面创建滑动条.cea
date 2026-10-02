@@ -1,0 +1,142 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+//mov [ebp+mChallengeScreenSliderListener_Offset],SliderListener_VFs
+push esi
+push B8+8
+call 61C130
+add esp,04
+lea ecx,[eax+B8]//lea ecx,[ebp+mChallengeScreenSliderListener_Offset]
+push ecx
+push 0//ID
+mov esi,eax
+call 53A510//初始化滑动条
+mov ecx,eax
+mov [ecx+B8],SliderListener_VFs
+mov [ecx+BC],ebp
+mov byte ptr [ecx+B0],0
+mov eax,[IMAGE_DIALOG_SLIDER]
+mov [ecx+0000009C],eax
+mov eax,[IMAGE_DIALOG_SLIDER_THUMB]
+mov [ecx+000000A0],eax
+mov [ebp+mChallengeScreenSlider_Offset],ecx
+fldz//默认数值
+push ecx
+push ecx//8字节堆栈记录双浮点
+fstp qword ptr [esp]
+mov eax,[ecx]
+mov eax,[eax+00000118]
+call eax//设置滑动条数值53A580
+mov ecx,esi
+push 190//高
+push 1E//宽
+push #150//y
+push #820//x
+call 539BD0
+{push esi//子控件
+mov ecx,ebp//父控件
+call 5370A0//加入父控件}
+pop esi
+
+originalcode:
+push 78
+call 0061C130
+
+exit:
+jmp returnhere
+
+align 10,CC
+SliderVar:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+lea esi,[ecx-B8]
+xor ebx,ebx
+push #5800
+fld qword [ebp+0C]
+fimul [esp]
+fistp [esp]
+pop edi
+
+//mov eax,[IMAGE_CHALLENGE_NAME_BACK]
+//call 588A20
+//lea eax,[eax+04]
+//mov eax,64
+//imul edi,eax
+While:
+mov ecx,[esi+BC]
+mov ecx,[ecx+ebx*4+mChallengeButtons_Offset]
+lea eax,[ebx+ebx*2]
+lea eax,[eax*8+ChallengeNewDefinition]
+mov eax,[eax+08]
+mov edx,[esi+BC]
+cmp [edx+000001C8],eax
+jne short Next
+//mov eax,[IMAGE_CHALLENGE_NAME_BACK]
+//call 588A20
+//lea ecx,[eax+02]
+mov ecx,64
+lea eax,[ebx+ebx*2]
+lea eax,[eax*8+ChallengeNewDefinition]
+mov eax,[eax+10]
+imul eax,ecx
+add eax,00000082+14
+mov edx,edi
+sar edx,1
+sub eax,edx
+push eax
+mov ecx,[esi+BC]
+mov ecx,[ecx+ebx*4+mChallengeButtons_Offset]
+push [ecx+30]
+mov edx,[ecx]
+mov edx,[edx+A4]
+call edx
+Next:
+inc ebx
+cmp ebx,NUM_CHALLENGE_MODES
+jne short While
+mov ecx,[esi+BC]
+push ecx
+call 42E710
+
+cmp byte ptr [esi+A4],0
+jne short SliderVar_NoSound
+mov ecx,[6A9EC0]
+push 0
+mov edx,[ecx]
+mov edx,[edx+000000D8]
+call edx
+SliderVar_NoSound:
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 0C
+
+align 04,00
+SliderListener_VFs:
+dd SliderVar 00000000
+
+42E070:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+42E070:
+db 6A 78 E8 B9 E0 1E 00
+//push 78
+//call 0061C130

@@ -1,0 +1,70 @@
+[ENABLE]
+define(number,100)
+define(number1,30)
+43A144:
+sub esp,number//划分堆栈
+43A682:
+add esp,number//复位堆栈
+43A60A:
+mov ebx,[esp+number+14]
+43A660:
+mov ebx,[esp+number+14]//调用堆栈
+43A533:
+cmp eax,number1
+43A61E:
+cmp esi,number1
+43A679:
+cmp esi,number1
+40DA93:
+cmp ebp,number1//出怪列表设置时读取的上限
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+originalcode:
+push esi
+xor esi,esi
+az1:
+mov [esp+esi+3C],eax
+add esi,4
+cmp esi,4*number1
+jne short az1
+pop esi
+cmp [ebp+00005564],esi
+
+exit:
+jmp returnhere
+
+43A245:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+43A144:
+sub esp,000000B0
+43A682:
+add esp,000000B0
+43A60A:
+mov ebx,[esp+000000C4]
+43A660:
+mov ebx,[esp+000000C4]
+43A533:
+cmp eax,21
+43A61E:
+cmp esi,21
+43A679:
+cmp esi,21
+40DA93:
+cmp ebp,21
+dealloc(newmem)
+43A245:
+mov [esp+000000B8],eax
+//Alt: db 89 84 24 B8 00 00 00

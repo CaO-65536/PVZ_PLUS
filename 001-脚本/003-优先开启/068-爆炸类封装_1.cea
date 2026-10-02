@@ -1,0 +1,140 @@
+[ENABLE]
+define(ExplodeONutRadius,5A)
+define(CherryBombRadius,73)
+define(DoomShroomRadius,000000FA)
+define(PotatoMineRadius,3C)
+define(CobCannonRadius,73)
+define(JackInTheBoxZombieRadius,73)
+registersymbol(ExplodeONutRadius)
+registersymbol(CherryBombRadius)
+registersymbol(DoomShroomRadius)
+registersymbol(PotatoMineRadius)
+registersymbol(CobCannonRadius)
+registersymbol(JackInTheBoxZombieRadius)
+//爆炸坚果
+462E7D:
+push ExplodeONutRadius
+462E83:
+call UnitedBoom
+//樱桃
+4667DA:
+push CherryBombRadius
+4667E0:
+call UnitedBoom
+//毁灭菇
+466838:
+push DoomShroomRadius
+466841:
+call UnitedBoom
+//土豆地雷
+466A64:
+push PotatoMineRadius
+466A6A:
+call UnitedBoom
+//玉米炮
+46D83C:
+push CobCannonRadius
+46D85B:
+call UnitedBoom
+//小丑
+526CD7://小丑不直接炸罐子
+jmp 00526D02
+alloc(newmem,2048)
+
+newmem:
+mov [esp+10],edi
+mov [esp+14],ebx
+mov ecx,[esi+1C]
+mov edx,[esi+04]
+cmp byte ptr [esi+000000B8],00
+je short NoMindControlled
+push 7F
+jmp short next1
+NoMindControlled:
+push FF
+next1:
+push 01
+push 01
+push JackInTheBoxZombieRadius
+push ebx
+push edi
+push ecx
+push edx
+call UnitedBoom
+jmp 00526C84
+
+newmem1:
+push 00
+mov eax,edi
+call 45EB10
+push eax//int theDamageRangeFlags
+push 01//bool theBurn
+push [edi+1C]//int theRow
+push [edi+04]//Board* this
+call UnitedBurnRow
+jmp 0046697E
+
+newmem2:
+push 00
+mov eax,ebx
+call 45EB10
+push eax//int theDamageRangeFlags
+push [ebx+04]//Board* this
+call UnitedIce
+jmp 004669FF
+
+newmem3:
+cmp byte ptr [edi+B8],0
+jne short BeMindControlled
+push FF
+jmp short UseUnitedBurnRow
+BeMindControlled:
+push 7F
+UseUnitedBurnRow:
+push 01
+push [edi+1C]
+push [edi+04]
+call UnitedBurnRow
+jmp 0052773E
+
+526C37://小丑
+jmp newmem
+nop 2
+466975://辣椒
+jmp newmem1
+nop 4
+4669F8://寒冰菇
+jmp newmem2
+nop 2
+5276BB://辣椒僵尸
+jmp newmem3
+nop 2
+[DISABLE]
+462E83:
+call 0041D8A0
+4667E0:
+call 0041D8A0
+466841:
+call 0041D8A0
+466A6A:
+call 0041D8A0
+46D85B:
+call 0041D8A0
+526CD7:
+mov ecx,[esi]
+dealloc(newmem)
+unregistersymbol(ExplodeONutRadius)
+unregistersymbol(CherryBombRadius)
+unregistersymbol(DoomShroomRadius)
+unregistersymbol(PotatoMineRadius)
+unregistersymbol(CobCannonRadius)
+unregistersymbol(JackInTheBoxZombieRadius)
+526C37:
+cmp byte ptr [esi+000000B8],00
+466975:
+mov ecx,[edi+1C]
+push ecx
+call 004664B0
+4669F8:
+mov edi,ebx
+call 00466420

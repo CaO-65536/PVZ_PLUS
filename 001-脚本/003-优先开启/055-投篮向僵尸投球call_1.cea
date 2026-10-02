@@ -1,0 +1,104 @@
+[ENABLE]
+alloc(ZombieCatapultFireToZombie,2048)
+registersymbol(ZombieCatapultFireToZombie)
+label(exit)
+
+ZombieCatapultFireToZombie:
+test eax,eax
+je 00525730
+sub esp,60
+push esi
+push edi
+push ebp
+mov edi,ecx//投篮僵尸
+mov esi,eax//被打僵尸
+lea eax,[esp+10]
+cmp [esi+24],19
+jne short az2
+mov [eax+8],#700
+push eax
+mov ecx,esi
+call 52BEE0
+test al,al
+pop eax
+je short wc
+mov [eax+8],#100
+wc:
+fld [edi+30]
+fistp [eax+C]
+az2:
+mov ecx,edi
+call 525730
+mov ebp,eax
+cmp [esi+24],19
+je end
+
+lea edi,[esp+18]
+mov ebx,esi
+call 005320B0//取僵尸矩形
+fld dword ptr [00679800]// (50.00)
+push ecx
+mov eax,esi
+fstp dword ptr [esp]
+call 0052A580
+fsub [ebp+30]//减去子弹x
+fsub qword ptr [00679318]// (30.00)
+fstp dword ptr [esp+34]
+fild [esp+1C]
+fsub [ebp+34]
+fstp [esp+3C]
+mov ecx,[esi+28]
+fld qword ptr [00679708]// (60.00)
+cmp ecx,35
+jne short az1
+fld dword ptr [esp+34]
+fsub st(0),st(1)
+fstp dword ptr [esp+34]
+az1:
+mov eax,[ebx+24]
+cmp eax,12
+jne short az3
+cmp byte ptr [ebx+000000BC],00
+je short az3
+fsubr dword ptr [esp+34]
+fstp dword ptr [esp+34]
+jmp short az4
+az3:
+fstp st(0)
+az4:
+cmp ecx,3B
+jne short az5
+fld dword ptr [esp+34]
+fsub qword ptr [006794C8]
+fstp dword ptr [esp+34]
+az5:
+fld dword ptr [esp+34]
+mov eax,ebp
+fld qword ptr [00679490]// (120.00)
+mov [eax+58],00000001
+fdiv st(1),st(0)
+fxch st(1)
+fstp dword ptr [eax+3C]
+fldz
+fstp dword ptr [eax+40]
+fdivr dword ptr [esp+3C]
+fsub qword ptr [00679560]
+fstp dword ptr [eax+44]
+fld dword ptr [00679978]
+fstp dword ptr [eax+48]
+
+end:
+pop ebp
+pop edi
+pop esi
+add esp,60
+exit:
+ret
+{
+mov eax,//Zombie* TargetZombie = 0
+mov ecx,//Zombie* theZombie
+}
+
+[DISABLE]
+dealloc(ZombieCatapultFireToZombie)
+unregistersymbol(ZombieCatapultFireToZombie)

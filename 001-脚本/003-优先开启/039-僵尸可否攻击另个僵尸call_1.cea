@@ -1,0 +1,97 @@
+[ENABLE]
+alloc(CanZombieHitAnotherZombie,2048)
+registersymbol(CanZombieHitAnotherZombie)
+CanZombieHitAnotherZombie:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+sub esp,20
+mov edi,esp
+mov esi,[ebp+8]//发起攻击的僵尸
+mov ebx,[ebp+C]//承受攻击的僵尸
+mov al,[esi+000000B8]
+cmp al,[ebx+000000B8]
+je no
+cmp byte [esi+15D],0
+je short next
+cmp [esi+188],1
+je no
+next:
+mov eax,[ebx+28]
+cmp eax,49
+je no
+cmp eax,4A
+je no
+cmp eax,20
+je no
+cmp eax,04
+je no
+cmp eax,05
+je no
+cmp eax,0C
+je no
+cmp eax,47
+je short no
+cmp eax,08
+je short no
+cmp [esi+24],11
+jne short az1
+cmp [ebx+24],19
+jne short az1
+mov ecx,esi
+call 52BEE0
+mov dl,al
+mov ecx,ebx
+call 52BEE0
+cmp dl,al
+je short no
+az1:
+cmp dword ptr [ebx+64],09
+je short no
+mov eax,ebx
+call 534700
+test al,al
+jne short no
+cmp [ebx+24],19
+je short az2
+mov eax,[ebx+1C]
+cmp eax,[esi+1C]
+jne short no
+az2:
+call 5320B0
+mov ebx,esi
+mov esi,eax
+add edi,10
+call 532140
+mov ecx,esp
+call 41C820
+cmp eax,14
+jnl short yes
+test eax,eax
+jl short no
+mov ebx,[ebp+C]//承受攻击的僵尸
+cmp byte ptr [ebx+51],00
+je short no
+yes:
+mov al,1
+end:
+add esp,20
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret C
+no:
+xor al,al
+jmp short end
+{
+push //攻击方式
+push //承受攻击的僵尸
+push //发起攻击的僵尸
+}
+
+[DISABLE]
+dealloc(CanZombieHitAnotherZombie)

@@ -1,0 +1,15 @@
+[ENABLE]
+alloc(newmem,2048)
+
+newmem:
+call 004537D0
+cmp [ebx+B8],al
+jne 5302DD
+jmp 530244
+
+530237:
+jmp newmem
+[DISABLE]
+dealloc(newmem)
+530237:
+call 004537D0

@@ -1,0 +1,34 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+originalcode:
+push 32//伤害
+mov eax,10//清除尸体
+call NormallyHitPlant//PlantTakeDamage
+mov eax,[esi+40]
+
+exit:
+jmp returnhere
+
+45EC63:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+45EC63:
+add dword ptr [esi+40],-32
+mov eax,[esi+40]
+//Alt: db 83 46 40 CE 8B 46 40

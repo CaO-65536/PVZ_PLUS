@@ -1,0 +1,87 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+
+
+originalcode:
+mov eax,[esi]
+mov ebx,[eax+00000768]
+
+push esi
+push 00
+While_Next:
+mov edx,ebx
+mov esi,esp
+call 41C8F0
+test al,al
+je short While_End
+mov esi,[esp]
+cmp [esi+24],19
+jne short While_Next
+mov eax,[esi]
+fld dword ptr [006793C0]//  (0.50)
+mov ecx,[eax+00000820]
+mov edx,[ecx+08]
+mov eax,[esi+00000118]
+and eax,0000FFFF
+lea ecx,[eax+eax*4]
+shl ecx,05
+add ecx,[edx]
+mov edx,[esi+28]
+cmp edx,56
+jne short While_Boss_Next1
+fcom dword ptr [ecx+04]
+fnstsw ax
+test ah,41
+jne short While_Boss_Next1
+fstp st(0)
+jmp short While_Next
+While_Boss_Next1:
+cmp edx,5A
+jne short While_Boss_Next2_0
+fcomp dword ptr [ecx+04]
+fnstsw ax
+test ah,05
+jp short While_Boss_Next2
+jmp short While_Next
+While_Boss_Next2_0:
+fstp st(0)
+While_Boss_Next2:
+cmp edx,57
+je short While_True
+cmp edx,58
+je short While_True
+cmp edx,59
+jne short While_Next
+While_True:
+mov al,01
+//jmp short While_Next
+While_End:
+add esp,04
+pop esi
+test al,al
+jne 0045B316
+
+exit:
+jmp returnhere
+
+45B2FA:
+jmp newmem
+nop 3
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+45B2FA:
+db 8B 06 8B 98 68 07 00 00
+//mov eax,[esi]
+//mov ebx,[eax+00000768]

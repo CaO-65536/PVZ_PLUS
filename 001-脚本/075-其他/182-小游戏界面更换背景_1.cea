@@ -1,0 +1,30 @@
+[ENABLE]
+alloc(newmem,2048)
+
+newmem:
+num1:
+dd (float)56
+
+0042F32E:
+db 6A 5A
+//push 5A
+0042F43A:
+db 6A 69
+//push 69
+0042F4B3:
+fld dword ptr [num1]//  (56.00)
+42F196:
+mov ebx,[IMAGE_CHALLENGE_NEWBACKGROUND]
+[DISABLE]
+dealloc(newmem)
+0042F32E:
+db 6A 3A
+//push 3A
+0042F43A:
+db 6A 49
+//push 49
+0042F4B3:
+fld dword ptr [00679A90]//  (26.00)
+42F196:
+db 8B 1D 0C 78 6A 00
+//mov ebx,[006A780C]

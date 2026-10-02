@@ -1,0 +1,18 @@
+[ENABLE]
+4019CF:
+jmp 00401A0A
+401D80:
+jmp 00401DA1
+00403878:
+jmp 004038E8
+nop 4
+[DISABLE]
+4019CF:
+db 31 DB
+//xor ebx,ebx
+401D80:
+db 31 F6
+//xor esi,esi
+00403878:
+db 8D B3 A4010000
+//lea esi,[ebx+000001A4]

@@ -1,0 +1,139 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(PlayHeadZombieReanimation,1024)
+label(UpdateHeadAnimSpeed)
+label(ApplyHeadAnimRate)
+registersymbol(PlayHeadZombieReanimation)
+registersymbol(UpdateHeadAnimSpeed)
+registersymbol(ApplyHeadAnimRate)
+
+PlayHeadZombieReanimation:
+push esi
+mov eax,[edi]
+mov ecx,[edi+00000144]
+call 453CB0
+test eax,eax
+je end
+mov esi,eax
+fld dword ptr [esp+14]
+mov eax,[esp+0C]
+push ecx
+mov ecx,[esp+0C]
+fstp dword ptr [esp]
+push eax
+mov eax,[esp+18]
+push ecx
+call 473BF0
+fldz
+fld dword ptr [esp+14]
+fucom st(1)
+fnstsw ax
+fstp st(1)
+test ah,44
+jnp short az1
+fstp [edi+184]
+jmp short az2
+az1:
+fstp st(0)
+az2:
+mov esi,edi
+call UpdateHeadAnimSpeed
+end:
+pop esi
+ret 10
+{
+push theAnimRate(float)
+push theBlendTime
+push theLoopType
+push theTrackName
+mov edi,*Zombie
+}
+
+UpdateHeadAnimSpeed:
+sub esp,08
+push ebx
+mov eax,[esi+6C]
+cmp eax,-02
+je end1
+cmp eax,-03
+je end1
+mov eax,[esi]
+mov ecx,[esi+00000144]
+call 453CB0
+test eax,eax
+je end1
+mov ebx,eax
+cmp dword ptr [esi+000000B4],00
+jg short stop
+cmp dword ptr [esi+000000B0],00
+jg short stop
+cmp byte ptr [esi+000000BF],00
+je short az3
+cmp [esi+000000C0],000000AA
+jnl short az3
+stop:
+fldz
+push ecx
+mov eax,esi
+fstp dword ptr [esp]
+call ApplyHeadAnimRate
+jmp end1
+az3:
+fldz
+fld [esi+184]
+fucom st(1)
+fnstsw ax
+fstp st(1)
+fstp st(0)
+test ah,44
+jnp short end1
+fld [esi+184]
+push ecx
+mov eax,esi
+fstp dword ptr [esp]
+call ApplyHeadAnimRate
+end1:
+pop ebx
+add esp,08
+ret
+{
+mov esi,*zombie
+}
+
+ApplyHeadAnimRate:
+push ebx
+push esi
+mov ebx,eax
+mov eax,[ebx]
+mov ecx,[ebx+00000144]
+call 453CB0
+test eax,eax
+je short end2
+mov esi,eax
+fld [esp+8+4]
+fst [esi+08]
+mov eax,ebx
+call 0052EF10
+test al,al
+je NormalSpeed
+fmul qword [00679300]
+fstp [esi+08]
+jmp end2
+NormalSpeed:
+fstp st(0)
+end2:
+pop esi
+pop ebx
+ret 4
+{
+push theAnimRate(float)
+mov eax,*Zombie
+}
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(PlayHeadZombieReanimation)
+unregistersymbol(PlayHeadZombieReanimation)
+unregistersymbol(UpdateHeadAnimSpeed)
+unregistersymbol(ApplyHeadAnimRate)

@@ -1,0 +1,26 @@
+[ENABLE]
+4837DA:
+db EB
+4837B2:
+mov [eax+08],000001BD+HALFEXSCREENWIDTH
+mov [eax+0C],#490
+483726:
+mov esi,[6A79F4]
+alloc(wc,9)
+wc:
+db BF EC CB D9 D1 A1 BF A8 00
+483694:
+push 09
+push wc
+[DISABLE]
+4837DA:
+db 75
+483694:
+push 0C
+push 0066D2C8
+4837B2:
+mov [eax+08],0000014C
+mov [eax+0C],00000222
+483726:
+mov esi,[6A77F8]
+dealloc(wc)

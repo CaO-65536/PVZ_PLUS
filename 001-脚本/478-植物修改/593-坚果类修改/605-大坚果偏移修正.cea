@@ -1,0 +1,52 @@
+[ENABLE]
+alloc(newmem,1024)
+newmem:
+az:
+dd (float)26
+az1:
+dd (float)-7//-33+26
+az2:
+dq (double)50//76-26
+az3:
+dd (float)13
+code1:
+fstp dword ptr [esp+20]
+cmp edx,32
+jne short next1
+fld dword ptr [esp+10]
+fadd dword ptr [az]
+fstp dword ptr [esp+10]
+next1:
+cmp edx,23
+jmp 438CD8
+code2:
+fstp dword ptr [esp+04]
+cmp esi,32
+jne short next2
+fld [az3]
+jmp 439016
+next2:
+fldz
+jmp 439016
+465918:
+fld dword ptr [az1]
+4639FC:
+fsub qword ptr [az2]
+438CD1:
+jmp code1
+nop 2
+439010:
+jmp code2
+nop
+[DISABLE]
+dealloc(newmem)
+465918:
+fld dword ptr [006799E0]
+4639FC:
+fsub qword ptr [00679810]
+438CD1:
+cmp edx,23
+fstp dword ptr [esp+20]
+439010:
+fstp dword ptr [esp+04]
+fldz

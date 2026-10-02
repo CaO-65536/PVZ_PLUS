@@ -1,0 +1,50 @@
+[ENABLE]
+4623CD:
+cmp eax,01
+jl 0046248A
+cmp eax,06
+jg 0046248A
+nop
+46267A:
+xor al,al
+4627C9:
+jmp 00462814//取消音效
+4629C2:
+nop A//默认不显示金钱
+alloc(newmem,2048)
+
+newmem:
+push 0
+mov ecx,ebp
+call 432C00
+mov [esi+10],-1
+jmp 4625B0
+
+4624DF:
+jmp newmem
+nop 5
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+4623CD:
+cmp eax,01
+je 004623E0
+cmp eax,02
+je 004623E0
+cmp eax,03
+jne 0046248A
+46267A:
+mov al,01
+4627C9:
+je 00462814
+4629C2:
+mov [edx+000055F4],000003E8
+dealloc(newmem)
+4624DF:
+fld dword ptr [ebp+24]
+push ecx
+fld qword ptr [00679360]
+//Alt: db D9 45 24 51 DD 05 60 93 67 00

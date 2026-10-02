@@ -1,0 +1,35 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push ebp
+call IsPlantLeft
+test al,al
+je short originalcode
+mov [ecx+58],0000000B
+jmp short exit
+
+originalcode:
+mov [ecx+58],00000005
+
+exit:
+jmp returnhere
+
+467425:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+467425:
+mov [ecx+58],00000005
+//Alt: db C7 41 58 05 00 00 00

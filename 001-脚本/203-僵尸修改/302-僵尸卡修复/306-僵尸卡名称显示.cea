@@ -1,0 +1,40 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+push eax
+call 42B530
+test al,al
+pop eax
+je 40F54C
+push 0
+lea ecx,[esp+34]
+mov esi,eax
+call 42A040
+push eax
+push ecx
+call ZombieGetNameString
+lea ecx,[esi-21]
+mov [esp+74],ecx
+jmp 0040F7BC
+
+exit:
+jmp returnhere
+
+40F52C:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+40F52C:
+cmp eax,3C
+jne 40F54C
+//Alt: db 83 F8 3C 75 1B

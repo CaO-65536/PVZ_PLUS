@@ -1,0 +1,33 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(exit)
+
+newmem:
+mov ebx,[esp+34]
+push 0
+push ebx
+push ebp
+call CanZombieHitAnotherZombie
+test al,al
+jne 0052E90B
+jmp 0052E8EF
+
+exit:
+jmp returnhere
+
+52E880:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+52E880:
+mov al,[ebp+000000B8]
+//Alt: db 8A 85 B8 00 00 00

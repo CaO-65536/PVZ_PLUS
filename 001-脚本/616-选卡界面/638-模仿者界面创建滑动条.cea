@@ -1,0 +1,105 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov [esi+178],0
+mov [esi+17C],0
+push esi
+push ebp
+mov ebp,esi
+push B8+8//多申请8字节记录Listener, 所在界面
+call 61C130
+add esp,04
+lea ecx,[eax+B8]
+push ecx
+push 0//ID
+mov esi,eax
+call 53A510//初始化滑动条
+mov [ebp+178],eax
+mov [eax+B8],MyVF
+mov [eax+BC],ebp
+mov byte ptr [eax+B0],0
+mov ecx,[IMAGE_DIALOG_SLIDER]
+mov [eax+0000009C],ecx
+mov ecx,[IMAGE_DIALOG_SLIDER_THUMB]
+mov [eax+000000A0],ecx
+mov ecx,eax
+fldz//默认数值
+push ecx
+push ecx//8字节堆栈记录双浮点
+fstp qword ptr [esp]
+mov eax,[ecx]
+mov eax,[eax+00000118]
+call eax//设置滑动条数值53A580
+mov ecx,esi
+push 00000140//高
+push 1E//宽
+push 00000082//y
+push 000001C2//x
+mov edx,[ecx]
+mov edx,[edx+A0]
+call edx
+push esi//子控件
+mov ecx,ebp//父控件
+mov edx,[ecx]
+mov edx,[edx+C]
+call edx//加入父控件
+pop ebp
+pop esi
+
+
+originalcode:
+push 78
+call 0061C130
+
+exit:
+jmp returnhere
+
+align 04,00
+MyVF:
+dd SliderVal
+
+align 10,CC
+SliderVal:
+push ebp
+mov ebp,esp//ebp+8//id ebp+C//双浮点数值 esi//滑动条指针
+push esi
+lea esi,[ecx-B8]
+fld qword ptr [ebp+C]
+mov ecx,[esi+BC]
+push -8
+fimul [esp]
+fistp [ecx+17C]
+pop ecx
+cmp byte ptr [esi+A4],0
+jne short az1
+mov ecx,[6A9EC0]
+push 0//音效id
+mov edx,[ecx]
+mov edx,[edx+000000D8]
+call edx
+az1:
+pop esi
+mov esp,ebp
+pop ebp
+ret C
+
+482C34:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+482C34:
+push 78
+call 0061C130
+//Alt: db 6A 78 E8 F5 94 19 00

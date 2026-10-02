@@ -1,0 +1,36 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+
+newmem:
+push [ebp+08]
+call FindStarFruitTargetPlant
+{test al,al
+jne short exit
+
+originalcode:
+xor al,al
+
+exit:}
+pop edi
+pop esi
+pop ebx
+jmp returnhere
+
+45F6C4:
+jmp newmem
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+45F6C4:
+xor al,al
+pop edi
+pop esi
+pop ebx
+//Alt: db 32 C0 5F 5E 5B

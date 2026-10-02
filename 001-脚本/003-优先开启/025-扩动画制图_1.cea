@@ -1,0 +1,229 @@
+[ENABLE]
+alloc(ReanimatorCache,2048)
+define(NUM_CACHED_SEED_TYPES,NUM_PLANT_TYPES)//36
+registersymbol(NUM_CACHED_SEED_TYPES)
+define(NUM_CACHED_MOWER_TYPES,4)
+registersymbol(NUM_CACHED_MOWER_TYPES)
+define(NUM_CACHED_ZOMBIE_TYPES,NUM_ZOMBIE_TYPES+2)//
+registersymbol(NUM_CACHED_ZOMBIE_TYPES)
+define(mImageVariationList_Size,10)
+registersymbol(mImageVariationList_Size)
+define(mImageVariationList_Offset,NUM_CACHED_SEED_TYPES*4)//D4
+registersymbol(mImageVariationList_Offset)
+define(mLawnMowers_Offset,mImageVariationList_Offset+mImageVariationList_Size)//E4
+registersymbol(mLawnMowers_Offset)
+define(mZombieImages_Offset,mLawnMowers_Offset+NUM_CACHED_MOWER_TYPES*4)//F4
+registersymbol(mZombieImages_Offset)
+define(mApp_Offset,mZombieImages_Offset+NUM_ZOMBIE_TYPES*4+2*4)//NUM_CACHED_ZOMBIE_TYPES*4)
+registersymbol(mApp_Offset)
+define(ReanimatorCacheSize,mApp_Offset+4)
+registersymbol(ReanimatorCacheSize)
+
+ReanimatorCache:
+
+ReanimatorCacheInitialize:
+push ebx
+xor ebx,ebx
+xor ecx,ecx
+lea eax,[ReanimatorCacheSize]
+ReanimatorCacheInitializeWhile:
+mov [edx+ecx],ebx
+add ecx,4
+cmp ecx,eax//ReanimatorCacheSize
+jne short ReanimatorCacheInitializeWhile
+mov eax,[006A9F38]
+mov [edx+mApp_Offset],eax
+pop ebx
+ret
+align 10,CC
+
+ReanimatorCacheDispose_mZombieImages:
+lea edi,[ebx+NUM_CACHED_ZOMBIE_TYPES]
+lea esi,[esi+mLawnMowers_Offset+NUM_CACHED_MOWER_TYPES*4]
+jmp 0046FF84
+
+newmem:
+{lea edi,[esi+mEXPlantImages_Offset]
+mov ebx,NUM_CACHED_EXPLANT_TYPES
+mov ecx,[edi]
+cmp ecx,ebp
+je +08
+mov eax,[ecx]
+mov edx,[eax]
+push 01
+call edx
+add edi,04
+sub ebx,01
+jne -16}
+lea edi,[esi+mLawnMowers_Offset]
+jmp 0046FF60
+
+//内存申请
+00452B3F:
+push 000001C4//ReanimatorCacheSize
+//初始化
+46FDC0:
+jmp ReanimatorCacheInitialize
+//贴图释放
+46FEF2:
+db 83 FF NUM_CACHED_SEED_TYPES
+//cmp edi,NUM_CACHED_SEED_TYPES
+46FEF7:
+cmp [esi+mImageVariationList_Offset+8],ebp
+push ebx
+je 0046FF5A
+or edi,-01
+mov eax,[esi+mImageVariationList_Offset]
+mov ecx,[eax+0C]
+cmp ecx,ebp
+mov [esi+mImageVariationList_Offset],ecx
+je 0046FF1B
+mov [ecx+10],ebp
+jmp 0046FF21
+mov [esi+mImageVariationList_Offset+4],ebp
+mov ecx,[eax]
+mov edx,[eax+04]
+mov [esp+10],ecx
+mov ecx,[eax+08]
+add [esi+mImageVariationList_Offset+8],edi
+mov [esp+14],edx
+mov edx,[esi+mImageVariationList_Offset+C]
+mov ebx,[edx]
+add [edx+0C],edi
+cmp ecx,ebp
+mov [eax],ebx
+mov [edx],eax
+je 0046FF52
+mov eax,[ecx]
+mov edx,[eax]
+push 01
+call edx
+cmp [esi+mImageVariationList_Offset+8],ebp
+jne 0046FF03
+46FF5A:
+jmp newmem//lea edi,[esi+mLawnMowers_Offset]
+nop
+46FF60:
+mov ebx,NUM_CACHED_MOWER_TYPES
+46FF7B:
+jmp ReanimatorCacheDispose_mZombieImages
+nop 4
+//贴图取用
+46FFC1:
+mov eax,[ebp+mImageVariationList_Offset]
+test eax,eax
+lea ebx,[ebp+mImageVariationList_Offset]
+470056:
+mov eax,[ebp+mApp_Offset]
+470111:
+cmp dword ptr [ebx+esi*4+mLawnMowers_Offset],00
+jne 00470128
+push esi
+call 0046F330
+mov [ebx+esi*4+mLawnMowers_Offset],eax
+fld dword ptr [edi+14]
+mov eax,[ebx+esi*4+mLawnMowers_Offset]
+470171:
+cmp dword ptr [ebx+esi*4+mZombieImages_Offset],00
+jne 00470189
+mov ecx,esi
+call 0046F8A0
+mov [ebx+esi*4+mZombieImages_Offset],eax
+fld dword ptr [edi+14]
+mov eax,[ebx+esi*4+mZombieImages_Offset]
+//图鉴使用
+403165:
+cmp dword ptr [esi+edi*4+mZombieImages_Offset],00
+jne 0040317D
+mov ecx,edi
+call 0046F8A0
+mov [esi+edi*4+mZombieImages_Offset],eax
+fld dword ptr [esp+48]
+mov eax,[esi+edi*4+mZombieImages_Offset]
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+unregistersymbol(NUM_CACHED_SEED_TYPES)
+unregistersymbol(NUM_CACHED_MOWER_TYPES)
+unregistersymbol(NUM_CACHED_ZOMBIE_TYPES)
+unregistersymbol(mImageVariationList_Size)
+unregistersymbol(mImageVariationList_Offset)
+unregistersymbol(mLawnMowers_Offset)
+unregistersymbol(mZombieImages_Offset)
+unregistersymbol(mApp_Offset)
+unregistersymbol(ReanimatorCacheSize)
+46FDC0:
+db A1 38 9F 6A 00
+00452B3F:
+push 00000184
+46FEF2:
+cmp edi,35
+46FEF7:
+cmp [esi+000000DC],ebp
+push ebx
+je 0046FF5A
+or edi,-01
+mov eax,[esi+000000D4]
+mov ecx,[eax+0C]
+cmp ecx,ebp
+mov [esi+000000D4],ecx
+je 0046FF1B
+mov [ecx+10],ebp
+jmp 0046FF21
+mov [esi+000000D8],ebp
+mov ecx,[eax]
+mov edx,[eax+04]
+mov [esp+10],ecx
+mov ecx,[eax+08]
+add [esi+000000DC],edi
+mov [esp+14],edx
+mov edx,[esi+000000E0]
+mov ebx,[edx]
+add [edx+0C],edi
+cmp ecx,ebp
+mov [eax],ebx
+mov [edx],eax
+je 0046FF52
+mov eax,[ecx]
+mov edx,[eax]
+push 01
+call edx
+cmp [esi+000000DC],ebp
+jne 0046FF03
+46FF5A:
+lea edi,[esi+000000E4]]
+46FF60:
+mov ebx,00000004
+46FFC1:
+mov eax,[ebp+000000D4]
+test eax,eax
+lea ebx,[ebp+000000D4]
+470056:
+mov eax,[ebp+00000180]
+470111:
+cmp dword ptr [ebx+esi*4+000000E4],00
+jne 00470128
+push esi
+call 0046F330
+mov [ebx+esi*4+000000E4],eax
+fld dword ptr [edi+14]
+mov eax,[ebx+esi*4+000000E4]
+470171:
+cmp dword ptr [ebx+esi*4+000000F4],00
+jne 00470189
+mov ecx,esi
+call 0046F8A0
+mov [ebx+esi*4+000000F4],eax
+fld dword ptr [edi+14]
+mov eax,[ebx+esi*4+000000F4]
+403165:
+cmp dword ptr [esi+edi*4+000000F4],00
+jne 0040317D
+mov ecx,edi
+call 0046F8A0
+mov [esi+edi*4+000000F4],eax
+fld dword ptr [esp+48]
+mov eax,[esi+edi*4+000000F4]
+46FF7B:
+db 8D 7B 23 81 C6 F4 00 00 00
+//mov eax,[006A9F38]

@@ -1,0 +1,91 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp [ebx+04],HITRESULTTYPE_SPECIALZOMBIE
+jne short Next1
+mov esi,[ebx]
+mov eax,[esi]
+mov eax,[eax+00000320]
+cmp [eax+000000E8],01
+jne short originalcode
+mov ebx,32//阳光减少值
+mov edi,[esi+4]
+call 41BA60
+test al,al
+je short originalcode//不够支付
+mov [esi+68],1
+mov al,01
+pop edi
+pop esi
+pop ebp
+pop ebx
+pop ecx
+ret 0010
+Next1:
+cmp [ebx+04],HITRESULTTYPE_WEAPON
+jne short originalcode
+mov esi,[ebx]
+mov eax,[esi]
+mov eax,[eax+00000320]
+cmp [eax+000000E8],01
+jne short originalcode
+mov byte ptr [esi+30],01
+mov eax,[esi+04]
+fild [eax+00005558]
+fsub [esi+24]
+fstp [esi+54]
+mov ecx,[esi+GridItemClassSize-4]
+mov [eax+000057B8],ecx
+mov ecx,[esi+34]
+mov eax,[esi]
+call 00453CB0
+mov esi,eax
+push [num]
+push 0
+xor eax,eax
+push 006580D4//anim_idle
+call 473BF0
+mov al,01
+pop edi
+pop esi
+pop ebp
+pop ebx
+pop ecx
+ret 0010
+
+
+originalcode:
+pop edi
+pop esi
+pop ebp
+xor al,al
+
+exit:
+jmp returnhere
+
+align 04,00
+num:
+dd (float)30.0
+
+
+4221A5:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4221A5:
+pop edi
+pop esi
+pop ebp
+xor al,al
+//Alt: db 5F 5E 5D 32 C0

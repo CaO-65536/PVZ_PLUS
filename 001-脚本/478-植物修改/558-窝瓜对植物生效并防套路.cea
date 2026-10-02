@@ -1,0 +1,50 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp dword ptr [esi+54],00
+jne 00460DC2
+push esi
+call 4607E0
+test eax,eax
+mov eax,3
+jne short originalcode
+push esi
+call FindSquashTargetPlant
+test eax,eax
+mov eax,3
+jne short originalcode
+push (float)12
+push 0
+push 006580D4
+mov eax,esi
+mov ecx,14
+call 45FD90
+xor eax,eax
+mov [esi+3C],eax
+mov [esi+54],eax
+jmp 460AF5
+originalcode:
+
+exit:
+jmp returnhere
+
+460AC3:
+jmp newmem
+nop 5
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+460AC3:
+cmp dword ptr [esi+54],00
+jne 00460DC2
+//Alt: db 83 7E 54 00 0F 85 F5 02 00 00

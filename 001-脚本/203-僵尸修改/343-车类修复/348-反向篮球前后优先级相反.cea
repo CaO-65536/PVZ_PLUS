@@ -1,0 +1,41 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(originalcode)
+label(exit)
+
+newmem:
+push eax
+mov ecx,[ebp+8]
+call 52BEE0
+test al,al
+pop eax
+je short originalcode
+mov ecx,[eax+28]
+cmp ecx,[ebx+28]
+jl 005259A9
+jmp short exit
+
+originalcode:
+mov ecx,[eax+28]
+cmp ecx,[ebx+28]
+jnl 005259A9
+
+exit:
+jmp 00525941
+
+525939:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+525939:
+mov ecx,[eax+28]
+cmp ecx,[ebx+28]
+//Alt: db 8B 48 28 3B 4B 28

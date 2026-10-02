@@ -1,0 +1,50 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp [edi+SeedChooserScreen_Page_Offest],0//植物页
+je short originalcode
+cmp [edi+SeedChooserScreen_Page_Offest],1//僵尸页
+jne short originalcode//next2
+mov eax,ecx
+call 42B530
+test al,al//非僵尸
+je short NotShow
+sub ecx,3C//以普僵为0号
+//jmp short originalcode
+
+originalcode:
+mov eax,ecx
+cdq 
+and edx,07
+
+exit:
+jmp returnhere
+
+NotShow:
+mov [ebx],114514
+mov [ebp],114514//后移至不显示
+pop ebp
+ret 0004
+//jmp short originalcode
+
+484425:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+484425:
+db 8B C1 99 83 E2 07
+//mov eax,ecx
+//cdq 
+//and edx,07

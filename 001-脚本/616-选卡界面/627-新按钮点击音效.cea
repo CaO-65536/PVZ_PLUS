@@ -1,0 +1,55 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov eax,[esi+SeedChooserScreen_NextPageButton_Offest]
+cmp byte ptr [eax+18],00
+je +49-0E
+cmp byte ptr [eax+1A],00
+jne +43-0E
+cmp byte ptr [eax+000000F9],00
+jne +3A-0E
+mov ecx,[esi+00000D10]
+mov edx,[ecx]
+mov eax,[006A7980]
+mov edx,[edx+000000D8]
+push eax
+call edx
+{mov eax,[esi]
+mov edx,[eax+0000011C]
+push 65
+mov ecx,esi
+call edx}
+mov ecx,[esp+10]
+mov fs:[00000000],ecx
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,0C
+ret 000C
+
+originalcode:
+mov eax,[esi+0000008C]
+
+exit:
+jmp returnhere
+
+48680A:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+48680A:
+db 8B 86 8C 00 00 00
+//mov eax,[esi+0000008C]

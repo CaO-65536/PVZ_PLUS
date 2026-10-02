@@ -1,0 +1,116 @@
+[ENABLE]
+alloc(FindCatapultZombieTarget,2048)
+registersymbol(FindCatapultZombieTarget)
+
+FindCatapultZombieTarget:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+xor eax,eax
+mov edi,[ebp+8]//记录僵尸指针
+push eax
+mov ecx,edi
+call 52BEE0
+test al,al
+je short wc1
+push 0
+push 1
+jmp short wc2
+wc1:
+push 320//42C
+push 0
+wc2:
+push 0//开始序号(写0从头，写指针从后一个开始
+star:
+mov esi,esp
+mov edx,[edi+4]
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je end
+mov esi,[esi]//esi=遍历对象的基址
+cmp [esi+24],19
+je short wc3
+mov eax,[esi+1C]
+cmp [edi+1C],eax
+jne short star
+wc3:
+cmp byte ptr [edi+BA],0
+je short star
+push edi
+sub esp,10
+mov edi,esp
+mov ebx,esi
+call 5320B0
+mov eax,[edi]
+cmp [esp+18],0
+je short az1
+add eax,[edi+8]
+az1:
+add esp,10
+pop edi
+mov edx,eax
+mov ecx,[edi+8]
+cmp [edi+24],16
+jne short NotCatapult
+cmp [esp+4],0
+je short az2
+add ecx,[edi+8C]
+add ecx,[edi+94]
+add ecx,64
+cmp eax,ecx
+jl short star
+jmp short az4
+az2:
+sub ecx,64
+cmp eax,ecx
+jg short star
+NotCatapult:
+az4:
+mov cl,[edi+B8]
+test cl,cl
+je short az5
+mov eax,D
+jmp short az6
+az5:
+mov eax,8D
+az6:
+push edx
+push eax
+call 531A80
+pop edx
+test al,al
+je star
+mov eax,[esp+4]
+test eax,eax
+je short az7
+mov eax,[esp+8]
+cmp edx,eax
+jl star
+mov [esp+8],edx
+mov [esp+C],esi
+jmp star
+az7:
+mov eax,[esp+8]
+cmp edx,eax
+jnl star
+mov [esp+8],edx
+mov [esp+C],esi
+jmp star
+end:
+mov eax,[esp+C]
+add esp,10
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 4
+{
+push //Zombie* theZombie
+}
+
+[DISABLE]
+dealloc(FindCatapultZombieTarget)
+unregistersymbol(FindCatapultZombieTarget)

@@ -1,0 +1,23 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(SeedTypeToPlantType,1024)
+registersymbol(SeedTypeToPlantType)
+
+SeedTypeToPlantType:
+cmp eax,SEEDCARD_APPLE_TIME_STOPPER
+jne short SeedTypeToPlantType_Next1
+mov eax,SEED_APPLE_TIME_STOPPER
+SeedTypeToPlantType_Next1:
+cmp eax,SEEDCARD_DUPLICATOR
+jne short SeedTypeToPlantType_End
+mov eax,SEED_DUPLICATOR
+SeedTypeToPlantType_End:
+ret
+{
+mov eax,//SeedType theSeedType
+}
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(SeedTypeToPlantType)
+unregistersymbol(SeedTypeToPlantType)

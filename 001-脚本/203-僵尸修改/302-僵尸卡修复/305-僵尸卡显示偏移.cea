@@ -1,0 +1,49 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp ebp,55
+je 00487C5E
+cmp ebp,5C
+je 00487C5E
+cmp ebp,54
+jne short az1
+fld dword ptr [006795CC]
+fstp dword ptr [esp+14]
+fld [679A04]
+fstp dword ptr [esp+1C]
+fld dword ptr [00679378]
+jmp 00487D14
+az1:
+cmp ebp,4B
+jl short originalcode
+cmp ebp,3C+NUM_ZOMBIE_TYPES
+jg short originalcode
+jmp 00487CBE
+
+originalcode:
+cmp ebp,3D
+je 00487CBE
+
+exit:
+jmp returnhere
+
+487B46:
+jmp newmem
+nop 4
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+487B46:
+cmp ebp,3D
+je 00487CBE
+//Alt: db E9 B5 84 94 08

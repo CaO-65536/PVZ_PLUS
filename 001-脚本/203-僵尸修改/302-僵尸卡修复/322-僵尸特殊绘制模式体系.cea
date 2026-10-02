@@ -1,0 +1,134 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(DrawCachedZombieInDrawVariation,1024)
+registersymbol(DrawCachedZombieInDrawVariation)
+
+DrawCachedZombieInDrawVariation:
+sub esp,14
+push ebx
+push ebp
+mov ebp,[esp+20]
+push esi
+push edi
+mov esi,eax
+test edx,edx
+je short DrawCachedZombieInDrawVariation_NormalMake
+or esi,1000
+mov eax,[ebp+mImageVariationList_Offset]
+test eax,eax
+lea ebx,[ebp+mImageVariationList_Offset]
+je short DrawCachedZombieInDrawVariation_MakeInDrawVariation
+DrawCachedZombieInDrawVariation_While:
+mov ecx,eax
+cmp [ecx],esi
+mov eax,[eax+0C]
+jne short DrawCachedZombieInDrawVariation_Find1
+cmp [ecx+04],edx
+je short DrawCachedZombieInDrawVariation_Find2
+DrawCachedZombieInDrawVariation_Find1:
+test eax,eax
+jne short DrawCachedZombieInDrawVariation_While
+jmp short DrawCachedZombieInDrawVariation_MakeInDrawVariation
+DrawCachedZombieInDrawVariation_Find2:
+mov edi,[ecx+08]
+test edi,edi
+jne short DrawCachedZombieInDrawVariation_StartDraw
+DrawCachedZombieInDrawVariation_MakeInDrawVariation:
+//push edx
+mov [esp+18],esi
+mov [esp+1C],edx
+mov ecx,esi
+xor ecx,1000
+call MakeCachedZombieFrameInDrawVariation//0046F550
+mov [esp+20],eax
+lea eax,[esp+18]
+push eax
+call 004701C0
+mov edi,[esp+20]
+jmp short DrawCachedZombieInDrawVariation_StartDraw
+DrawCachedZombieInDrawVariation_NormalMake:
+cmp dword ptr [ebp+esi*4+mZombieImages_Offset],00
+jne short DrawCachedZombieInDrawVariation_MakeEnd
+xor edx,edx//push 00
+mov ecx,esi
+call MakeCachedZombieFrameInDrawVariation//0046F550
+mov [ebp+esi*4+mZombieImages_Offset],eax
+DrawCachedZombieInDrawVariation_MakeEnd:
+mov edi,[ebp+esi*4+mZombieImages_Offset]
+DrawCachedZombieInDrawVariation_StartDraw:
+
+mov eax,edi
+mov ecx,[esp+2C]//Graphics* g
+sub esp,10
+fld dword ptr [ecx+14]
+fstp dword ptr [esp+0C]
+fld dword ptr [ecx+10]
+fstp dword ptr [esp+08]
+fld dword ptr [esp+34+10]
+fstp dword ptr [esp+04]
+fld dword ptr [esp+30+10]
+fstp dword ptr [esp]
+call 00512950
+add esp,10
+
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,14
+ret 0010
+{
+mov edx,//DrawVariation theDrawVariation
+mov eax,//SeedType theSeedType
+push //float thePosY
+push //float thePosX
+push //Graphics* g
+push //ReanimatorCache* this
+}
+
+MakeCachedZombieFrameInDrawVariation:
+push -01
+push 0064DCB4
+mov eax,fs:[00000000]
+push eax
+mov fs:[00000000],esp
+sub esp,000001B0
+push ebx
+push ebp
+push esi
+push edi
+push edx//DrawVariation theDrawVariation
+mov ebx,000000D2
+mov edi,ecx
+lea ecx,[ebx-0A]
+call 0046F280
+pop ebx//DrawVariation theDrawVariation
+mov ebp,eax
+lea eax,[esp+00000154]
+push eax
+mov ecx,ebp
+call 00586A30
+jmp 0046F8E4
+{
+mov ecx,//ZombieType theZombieType
+mov edx,//DrawVariation theDrawVariation
+}
+
+46F8DF:
+xor ebx,ebx
+nop 3//默认参数
+mov cl,01
+
+46FD78:
+push ebx
+nop
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(DrawCachedZombieInDrawVariation)
+unregistersymbol(DrawCachedZombieInDrawVariation)
+46F8DF:
+db BB 01 00 00 00
+mov cl,bl
+46FD78:
+push 00

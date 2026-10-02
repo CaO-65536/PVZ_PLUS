@@ -1,0 +1,41 @@
+[ENABLE]
+0046CF8E:
+fcomp dword ptr [ebp+4C]
+0046CF88:
+fldz
+nop 4
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem: //this is allocated memory, you have read,write,execute access
+//place your code here
+
+originalcode:
+cmp [ebp+58],07
+jne 0046CF9C
+
+exit:
+jmp returnhere
+
+num1:
+dd (float)0
+
+46CF6F:
+jmp newmem
+returnhere:
+
+
+
+
+[DISABLE]
+0046CF8E:
+fcomp dword ptr [ebp+34]
+0046CF88:
+fld dword ptr [0067959C] { (40.00) }
+dealloc(newmem)
+46CF6F:
+cmp ecx,07
+jne 0046CF9C
+//Alt: db 83 F9 07 75 28

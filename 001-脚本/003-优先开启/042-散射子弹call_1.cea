@@ -1,0 +1,90 @@
+[ENABLE]
+alloc(ScatteringProjectile,2048)
+registersymbol(ScatteringProjectile)
+
+ScatteringProjectile:
+push ebp
+mov ebp,esp
+push edi
+push esi
+push ecx//esp-4
+mov edi,[ebp+2C]//子弹指针数组
+fldpi
+fadd st(0)
+fidiv [ebp+28]//子弹数量
+fstp [esp]
+xor esi,esi
+az1:
+mov eax,[ebp+10]//子弹ID
+push eax
+mov eax,[ebp+18]//行
+push eax
+mov eax,[ebp+14]//图层
+push eax
+mov eax,[ebp+20]//y
+push eax
+mov eax,[ebp+1C]//x
+push eax
+mov eax,[ebp+8]//*Board
+call 40D620
+cmp [ebp+10],6
+jne short az2
+push eax
+mov ecx,eax
+xor eax,eax
+call 46ECB0
+pop eax
+az2:
+test edi,edi
+je short az3
+mov [edi+esi*4],eax
+az3:
+mov ecx,[ebp+C]//攻击能力范围
+mov [eax+74],ecx
+mov [eax+58],7
+push esi
+fild [esp]
+pop ecx
+fmul [esp]
+fld st(0)
+fldpi
+push (float)0.5
+fmul [esp]
+fstp [esp]
+fsub [esp]
+pop ecx
+fstp [eax+68]
+fld st(0)
+fcos
+fmul [ebp+24]
+fstp [eax+40]
+fsin
+fmul [ebp+24]
+fstp [eax+3C]
+inc esi
+cmp esi,[ebp+28]
+jne az1
+mov eax,edi//子弹指针数组
+pop ecx//esp+4
+pop esi
+pop edi
+mov esp,ebp
+pop ebp
+ret 28
+{
+push //子弹指针数组
+push //子弹数量
+push //子弹速度
+push //y
+push //x
+push //行
+push //图层
+push //子弹ID
+push //攻击能力范围
+push //*Board
+//eax为子弹指针数组
+}
+
+[DISABLE]
+dealloc(ScatteringProjectile)
+unregistersymbol(ScatteringProjectile)

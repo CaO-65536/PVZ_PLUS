@@ -1,0 +1,33 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp dword ptr [esi+30],04
+je returnhere
+
+originalcode:
+cmp dword ptr [esi+30],01
+jne 0041087E
+
+exit:
+jmp returnhere
+
+410851:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+410851:
+db 83 7E 30 01 75 27
+//cmp dword ptr [esi+30],01
+//jne 0041087E

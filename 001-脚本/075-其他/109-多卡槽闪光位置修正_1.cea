@@ -1,0 +1,45 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov edx,[eax+SeedBankMax*50+mSeedPacket_Offest+10]
+test edx,edx
+je short originalcode
+fld qword [edx+90]
+mov edx,[eax+24]
+sub edx,0A
+imul edx,33
+push edx
+fchs
+fimul [esp]
+fistp [esp]
+pop edx
+add edx,[eax+08]
+jmp short exit
+
+originalcode:
+mov edx,[eax+08]
+
+exit:
+add edx,[edi+08]
+jmp returnhere
+
+4871CD:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4871CD:
+db 8B 50 08 03 57 08
+//mov edx,[eax+08]
+//add edx,[edi+08]

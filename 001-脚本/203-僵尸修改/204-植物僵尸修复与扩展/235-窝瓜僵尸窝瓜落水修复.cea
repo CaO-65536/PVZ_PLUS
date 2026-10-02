@@ -1,0 +1,69 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp dword ptr [ebp+68],01
+jne originalcode
+mov eax,[ebp+FC]
+mov ecx,[ebp+1C]
+mov edx,[ebp+4]
+call 40CE00
+test al,al
+je originalcode
+mov edx,[ebp+00]
+mov eax,[edx+00000820]
+mov edx,[eax+08]
+mov eax,[ebp+00000144]
+and eax,0000FFFF
+lea esi,[eax+eax*4]
+shl esi,05
+add esi,[edx]
+mov edx,[ebp+20]
+inc edx
+push edx
+sub esp,8
+fld [esi+2C]
+fstp [esp]
+fld [esi+38]
+fadd [ebp+84]
+fstp [esp+4]
+mov eax,[ebp]
+mov ebx,00000020
+call 00453C30
+mov eax,[ebp]
+lea esi,[ebx-1F]
+call 00453630
+mov ecx,[ebp]
+mov edx,[ecx]
+mov eax,[006A7AC8]
+mov edx,[edx+000000D8]
+push eax
+call edx
+jmp 00527ECD
+
+originalcode:
+cmp dword ptr [ebp+68],00
+jne 00527EC1
+
+exit:
+jmp returnhere
+
+527E33:
+jmp newmem
+nop 5
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+527E33:
+cmp dword ptr [ebp+68],00
+jne 00527EC1
+//Alt: db 83 7D 68 00 0F 85 84 00 00 00

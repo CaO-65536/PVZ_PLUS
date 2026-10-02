@@ -1,0 +1,477 @@
+[ENABLE]
+alloc(GameSettingDialog,2048)
+define(GameSettingDialog_Index,34)
+define(GameSettingDialog_Checkboxes_Offest,170)
+define(GameSettingDialog_CheckboxeNum,A)
+define(GameSettingDialogClassSize,16C+4+4*GameSettingDialog_CheckboxeNum)
+define(NUM_DIALOGS,1)
+label(DoGameSettingDialog)
+registersymbol(DoGameSettingDialog)
+//44F243:
+//cmp esi,NUM_DIALOGS
+
+GameSettingDialog:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+xor ebx,ebx
+sub esp,1C*3
+mov esi,[ebp+08]
+mov edi,[ebp+0C]
+
+{lea ecx,[esp+1C*2]
+push 006578D0//  ("DelayLoad_ChallengeScreen")
+mov [ecx+4],bl
+mov [ecx+14],ebx
+mov [ecx+18],0F
+call 404450//eax=字符串对象
+mov ecx,[edi+00000634]
+call 513140
+lea ecx,[esp+1C*2]
+call 404420}
+
+mov ecx,esp
+push GameSettingDialogHeader//字符串
+mov [ecx+4],bl
+mov [ecx+14],ebx
+mov [ecx+18],0F
+call 404450//eax=字符串对象
+mov ecx,eax//const std::string& theDialogHeader
+lea eax,[esp+1C]
+mov [eax+4],bl
+mov [eax+14],ebx
+mov [eax+18],0F
+push 01//int theButtonMode
+push eax//const std::string& theDialogFooter
+push eax//const std::string& theDialogLines
+push 01//bool isModal
+push 33//int theId
+push edi//LawnApp* theApp
+push esi//LawnDialog* this
+call 456A80
+mov [esi],GameSettingDialogVF
+mov [esi+00000088],GameSettingDialogButtonListener
+mov [esi+0000016C],CheckboxListener
+//mov byte ptr [esi+00000168],01
+xor ebx,ebx
+GameSettingDialog_NewCheckboxMakingWhile:
+lea ecx,[esi+0000016C]
+mov edx,[esi+00000150]
+mov edx,[edx+0000082C]
+push [edx+PlayerInfo_GameSetting_Offset+ebx*4]
+push ecx
+push ebx
+call 456860
+add esp,0C
+mov [esi+GameSettingDialog_Checkboxes_Offest+ebx*4],eax
+inc ebx
+cmp ebx,GameSettingDialog_CheckboxeNum
+jne short GameSettingDialog_NewCheckboxMakingWhile
+push 0000012C
+push 000001A4
+call 456F30
+mov ecx,esi
+call CenterDialog
+{mov eax,00000258
+sub eax,[esi+3C]
+cdq
+sub eax,edx
+sar eax,1
+push eax
+mov eax,SCREENWIDTH
+sub eax,[esi+38]
+cdq
+sub eax,edx
+sar eax,1
+push eax
+mov ecx,esi
+mov edx,[esi]
+mov edx,[edx+000000A4]
+call edx}
+
+mov ecx,esp
+call 404420
+lea ecx,[esp+1C]
+call 404420
+GameSettingDialog_End:
+add esp,1C*3
+mov eax,[ebp+08]
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 08
+{
+push //LawnApp* theApp
+push //GameSettingDialog* this
+}
+align 10,CC
+
+GameSettingDialogscalar_deleting_destructor:
+push esi
+mov esi,ecx
+call DeleteGameSettingDialog
+test byte ptr [esp+08],01
+je +09
+push esi
+call 0061C19A
+add esp,04
+mov eax,esi
+pop esi
+ret 0004
+align 10,CC
+
+DeleteGameSettingDialog:
+push ebx
+push esi
+mov esi,ecx
+xor ebx,ebx
+DeleteGameSettingDialog_While:
+mov ecx,[esi+GameSettingDialog_Checkboxes_Offest+ebx*4]
+test ecx,ecx
+je +08
+mov eax,[ecx]
+mov edx,[eax]
+push 01
+call edx
+inc ebx
+cmp ebx,GameSettingDialog_CheckboxeNum
+jne short DeleteGameSettingDialog_While
+mov ecx,esi
+call 00456EA0
+pop esi
+pop ebx
+ret
+align 10,CC
+
+GameSettingDialogAddedToManager:
+push ebx
+push esi
+mov esi,ecx
+push [esp+08+04]
+call 00457160
+xor ebx,ebx
+GameSettingDialogAddedToManager_While:
+mov eax,[esi+GameSettingDialog_Checkboxes_Offest+ebx*4]
+test eax,eax
+je +0A
+mov edx,[esi]
+push eax
+mov eax,[edx+0C]
+mov ecx,esi
+call eax
+inc ebx
+cmp ebx,GameSettingDialog_CheckboxeNum
+jne short GameSettingDialogAddedToManager_While
+pop esi
+pop ebx
+ret 04
+align 10,CC
+
+GameSettingDialogRemovedFromManager:
+push ebx
+push esi
+mov esi,ecx
+push [esp+08+04]
+call 004571B0
+xor ebx,ebx
+GameSettingDialogRemovedFromManager_While:
+mov eax,[esi+GameSettingDialog_Checkboxes_Offest+ebx*4]
+test eax,eax
+je +0A
+mov edx,[esi]
+push eax
+mov eax,[edx+10]
+mov ecx,esi
+call eax
+inc ebx
+cmp ebx,GameSettingDialog_CheckboxeNum
+jne short GameSettingDialogRemovedFromManager_While
+pop esi
+pop ebx
+ret 04
+align 10,CC
+
+GameSettingDialogDraw:
+push edi
+mov edi,[esp+08]
+push esi
+mov esi,ecx
+push ebx
+push edi
+call 4575A0
+xor ebx,ebx
+sub esp,1C
+GameSettingDialogDraw_While:
+mov ecx,esp
+push esi
+xor eax,eax
+mov [ecx+4],al
+mov [ecx+14],eax
+mov [ecx+18],0F
+push ebx
+push GameSettingDialogLine
+mov esi,ecx
+call 5B0CA0
+add esp,08
+mov edx,esi
+pop esi
+push ebx
+push 000000FF
+push 62
+push 000000BA
+push 000000E9
+push 00//左对齐
+mov ecx,78
+test ebx,01
+je short GameSettingDialogDraw_L1
+add ecx,000000FA
+GameSettingDialogDraw_L1:
+mov eax,ebx
+shr eax,1
+imul eax,32
+add eax,00000095
+push eax
+push edi
+mov ebx,[esi+000000FC]
+call 511CE0
+add esp,1C
+pop ebx
+mov ecx,esp
+call 404420
+inc ebx
+cmp ebx,GameSettingDialog_CheckboxeNum
+jne short GameSettingDialogDraw_While
+add esp,1C
+pop ebx
+pop esi
+pop edi
+ret 04
+align 10,CC
+
+GameSettingDialogResize:
+push ebx
+push esi
+mov esi,ecx
+push [esp+18]
+push [esp+18]
+push [esp+18]
+push [esp+18]
+call 004573D0
+xor ebx,ebx
+GameSettingDialogResize_While:
+mov ecx,[esi+GameSettingDialog_Checkboxes_Offest+ebx*4]
+push 2D
+push 2E
+mov edx,00000082
+mov eax,ebx
+sar eax,1
+imul eax,32
+add edx,eax
+push edx
+mov edx,50
+mov eax,ebx
+and eax,00000001
+imul eax,000000FA
+add edx,eax
+push edx
+mov edx,[ecx]
+mov edx,[edx+000000A0]
+call edx
+inc ebx
+cmp ebx,GameSettingDialog_CheckboxeNum
+jne short GameSettingDialogResize_While
+pop esi
+pop ebx
+ret 0010
+align 10,CC
+
+GameSettingDialogGetPreferredHeight:
+push ebx
+mov ebx,[esp+08]
+push esi
+mov esi,ecx
+push ebx
+call 540750
+add eax,32
+pop esi
+pop ebx
+ret 04
+align 10,CC
+
+DoGameSettingDialog:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+mov edi,ecx
+sub esp,18+04
+mov edx,[edi+00000320]
+mov edx,[edx+00000088]
+mov [esp+18],edx
+{mov eax,esp
+call 005A9230
+call 005A9290}
+xor esi,esi
+lea eax,[GameSettingDialogClassSize]
+push eax
+call 0061C130
+add esp,04
+cmp eax,esi
+je short DoGameSettingDialog_Failure
+push edi
+push eax
+call GameSettingDialog
+mov esi,eax
+DoGameSettingDialog_Failure:
+mov eax,[edi]
+mov edx,[eax+0000012C]
+push esi
+push GameSettingDialog_Index
+mov ecx,edi
+call edx
+mov ecx,[edi+00000320]
+mov edx,[ecx]
+mov edx,[edx+20]
+push esi
+call edx
+{mov ecx,esi
+mov edx,[ecx]
+mov edx,[edx+0000012C]
+push 01
+call edx
+mov eax,[esp+18]
+mov ecx,[edi+00000320]
+mov edx,[ecx]
+mov edx,[edx+20]
+push eax
+call edx}
+mov eax,[006A71A4]
+mov ecx,edi
+mov edx,[ecx]
+mov edx,[edx+000000D8]
+push eax
+call edx
+add esp,18+04
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret
+{
+mov ecx,//LawnApp* this
+}
+align 10,CC
+
+KillGameSettingDialog:
+push esi
+mov esi,eax
+mov eax,[esi]
+mov edx,[eax+00000124]
+push GameSettingDialog_Index
+mov ecx,esi
+call edx
+test eax,eax
+jne +04
+xor al,al
+pop esi
+ret
+mov eax,[esi]
+mov edx,[eax+00000134]
+push GameSettingDialog_Index
+mov ecx,esi
+call edx
+call 005456A0
+mov al,01
+pop esi
+ret
+{
+mov eax,//LawnApp* this
+}
+align 10,CC
+
+GameSettingDialogButtonDepress:
+push ebx
+mov ebx,[esp+08]
+push esi
+mov esi,ecx
+{push ebx
+mov ecx,esi
+call 00457300}
+cmp ebx,000003E8
+jne short GameSettingDialogButtonDepress_End
+mov edx,[esi-88+00000150]
+mov edx,[edx+0000082C]
+xor ebx,ebx
+GameSettingDialogButtonDepress_While:
+mov ecx,[esi-88+GameSettingDialog_Checkboxes_Offest+ebx*4]
+mov cl,[ecx+00000090]
+mov [edx+PlayerInfo_GameSetting_Offset+ebx*4],cl
+inc ebx
+cmp ebx,GameSettingDialog_CheckboxeNum
+jne short GameSettingDialogButtonDepress_While
+mov eax,[esi-88+00000150]
+call 44F540//尝试保存玩家存档
+GameSettingDialogButtonDepress_End:
+mov eax,[esi-88+00000150]
+call KillGameSettingDialog
+pop esi
+pop ebx
+ret 04
+align 10,CC
+
+GameSettingDialogCheckboxChecked:
+push esi
+mov esi,ecx
+mov ecx,[esi-16C+00000150]
+mov edx,[ecx]
+mov edx,[edx+000000D8]
+mov eax,[006A7594]
+push eax
+call edx
+pop esi
+ret 08
+align 10,CC
+
+GameSettingDialogHeader:
+db '[GAMESETTINGDIALOG_HEADER]' 00
+align 04,00
+
+GameSettingDialogLine:
+db '[GAMESETTIND_%d]' 00
+align 04,00
+
+GameSettingDialogVF:
+dd GameSettingDialogscalar_deleting_destructor//00456E80//LawnDialog::`scalar deleting destructor'
+dd 00537010 00537030 005370A0 005371C0 00537160 00539D90 00536FB0 00539D90 005374F0 00537510 005376B0 00537780 00537850 00537960 00537A90 00537E90 00537BE0 00537C20 00537C00
+dd GameSettingDialogAddedToManager//00457160//LawnDialog::AddedToManager
+dd GameSettingDialogRemovedFromManager//004571B0//LawnDialog::RemovedFromManager
+dd 00457280 00537F60 00539D90 005380F0
+dd GameSettingDialogDraw//004575A0//LawnDialog::Draw
+dd 00538240 00538430 005509A0 00540C80 005398D0 005399C0 00539920 005404B0 00539B50 00539AE0 00539C90 00539DA0 00539C30
+dd GameSettingDialogResize//004573D0//LawnDialog::Resize
+dd 00539C60 00539C80 00539900 00539D90 00539D10 00539D20 00539D90 00457340 00539D90 005509A0 005509A0 00539E40 00540E10 004566E0 00540F60 00447AE0 004566F0 00540E50 00539D90 005398C0 00539F40 00539EC0 0053A050 0053A0A0 0053A0E0 0053A100 0053A120 0053A230 0053A270 00540540 00540590 005405C0
+dd GameSettingDialogGetPreferredHeight//00540750//Sexy::Dialog::GetPreferredHeight
+dd 00540FA0 00540FB0 00457230 00457320
+align 10,00
+
+GameSettingDialogButtonListener:
+dd 00401000 004572E0
+dd GameSettingDialogButtonDepress//00457300//LawnDialog::ButtonDepress
+dd 00539D90 0042FB50 0042FB50 00483370
+align 10,00
+
+CheckboxListener:
+dd GameSettingDialogCheckboxChecked//004566F0//Sexy::CheckboxListener::CheckboxChecked
+align 10,00
+
+[DISABLE]
+dealloc(GameSettingDialog)
+unregistersymbol(DoGameSettingDialog)
+44F243:
+cmp esi,33

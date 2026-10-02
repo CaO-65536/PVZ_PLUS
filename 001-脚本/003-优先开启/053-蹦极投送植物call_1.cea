@@ -1,0 +1,106 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(BungeeDropPlant,2048)
+registersymbol(BungeeDropPlant)
+
+BungeeDropPlant:
+push ecx
+push ebp
+mov ebp,[esp+0C]
+push esi
+mov esi,eax
+imul eax,eax,00002710
+add eax,00049F9C
+mov [ebx+20],eax
+push edi
+mov edi,ecx
+mov [esp+0C],eax
+mov eax,[ebx+04]
+mov [ebx+00000080],edi
+mov [ebx+1C],esi
+mov ecx,[eax+0000008C]
+cmp dword ptr [ecx+000007F8],2B
+jne short az1
+mov eax,[eax+0000554C]
+cmp eax,06
+je short az3
+cmp eax,08
+je short az3
+cmp eax,07
+jne short az1
+az3:
+mov eax,[ecx+0000081C]
+call 00521450
+mov [esp+14],eax
+jmp short az2
+az1:
+lea ecx,[edi+edi*4]
+shl ecx,04
+add ecx,28
+mov [esp+14],ecx
+az2:
+fild dword ptr [esp+14]
+push esi
+mov eax,ebx
+fstp dword ptr [ebx+2C]
+call 00531880
+push ecx
+fstp dword ptr [ebx+30]
+fld dword ptr [00679558]
+mov edi,ebx
+fstp dword ptr [esp]
+push 00
+push 03
+push 0066ECFC
+call 00528B00
+mov edx,[ebp+PlantClassSize-4]
+mov eax,[esp+0C]
+mov [ebx+128],edx
+mov [ebp+20],eax
+mov eax,[ebx+80]
+mov [ebp+28],eax
+imul eax,50
+add eax,28
+mov [ebp+8],eax
+mov eax,ebp
+movzx ecx,byte ptr [eax+143]
+push ecx
+push 0
+call 45E860
+mov [ebp+1C],esi
+mov ecx,[ebx+04]
+push ebx
+mov eax,[ebp+1C]
+mov ecx,[ebp+28]
+mov ebx,[ebx+4]
+call 41C740
+mov [ebp+C],eax
+pop ebx
+push esi
+mov esi,ebp//指针
+call 45E7C0
+mov [ebp+20],eax
+mov eax,ebp
+mov ecx,[esp+4]
+push ecx
+call 45E860
+pop esi
+pop ecx
+mov edi,ebp
+mov [ebp+134],2
+pop edi
+pop esi
+pop ebp
+pop ecx
+ret 0004
+{
+push //Plant* thePlant
+mov eax,//int theRow
+mov ecx,//int theCol
+mov ebx,//Zombie* this
+}
+
+[DISABLE]
+dealloc(BungeeDropPlant)
+unregistersymbol(BungeeDropPlant)
+//Alt: db CC CC CC CC CC

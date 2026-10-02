@@ -1,0 +1,107 @@
+[ENABLE]
+00467319:
+jmp 004673A6
+nop 2
+00467345:
+jmp 004673A6
+nop 5
+00467377:
+jmp 004673A6
+nop 5
+0046741B:
+jmp 004673A6
+nop 5
+0046742C:
+jmp 004673A6
+nop 2
+0046754C:
+jmp 004673A6
+nop 2
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push ebp
+call IsPlantLeft
+test al,al
+je short originalcode
+mov ecx,[esp+38]
+cmp [ecx+58],0
+jne short next1
+mov [ecx+58],6
+fldpi
+fstp [ecx+68]
+jmp short originalcode
+next1:
+cmp [ecx+58],6
+jne short originalcode
+mov [ecx+58],0
+fldz
+fstp [ecx+68]
+
+originalcode:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+
+exit:
+jmp returnhere
+
+4673A6:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+00467319:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+00467345:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+00467377:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+0046741B:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+0046742C:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+0046754C:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+dealloc(newmem)
+4673A6:
+pop edi
+pop esi
+pop ebp
+pop ebx
+add esp,1C
+//Alt: db 5F 5E 5D 5B 83 C4 1C

@@ -1,0 +1,117 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,4096)
+label(originalcode)
+label(exit)
+label(imm32DLL)
+label(ImmGetContextProcAddress)
+label(ImmReleaseContextProcAddress)
+label(ImmGetConversionStatusProcAddress)
+label(ImmSetConversionStatusProcAddress)
+label(ImmSetCompositionWindowProcAddress)
+registersymbol(imm32DLL)
+registersymbol(ImmGetContextProcAddress)
+registersymbol(ImmReleaseContextProcAddress)
+registersymbol(ImmGetConversionStatusProcAddress)
+registersymbol(ImmSetConversionStatusProcAddress)
+registersymbol(ImmSetCompositionWindowProcAddress)
+
+newmem:
+mov [006A9F40],eax
+push imm32dllName
+call dword ptr [006520A4] { ->KERNEL32.LoadLibraryA }
+mov [imm32DLL],eax
+push NameImmGetContext
+push eax
+call dword ptr [6520AC] { ->KERNEL32.GetProcAddress }
+test eax,eax
+je +05
+mov [ImmGetContextProcAddress],eax
+
+push NameImmReleaseContext
+push [imm32DLL]
+call dword ptr [6520AC] { ->KERNEL32.GetProcAddress }
+test eax,eax
+je +05
+mov [ImmReleaseContextProcAddress],eax
+
+push NameImmGetConversionStatus
+push [imm32DLL]
+call dword ptr [6520AC] { ->KERNEL32.GetProcAddress }
+test eax,eax
+je +05
+mov [ImmGetConversionStatusProcAddress],eax
+
+push NameImmSetConversionStatus
+push [imm32DLL]
+call dword ptr [6520AC] { ->KERNEL32.GetProcAddress }
+test eax,eax
+je +05
+mov [ImmSetConversionStatusProcAddress],eax
+
+push NameImmSetCompositionWindow
+push [imm32DLL]
+call dword ptr [6520AC] { ->KERNEL32.GetProcAddress }
+test eax,eax
+je +05
+mov [ImmSetCompositionWindowProcAddress],eax
+
+originalcode:
+push 00670430 { ("GetLastInputInfo") }
+push 00670444 { ("user32.dll") }
+call dword ptr [00652070] { ->KERNEL32.GetModuleHandleA }
+
+exit:
+jmp 00543EFA
+
+align 04,00
+imm32DLL:
+dd 00000000
+
+ImmGetContextProcAddress:
+dd 00000000
+
+ImmReleaseContextProcAddress:
+dd 00000000
+
+ImmGetConversionStatusProcAddress:
+dd 00000000
+
+ImmSetConversionStatusProcAddress:
+dd 00000000
+
+ImmSetCompositionWindowProcAddress:
+dd 00000000
+
+imm32dllName:
+db 'imm32.dll' 00
+
+NameImmGetContext:
+db 'ImmGetContext' 00
+
+NameImmReleaseContext:
+db 'ImmReleaseContext' 00
+
+NameImmGetConversionStatus:
+db 'ImmGetConversionStatus' 00
+
+NameImmSetConversionStatus:
+db 'ImmSetConversionStatus' 00
+
+NameImmSetCompositionWindow:
+db 'ImmSetCompositionWindow' 00
+
+543EE5:
+jmp newmem
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+unregistersymbol(imm32DLL)
+unregistersymbol(ImmGetContextProcAddress)
+unregistersymbol(ImmReleaseContextProcAddress)
+unregistersymbol(ImmGetConversionStatusProcAddress)
+unregistersymbol(ImmSetConversionStatusProcAddress)
+unregistersymbol(ImmSetCompositionWindowProcAddress)
+543EE5:
+db 68 30 04 67 00
+//push 00670430

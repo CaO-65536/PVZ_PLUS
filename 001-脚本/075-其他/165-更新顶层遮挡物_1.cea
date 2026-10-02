@@ -1,0 +1,52 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov edi,ebp
+call UpdateOverCover
+
+originalcode:
+mov edi,ebp
+call 0041D730
+
+exit:
+jmp returnhere
+
+UpdateOverCover:
+push ebx
+xor ebx,ebx
+UpdateOverCover_While:
+mov eax,[edi+0000008C]
+mov ecx,[edi+ebx*4+mBushesAnimID_Offset]
+call 453CB0
+test eax,eax
+je short UpdateOverCover_Next
+mov ecx,eax
+call 471BC0
+UpdateOverCover_Next:
+inc ebx
+cmp ebx,BushesRowNum
+jne short UpdateOverCover_While
+pop ebx
+ret
+
+
+41600E:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+41600E:
+db 8B FD E8 1B 77 00 00
+//mov edi,ebp
+//call 0041D730

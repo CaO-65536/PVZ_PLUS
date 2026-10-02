@@ -1,0 +1,52 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+push eax
+push ecx
+call IsPlantLeft
+test al,al
+pop eax
+je short originalcode
+mov edx,320
+mov [eax+8],edx
+mov edx,[ecx+8]
+add edx,[ecx+10]
+sub edx,3C
+sub edx,320
+mov [eax],edx
+mov edx,[ecx+C]
+mov [eax+4],edx
+mov edx,[ecx+14]
+mov [eax+C],edx
+pop edi
+pop esi
+pop ebx
+ret 0004
+
+originalcode:
+mov edx,[ecx+08]
+mov esi,[ecx+0C]
+
+exit:
+jmp returnhere
+
+468176:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+468176:
+mov edx,[ecx+08]
+mov esi,[ecx+0C]
+//Alt: db 8B 51 08 8B 71 0C

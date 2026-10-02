@@ -1,0 +1,560 @@
+[ENABLE]
+define(PlayerInfoAdditianalPartSize,100)
+define(PlayerInfoAdditianalPartDoubleSize,200)
+define(QuarterOfPlayerInfoAdditianalPartSize,40)
+registersymbol(PlayerInfoAdditianalPartSize)
+registersymbol(QuarterOfPlayerInfoAdditianalPartSize)
+define(PlayerInfo_GameSetting_Offset,4818)
+registersymbol(PlayerInfo_GameSetting_Offset)
+0046A70C:
+mov byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],01
+
+0046A84C:
+mov eax,00004834+PlayerInfoAdditianalPartSize
+0046A926:
+mov [esp+00004850+PlayerInfoAdditianalPartSize],00000000
+0046A968:
+mov [esp+0000484C+PlayerInfoAdditianalPartSize],FFFFFFFF
+0046A9A9:
+mov ecx,[esp+00004844+PlayerInfoAdditianalPartSize]
+
+0046AFFE:
+mov eax,00004864+PlayerInfoAdditianalPartSize
+0046B049:
+mov esi,[esp+00004884+PlayerInfoAdditianalPartSize]
+0046B0CF:
+mov [esp+00004884+PlayerInfoAdditianalPartSize],00000000
+0046B0EF:
+mov [esp+0000487C+PlayerInfoAdditianalPartSize],FFFFFFFF
+0046B133:
+mov edx,[esp+00004884+PlayerInfoAdditianalPartSize]
+0046B149:
+mov ecx,[esp+00004874+PlayerInfoAdditianalPartSize]
+0046B15B:
+add esp,00004870+PlayerInfoAdditianalPartSize
+
+0046B32C:
+mov eax,00009068+PlayerInfoAdditianalPartDoubleSize
+0046B35A:
+lea edx,[esp+00004840+PlayerInfoAdditianalPartSize]
+0046B362:
+mov [esp+00009088+PlayerInfoAdditianalPartDoubleSize],ebx
+0046B377:
+mov byte ptr [esp+00009084+PlayerInfoAdditianalPartDoubleSize],01
+0046B384:
+cmp dword ptr [esp+00004870+PlayerInfoAdditianalPartSize],10
+0046B39A:
+mov edx,[esp+0000485C+PlayerInfoAdditianalPartSize]
+0046B3AA:
+cmp dword ptr [esp+00004850+PlayerInfoAdditianalPartSize],10
+mov [esp+00004870+PlayerInfoAdditianalPartSize],0000000F
+mov [esp+0000486C+PlayerInfoAdditianalPartSize],00000000
+mov byte ptr [esp+0000485C+PlayerInfoAdditianalPartSize],00
+0046B3D2:
+mov eax,[esp+0000483C+PlayerInfoAdditianalPartSize]
+0046B3E2:
+mov [esp+0000907C+PlayerInfoAdditianalPartDoubleSize],FFFFFFFF
+0046B3F2:
+mov [esp+00004850+PlayerInfoAdditianalPartSize],0000000F
+mov [esp+0000484C+PlayerInfoAdditianalPartSize],00000000
+mov byte ptr [esp+0000483C+PlayerInfoAdditianalPartSize],00
+0046B43A:
+mov ecx,[esp+00009074+PlayerInfoAdditianalPartDoubleSize]
+0046B4AC:
+mov ecx,[esp+00009074+PlayerInfoAdditianalPartDoubleSize]
+
+0046B4DE:
+mov eax,00009060+PlayerInfoAdditianalPartDoubleSize
+0046B4F1:
+mov ebp,[esp+00009078+PlayerInfoAdditianalPartDoubleSize]
+0046B4F9:
+mov esi,[esp+00009080+PlayerInfoAdditianalPartDoubleSize]
+0046B546:
+mov ecx,[esp+00009084+PlayerInfoAdditianalPartDoubleSize]
+0046B551:
+lea edx,[esp+0000483C+PlayerInfoAdditianalPartSize]
+0046B559:
+mov [esp+00009084+PlayerInfoAdditianalPartDoubleSize],ebx
+0046B56F:
+mov byte ptr [esp+00009088+PlayerInfoAdditianalPartDoubleSize],01
+0046B586:
+cmp [esp+0000486C+PlayerInfoAdditianalPartSize],esi
+0046B58F:
+mov ecx,[esp+00004858+PlayerInfoAdditianalPartSize]
+0046B59F:
+cmp [esp+0000484C+PlayerInfoAdditianalPartSize],esi
+mov [esp+0000486C+PlayerInfoAdditianalPartSize],0000000F
+mov [esp+00004868+PlayerInfoAdditianalPartSize],ebx
+mov [esp+00004858+PlayerInfoAdditianalPartSize],bl
+0046B5C1:
+mov edx,[esp+00004838+PlayerInfoAdditianalPartSize]
+0046B5D5:
+mov [esp+0000484C+PlayerInfoAdditianalPartSize],0000000F
+mov [esp+00004848+PlayerInfoAdditianalPartSize],ebx
+mov [esp+00004838+PlayerInfoAdditianalPartSize],bl
+0046B620:
+mov ecx,[esp+00009070+PlayerInfoAdditianalPartDoubleSize]
+0046B635:
+add esp,0000906C+PlayerInfoAdditianalPartDoubleSize
+
+0046B64F:
+cmp byte ptr [esi+00004849+PlayerInfoAdditianalPartSize],00
+0046B6A6:
+cmp byte ptr [esi+00004849+PlayerInfoAdditianalPartSize],00
+
+0046B760:
+cmp byte ptr [edi+00004849+PlayerInfoAdditianalPartSize],00
+0046B7C0:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046B7D1:
+cmp byte ptr [edx+00004849+PlayerInfoAdditianalPartSize],00
+0046B7E9:
+cmp byte ptr [ebp+00004849+PlayerInfoAdditianalPartSize],00
+0046B81B:
+cmp byte ptr [ebp+00004849+PlayerInfoAdditianalPartSize],00
+0046B841:
+cmp byte ptr [ebp+00004849+PlayerInfoAdditianalPartSize],00
+0046B871:
+cmp byte ptr [ebp+00004849+PlayerInfoAdditianalPartSize],00
+0046B8B3:
+mov dl,[edi+00004848+PlayerInfoAdditianalPartSize]
+mov al,[ecx+00004848+PlayerInfoAdditianalPartSize]
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],dl
+mov edx,[esp+68]
+mov [edi+00004848+PlayerInfoAdditianalPartSize],al
+mov bl,01
+cmp [edi+00004848+PlayerInfoAdditianalPartSize],bl
+0046B8F0:
+cmp [ebp+00004848+PlayerInfoAdditianalPartSize],bl
+0046B909:
+cmp byte ptr [ecx+00004848+PlayerInfoAdditianalPartSize],00
+0046B912:
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],bl
+0046B91B:
+mov byte ptr [esi+00004848+PlayerInfoAdditianalPartSize],00
+0046B92E:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+0046B93D:
+cmp [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046B948:
+cmp [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046B957:
+cmp [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046B961:
+mov [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046B968:
+mov byte ptr [ecx+00004848+PlayerInfoAdditianalPartSize],00
+0046B97B:
+mov al,[esi+00004848+PlayerInfoAdditianalPartSize]
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],al
+mov [esi+00004848+PlayerInfoAdditianalPartSize],bl
+mov ecx,[ecx+08]
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],bl
+0046B9A3:
+cmp byte ptr [ecx+00004848+PlayerInfoAdditianalPartSize],00
+0046B9AC:
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],bl
+0046B9B5:
+mov byte ptr [esi+00004848+PlayerInfoAdditianalPartSize],00
+0046B9C7:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+0046B9D3:
+cmp [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046B9DD:
+cmp [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046B9E5:
+mov byte ptr [ecx+00004848+PlayerInfoAdditianalPartSize],00
+0046BA01:
+cmp [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046BA0C:
+mov [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046BA13:
+mov byte ptr [ecx+00004848+PlayerInfoAdditianalPartSize],00
+0046BA25:
+mov al,[esi+00004848+PlayerInfoAdditianalPartSize]
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],al
+mov [esi+00004848+PlayerInfoAdditianalPartSize],bl
+mov ecx,[ecx]
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],bl
+0046BA47:
+mov [ebp+00004848+PlayerInfoAdditianalPartSize],bl
+
+0046BE56:
+cmp byte ptr [edx+00004849+PlayerInfoAdditianalPartSize],00
+0046BEF3:
+cmp byte ptr [edx+00004849+PlayerInfoAdditianalPartSize],00
+
+0046BF69:
+cmp [esi+00004849+PlayerInfoAdditianalPartSize],bl
+0046BFCE:
+cmp [edi+00004849+PlayerInfoAdditianalPartSize],bl
+
+0046C0A8:
+cmp byte ptr [edx+00004848+PlayerInfoAdditianalPartSize],00
+0046C0CC:
+cmp byte ptr [edx+00004848+PlayerInfoAdditianalPartSize],00
+0046C0E5:
+mov [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046C0F1:
+mov byte ptr [edx+00004848+PlayerInfoAdditianalPartSize],00
+0046C108:
+cmp byte ptr [edx+00004848+PlayerInfoAdditianalPartSize],00
+0046C111:
+mov [ecx+00004848+PlayerInfoAdditianalPartSize],bl
+mov [edx+00004848+PlayerInfoAdditianalPartSize],bl
+0046C122:
+mov byte ptr [ecx+00004848+PlayerInfoAdditianalPartSize],00
+0046C13F:
+mov [eax+00004848+PlayerInfoAdditianalPartSize],bl
+0046C14B:
+mov byte ptr [edx+00004848+PlayerInfoAdditianalPartSize],00
+0046C161:
+cmp byte ptr [ecx+00004848+PlayerInfoAdditianalPartSize],00
+0046C17B:
+mov [eax+00004848+PlayerInfoAdditianalPartSize],bl
+
+0046C1AA:
+cmp byte ptr [edx+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C1F3:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+0046C205:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C212:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+0046C224:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C23A:
+cmp byte ptr [edx+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C3A8:
+cmp byte ptr [esi+00004849+PlayerInfoAdditianalPartSize],00
+0046C3F4:
+cmp byte ptr [esi+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C470:
+mov [esi+00004848+PlayerInfoAdditianalPartSize],bl
+mov [esi+00004849+PlayerInfoAdditianalPartSize],bl
+
+0046C4BD:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C4CE:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+0046C4D9:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C4E6:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C4F6:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C510:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C54E:
+mov byte ptr [eax+00004848+PlayerInfoAdditianalPartSize],01
+mov byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C56D:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C57C:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C58C:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+0046C598:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C5A6:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C5B6:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C5CF:
+cmp byte ptr [eax+00004849+PlayerInfoAdditianalPartSize],00
+0046C5DB:
+cmp byte ptr [ecx+00004849+PlayerInfoAdditianalPartSize],00
+
+0046C65A:
+cmp eax,00004850+PlayerInfoAdditianalPartSize
+0046C68D:
+imul ecx,ecx,00004850+PlayerInfoAdditianalPartSize
+
+
+
+
+[DISABLE]
+unregistersymbol(PlayerInfoAdditianalPartSize)
+unregistersymbol(QuarterOfPlayerInfoAdditianalPartSize)
+unregistersymbol(PlayerInfo_GameSetting_Offset)
+
+
+
+
+0046A70C:
+mov byte ptr [eax+00004849],01
+
+0046A84C:
+mov eax,00004834
+0046A926:
+mov [esp+00004850],00000000
+0046A968:
+mov [esp+0000484C],FFFFFFFF
+0046A9A9:
+mov ecx,[esp+00004844]
+
+0046AFFE:
+mov eax,00004864
+0046B049:
+mov esi,[esp+00004884]
+0046B0CF:
+mov [esp+00004884],00000000
+0046B0EF:
+mov [esp+0000487C],FFFFFFFF
+0046B133:
+mov edx,[esp+00004884]
+0046B149:
+mov ecx,[esp+00004874]
+0046B15B:
+add esp,00004870
+
+0046B32C:
+mov eax,00009068
+0046B35A:
+lea edx,[esp+00004840]
+0046B362:
+mov [esp+00009088],ebx
+0046B377:
+mov byte ptr [esp+00009084],01
+0046B384:
+cmp dword ptr [esp+00004870],10
+0046B39A:
+mov edx,[esp+0000485C]
+0046B3AA:
+cmp dword ptr [esp+00004850],10
+mov [esp+00004870],0000000F
+mov [esp+0000486C],00000000
+mov byte ptr [esp+0000485C],00
+0046B3D2:
+mov eax,[esp+0000483C]
+0046B3E2:
+mov [esp+0000907C],FFFFFFFF
+0046B3F2:
+mov [esp+00004850],0000000F
+mov [esp+0000484C],00000000
+mov byte ptr [esp+0000483C],00
+0046B43A:
+mov ecx,[esp+00009074]
+0046B4AC:
+mov ecx,[esp+00009074]
+
+0046B4DE:
+mov eax,00009060
+0046B4F1:
+mov ebp,[esp+00009078]
+0046B4F9:
+mov esi,[esp+00009080]
+0046B546:
+mov ecx,[esp+00009084]
+0046B551:
+lea edx,[esp+0000483C]
+0046B559:
+mov [esp+00009084],ebx
+0046B56F:
+mov byte ptr [esp+00009088],01
+0046B586:
+cmp [esp+0000486C],esi
+0046B58F:
+mov ecx,[esp+00004858]
+0046B59F:
+cmp [esp+0000484C],esi
+mov [esp+0000486C],0000000F
+mov [esp+00004868],ebx
+mov [esp+00004858],bl
+0046B5C1:
+mov edx,[esp+00004838]
+0046B5D5:
+mov [esp+0000484C],0000000F
+mov [esp+00004848],ebx
+mov [esp+00004838],bl
+0046B620:
+mov ecx,[esp+00009070]
+0046B635:
+add esp,0000906C
+
+0046B64F:
+cmp byte ptr [esi+00004849],00
+0046B6A6:
+cmp byte ptr [esi+00004849],00
+
+0046B760:
+cmp byte ptr [edi+00004849],00
+0046B7C0:
+cmp byte ptr [eax+00004849],00
+0046B7D1:
+cmp byte ptr [edx+00004849],00
+0046B7E9:
+cmp byte ptr [ebp+00004849],00
+0046B81B:
+cmp byte ptr [ebp+00004849],00
+0046B841:
+cmp byte ptr [ebp+00004849],00
+0046B871:
+cmp byte ptr [ebp+00004849],00
+0046B8B3:
+mov dl,[edi+00004848]
+mov al,[ecx+00004848]
+mov [ecx+00004848],dl
+mov edx,[esp+68]
+mov [edi+00004848],al
+mov bl,01
+cmp [edi+00004848],bl
+0046B8F0:
+cmp [ebp+00004848],bl
+0046B909:
+cmp byte ptr [ecx+00004848],00
+0046B912:
+mov [ecx+00004848],bl
+0046B91B:
+mov byte ptr [esi+00004848],00
+0046B92E:
+cmp byte ptr [ecx+00004849],00
+0046B93D:
+cmp [eax+00004848],bl
+0046B948:
+cmp [eax+00004848],bl
+0046B957:
+cmp [eax+00004848],bl
+0046B961:
+mov [eax+00004848],bl
+0046B968:
+mov byte ptr [ecx+00004848],00
+0046B97B:
+mov al,[esi+00004848]
+mov [ecx+00004848],al
+mov [esi+00004848],bl
+mov ecx,[ecx+08]
+mov [ecx+00004848],bl
+0046B9A3:
+cmp byte ptr [ecx+00004848],00
+0046B9AC:
+mov [ecx+00004848],bl
+0046B9B5:
+mov byte ptr [esi+00004848],00
+0046B9C7:
+cmp byte ptr [ecx+00004849],00
+0046B9D3:
+cmp [eax+00004848],bl
+0046B9DD:
+cmp [eax+00004848],bl
+0046B9E5:
+mov byte ptr [ecx+00004848],00
+0046BA01:
+cmp [eax+00004848],bl
+0046BA0C:
+mov [eax+00004848],bl
+0046BA13:
+mov byte ptr [ecx+00004848],00
+0046BA25:
+mov al,[esi+00004848]
+mov [ecx+00004848],al
+mov [esi+00004848],bl
+mov ecx,[ecx]
+mov [ecx+00004848],bl
+0046BA47:
+mov [ebp+00004848],bl
+
+0046BE56:
+cmp byte ptr [edx+00004849],00
+0046BEF3:
+cmp byte ptr [edx+00004849],00
+
+0046BF69:
+cmp [esi+00004849],bl
+0046BFCE:
+cmp [edi+00004849],bl
+
+0046C0A8:
+cmp byte ptr [edx+00004848],00
+0046C0CC:
+cmp byte ptr [edx+00004848],00
+0046C0E5:
+mov [eax+00004848],bl
+0046C0F1:
+mov byte ptr [edx+00004848],00
+0046C108:
+cmp byte ptr [edx+00004848],00
+0046C111:
+mov [ecx+00004848],bl
+mov [edx+00004848],bl
+0046C122:
+mov byte ptr [ecx+00004848],00
+0046C13F:
+mov [eax+00004848],bl
+0046C14B:
+mov byte ptr [edx+00004848],00
+0046C161:
+cmp byte ptr [ecx+00004848],00
+0046C17B:
+mov [eax+00004848],bl
+
+0046C1AA:
+cmp byte ptr [edx+00004849],00
+
+0046C1F3:
+cmp byte ptr [ecx+00004849],00
+0046C205:
+cmp byte ptr [ecx+00004849],00
+
+0046C212:
+cmp byte ptr [ecx+00004849],00
+0046C224:
+cmp byte ptr [ecx+00004849],00
+
+0046C23A:
+cmp byte ptr [edx+00004849],00
+
+0046C3A8:
+cmp byte ptr [esi+00004849],00
+0046C3F4:
+cmp byte ptr [esi+00004849],00
+
+0046C470:
+mov [esi+00004848],bl
+mov [esi+00004849],bl
+
+0046C4BD:
+cmp byte ptr [eax+00004849],00
+0046C4CE:
+cmp byte ptr [ecx+00004849],00
+0046C4D9:
+cmp byte ptr [eax+00004849],00
+0046C4E6:
+cmp byte ptr [eax+00004849],00
+0046C4F6:
+cmp byte ptr [eax+00004849],00
+0046C510:
+cmp byte ptr [eax+00004849],00
+
+0046C54E:
+mov byte ptr [eax+00004848],01
+mov byte ptr [eax+00004849],00
+
+0046C56D:
+cmp byte ptr [eax+00004849],00
+0046C57C:
+cmp byte ptr [eax+00004849],00
+0046C58C:
+cmp byte ptr [ecx+00004849],00
+0046C598:
+cmp byte ptr [eax+00004849],00
+0046C5A6:
+cmp byte ptr [eax+00004849],00
+0046C5B6:
+cmp byte ptr [eax+00004849],00
+0046C5CF:
+cmp byte ptr [eax+00004849],00
+0046C5DB:
+cmp byte ptr [ecx+00004849],00
+
+0046C65A:
+cmp eax,00004850
+0046C68D:
+imul ecx,ecx,00004850

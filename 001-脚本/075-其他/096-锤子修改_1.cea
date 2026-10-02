@@ -1,0 +1,21 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+mov esi,ebx//僵尸指针
+push 708//伤害
+mov eax,0//形式0正面1非正面2溅伤4正面减速5非正面减速6溅伤减速7溅伤减速8无特效正面9无特效非正面A无特效溅伤
+call 5317C0
+jmp 421DE6
+
+421DD8:
+jmp newmem
+nop 2
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+421DD8:
+mov ecx,ebx
+call 00530510
+//Alt: db 8B CB E8 31 E7 10 00

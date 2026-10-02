@@ -1,0 +1,153 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+mov ecx,[ebp+0000008C]
+mov ecx,[ecx+000007F8]
+cmp ecx,2B
+je short originalcode
+cmp ecx,32
+je short originalcode
+mov ecx,[eax+38]
+lea edx,[ebp+000000AC]
+call 41DF00
+test eax,eax
+je short originalcode
+mov esi,eax
+
+
+cmp [esi+24],2B
+jne short next//00410AD9
+push ebx
+mov ebx,[esi+1C]
+push [esi+28]
+mov edx,[esi+04]
+call 40D1A0
+pop ebx
+test eax,eax
+je short next
+mov ecx,[esp+18]
+push ecx
+push edi
+call MovePlant
+next:
+mov eax,esi
+mov ecx,[esp+18]
+push ecx
+push edi
+call MovePlant
+jmp 00410AD9
+
+originalcode:
+mov eax,[eax+38]
+mov ecx,[esp+18]
+
+exit:
+jmp returnhere
+
+MovePlant:
+push ebx
+mov ebx,ecx
+push esi
+push edi
+sub esp,8
+mov esi,eax
+mov eax,ebx
+sub eax,[esi+1C]
+add [esi+88],eax
+mov [esi+1C],ebx
+mov [esi+28],edi
+lea eax,[edi+edi*4]
+shl eax,4
+add eax,28+HALFEXSCREENWIDTH
+mov ecx,eax
+sub eax,[esi+08]
+mov [esp+4],eax
+mov [esi+08],ecx
+push ebx
+mov eax,ebx
+mov ecx,edi
+mov ebx,[esi+04]
+call 41C740
+pop ebx
+mov ecx,eax
+sub eax,[esi+0C]
+mov [esp],eax
+mov [esi+0C],ecx
+call 45E7C0
+mov [esi+20],eax
+mov edx,[esi]
+mov ecx,[esi+0000008C]
+test ecx,ecx
+mov eax,[edx+00000820]
+mov edx,[eax]
+je short NoParticleSystem
+movzx eax,cx
+cmp eax,[edx+08]
+jae short NoParticleSystem
+imul eax,eax,2C
+add eax,[edx]
+cmp [eax+28],ecx
+jne short NoParticleSystem
+cmp dword ptr [eax+14],00
+je short NoParticleSystem
+push edi
+mov ecx,[eax+0C]
+mov ecx,[ecx]
+mov edx,[eax+08]
+and ecx,0000FFFF
+imul ecx,ecx,000000B0
+add ecx,[edx+1C]
+sub esp,08
+mov edi,eax
+fld [ecx+20]
+fiadd [esp+0C+00]
+fstp [esp+04]
+fld [ecx+1C]
+fiadd [esp+0C+04]
+fstp [esp]
+call 518440
+pop edi
+NoParticleSystem:
+mov al,[esi+143]
+movzx eax,al
+push eax
+push 0
+mov eax,esi
+call 45E860
+mov eax,esi
+call 45E860
+push esi
+mov eax,ebx
+mov ecx,edi
+mov edx,[esi+04]
+call 40CE60
+mov ebx,[esi+04]
+mov ebx,[ebx+00000160]
+mov edi,esi
+call 425460
+add esp,08
+pop edi
+pop esi
+pop ebx
+ret 08
+
+4109E2:
+jmp newmem
+nop 2
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+4109E2:
+db 8B 40 38 8B 4C 24 18
+//mov eax,[eax+38]
+//mov ecx,[esp+18]

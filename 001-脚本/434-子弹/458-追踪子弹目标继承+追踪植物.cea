@@ -1,0 +1,223 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+je short ResetTarget
+mov eax,ebx
+call 534700
+test al,al
+jne short ResetTarget
+jmp 0046CEE9
+ResetTarget:
+mov ecx,[ebp+94]
+test ecx,ecx
+je ProjectileNoPlantTarget
+mov edx,[ebp+04]
+lea edx,[edx+000000AC]
+call 41DF00
+test eax,eax
+je ProjectileNoPlantTarget
+push [ebp+74]
+mov esi,eax
+call PlantEffectedByDamage
+test al,al
+je ProjectileNoPlantTarget
+ProjectileTestPlant:
+mov ebx,esi
+lea ecx,[esp+20]
+mov esi,ebp
+call 46EBC0
+lea eax,[esp+10]
+mov ecx,ebx
+call 467EF0
+mov edi,eax
+mov ecx,edi
+lea edi,[esp+20]
+call 41C820
+test eax,eax
+jl 0046D04E
+fld dword ptr [ebp+34]
+fild dword ptr [esp+14]
+fcompp
+fnstsw ax
+test ah,05
+jp 0046D04E
+mov ecx,[esp+14]
+fld dword ptr [ebp+34]
+mov edx,[esp+1C]
+add edx,ecx
+mov [esp+34],edx
+fild dword ptr [esp+34]
+fcompp
+fnstsw ax
+test ah,41
+jne 0046D04E
+mov eax,ebx
+mov ecx,ebp
+call DoImpactToPlant
+jmp 0046CF62
+ProjectileNoPlantTarget:
+call ProjectileGetTargetZombie
+mov ebx,eax
+test ebx,ebx
+je short ProjectileFindPlant
+mov eax,ebx
+call 534700
+test al,al
+jne 0046CEE9
+jmp 0046CEE9
+ProjectileFindPlant:
+call ProjectileGetTargetPlant
+mov esi,eax
+test eax,eax
+jne ProjectileTestPlant
+jmp 0046D04E
+
+ProjectileGetTargetZombie:
+mov [ebp+88],0
+sub esp,1C
+mov [esp+14],0//最佳僵尸
+mov [esp+18],0//最高权重
+push 0//开始序号(写0从头，写指针从后一个开始
+ProjectileGetTargetZombie_Star:
+mov esi,esp
+mov edx,[ebp+4]
+call 41C8F0//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je ProjectileGetTargetZombie_End
+mov esi,[esi]//esi=遍历对象的指针
+mov ebx,esi
+mov eax,ebx
+call 534700
+test al,al
+jne short ProjectileGetTargetZombie_Star
+push [ebp+74]
+call 531A80
+test al,al
+je short ProjectileGetTargetZombie_Star
+lea edi,[esp+4]
+call 5320B0
+sar [edi+8],1
+sar [edi+C],1
+sub esp,10
+fild [edi+4]
+fiadd [edi+C]
+fstp [esp+C]
+fild [edi]
+fiadd [edi+8]
+fstp [esp+8]
+fild [ebp+C]
+fstp [esp+4]
+fild [ebp+8]
+fstp [esp]
+call 407B10
+add esp,10
+fchs
+fistp [esp+14]
+mov eax,ebx
+call 534680
+test al,al
+je short ProjectileGetTargetZombie_NotFlying
+add [esp+14],3E8
+ProjectileGetTargetZombie_NotFlying:
+cmp [esp+18],0
+je short ProjectileGetTargetZombie_SetBestZombie
+mov eax,[esp+1C]
+cmp [esp+14],eax
+jng ProjectileGetTargetZombie_Star
+ProjectileGetTargetZombie_SetBestZombie:
+mov [esp+18],esi
+mov eax,[esp+14]
+mov [esp+1C],eax
+jmp ProjectileGetTargetZombie_Star
+ProjectileGetTargetZombie_End:
+mov eax,[esp+18]
+test eax,eax
+je short ProjectileGetTargetZombie_NoZombie
+mov eax,[eax+ZombieClassSize-4]
+mov [ebp+88],eax
+ProjectileGetTargetZombie_NoZombie:
+mov eax,[esp+18]
+add esp,20
+ret
+{
+mov ebp,//Projectile* this
+}
+align 10,CC
+
+ProjectileGetTargetPlant:
+mov [ebp+94],0
+sub esp,1C
+mov [esp+14],0//最佳植物
+mov [esp+18],0//最高权重
+push 0//开始序号(写0从头，写指针从后一个开始
+ProjectileGetTargetPlant_Star:
+mov esi,esp
+mov edx,[ebp+4]
+call 41C950//41C950遍历植物函数41C8F0遍历僵尸函数41C9B0遍历子弹函数41CA10遍历物品函数41CA70遍历推车函数41CAD0遍历场地物品函数
+test al,al
+je ProjectileGetTargetPlant_End
+mov esi,[esi]//esi=遍历对象的指针
+//mov ebx,esi
+push [ebp+74]
+call PlantEffectedByDamage
+test al,al
+je short ProjectileGetTargetPlant_Star
+lea eax,[esp+4]
+mov ecx,esi
+call 467EF0
+mov edi,eax
+sar [edi+8],1
+sar [edi+C],1
+sub esp,10
+fild [edi+4]
+fiadd [edi+C]
+fstp [esp+C]
+fild [edi]
+fiadd [edi+8]
+fstp [esp+8]
+fild [ebp+C]
+fstp [esp+4]
+fild [ebp+8]
+fstp [esp]
+call 407B10
+add esp,10
+fchs
+fistp [esp+14]
+cmp [esp+18],0
+je short ProjectileGetTargetPlant_SetBestPlant
+mov eax,[esp+1C]
+cmp [esp+14],eax
+jng ProjectileGetTargetPlant_Star
+ProjectileGetTargetPlant_SetBestPlant:
+mov [esp+18],esi
+mov eax,[esp+14]
+mov [esp+1C],eax
+jmp ProjectileGetTargetPlant_Star
+ProjectileGetTargetPlant_End:
+mov eax,[esp+18]
+test eax,eax
+je short ProjectileGetTargetPlant_NoPlant
+mov eax,[eax+PlantClassSize-4]
+cmp [ebp+90],eax//不追踪自己
+je short ProjectileGetTargetPlant_NoPlant
+mov [ebp+94],eax
+ProjectileGetTargetPlant_NoPlant:
+mov eax,[esp+18]
+add esp,20
+ret
+{
+mov ebp,//Projectile* this
+}
+
+
+46CEE3:
+jmp newmem
+nop
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+46CEE3:
+je 0046D04E
+//Alt: db 0F 84 65 01 00 00

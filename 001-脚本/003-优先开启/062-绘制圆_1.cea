@@ -1,0 +1,385 @@
+[ENABLE]
+alloc(DrawRound,1024)
+registersymbol(DrawRound)
+label(DrawCircle)
+registersymbol(DrawCircle)
+label(DrawCircleFilledF)
+registersymbol(DrawCircleFilledF)
+//define(DrawCirclePeriodMax,1F4)
+
+DrawRound:
+push ebx
+push esi
+mov edi,eax
+mov ebx,[esp+8+4]//[ebp+8]
+test ebx,ebx
+je DrawRound_end
+shl ebx,1
+xor esi,esi
+DrawRound_while:
+push 1//宽
+mov ecx,[esp+8+8]//[ebp+8]
+sub ecx,esi
+mov [esp-4],ecx
+fild [esp-4]
+fmul st(0)//直角边
+fild [esp+8+8]//[ebp+8]
+fmul st(0)//斜边
+fsub st(0),st(1)
+fsqrt
+fistp [esp-4]
+fstp st(0)
+mov eax,[esp-4]
+mov edx,eax
+shl edx
+push edx//长
+add ecx,[esp+C+C]//[ebp+C]
+push ecx//y
+mov edx,[esp+10+10]//[ebp+10]
+sub edx,eax
+push edx//x
+mov eax,edi//Gra
+call 586DE0
+inc esi
+cmp esi,ebx
+jne DrawRound_while
+DrawRound_end:
+pop esi
+pop ebx
+ret C
+{
+push //x
+push //y
+push //r
+mov eax,//Gra
+}
+align 10,CC
+
+DrawCircle:
+push ebp
+mov ebp,esp
+push ebx
+push esi
+push edi
+push ecx
+mov edi,eax
+mov esi,[ebp+08]//当前y偏移
+DrawCircleByY_while:
+mov [esp],esi
+fild [ebp+08]
+fmul st(0)
+fild [esp]
+fmul st(0)
+fsubp st(1),st(0)
+fsqrt
+fistp [esp]
+mov ebx,[esp]//当前横向半弦
+test ebx,ebx
+je short DrawCircleByY_Right
+DrawCircleByY_Left:
+push 1//宽
+push 1//长
+mov eax,[ebp+C]
+sub eax,esi
+push eax//y
+mov eax,[ebp+10]
+sub eax,ebx
+push eax//x
+mov eax,edi//Gra
+call 586DE0
+DrawCircleByY_Right:
+push 1//宽
+push 1//长
+mov eax,[ebp+C]
+sub eax,esi
+push eax//y
+mov eax,[ebp+10]
+add eax,ebx
+push eax//x
+mov eax,edi//Gra
+call 586DE0
+mov eax,[ebp+8]
+neg eax
+dec eax
+dec esi
+cmp esi,eax
+jne short DrawCircleByY_while
+DrawCircleByX:
+mov esi,[ebp+08]//当前x偏移
+neg esi
+DrawCircleByX_while:
+mov [esp],esi
+fild [ebp+08]
+fmul st(0)
+fild [esp]
+fmul st(0)
+fsubp st(1),st(0)
+fsqrt
+fistp [esp]
+mov ebx,[esp]//当前横向半弦
+test ebx,ebx
+je short DrawCircleByX_Down
+DrawCircleByX_Up:
+push 1//宽
+push 1//长
+mov eax,[ebp+C]
+sub eax,ebx
+push eax//y
+mov eax,[ebp+10]
+sub eax,esi
+push eax//x
+mov eax,edi//Gra
+call 586DE0
+DrawCircleByX_Down:
+push 1//宽
+push 1//长
+mov eax,[ebp+C]
+add eax,ebx
+push eax//y
+mov eax,[ebp+10]
+sub eax,esi
+push eax//x
+mov eax,edi//Gra
+call 586DE0
+mov eax,[ebp+08]
+inc eax
+inc esi
+cmp esi,eax
+jne short DrawCircleByX_while
+DrawCircleByX_End:
+pop ecx
+pop edi
+pop esi
+pop ebx
+pop ebp
+ret C
+{
+push //x
+push //y
+push //r
+mov eax,//Gra
+}
+align 10,CC
+
+DrawPolygonFilledF:
+push ebp
+mov ebp,esp
+sub esp,0C
+push ebx
+push esi
+push edi
+mov esi,[ebp+08]//Graphics* this
+mov edi,[ebp+10]//int theNumPoints
+cmp edi,03
+jl DrawPolygonFilledF_End
+lea eax,[edi-2]
+lea eax,[eax+eax*2]
+imul eax,14
+push eax
+call 61C130
+add esp,04
+test eax,eax
+je DrawPolygonFilledF_End
+mov ebx,eax
+mov [ebp-04],00000000
+mov ecx,[ebp+14]
+xor edx,edx
+or edx,[ecx+0C]
+shl edx,08
+or edx,[ecx]
+shl edx,08
+or edx,[ecx+04]
+shl edx,08
+or edx,[ecx+08]
+mov [ebp-08],edx
+DrawPolygonFilledF_Loop:
+mov ecx,[ebp+0C]
+mov eax,[ebp-04]
+lea eax,[eax+eax*2]
+imul eax,14
+fld [ecx]
+fstp [ebx+eax]
+fld [ecx+04]
+fstp [ebx+eax+04]
+fldz
+fst [ebx+eax+08]
+fstp [ebx+eax+0C]
+mov edx,[ebp-08]
+mov [ebx+eax+10],edx
+
+mov ecx,[ebp+0C]
+mov edx,[ebp-04]
+inc edx
+shl edx,03
+mov eax,[ebp-04]
+lea eax,[eax+eax*2]
+inc eax
+imul eax,14
+fld [ecx+edx]
+fstp [ebx+eax]
+fld [ecx+edx+04]
+fstp [ebx+eax+04]
+fldz
+fst [ebx+eax+08]
+fstp [ebx+eax+0C]
+mov edx,[ebp-08]
+mov [ebx+eax+10],edx
+
+mov ecx,[ebp+0C]
+mov edx,[ebp-04]
+inc edx
+inc edx
+shl edx,03
+mov eax,[ebp-04]
+lea eax,[eax+eax*2]
+inc eax
+inc eax
+imul eax,14
+fld [ecx+edx]
+fstp [ebx+eax]
+fld [ecx+edx+04]
+fstp [ebx+eax+04]
+fldz
+fst [ebx+eax+08]
+fstp [ebx+eax+0C]
+mov edx,[ebp-08]
+mov [ebx+eax+10],edx
+
+inc [ebp-04]
+lea eax,[edi-2]
+cmp [ebp-04],eax
+jne DrawPolygonFilledF_Loop
+lea eax,[edi-02]
+//lea eax,[eax+eax*2]
+push eax
+push ebx
+push [ebp+18]
+mov eax,esi
+call 587710
+{push ebx
+push 32
+push 32
+mov ebx,[ebp+18]
+mov eax,esi
+call 587150
+pop ebx}
+push ebx
+call 61C19A
+add esp,04
+DrawPolygonFilledF_End:
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 14
+{
+push //Sexy::Image& TriangleWhiteTexture
+push //Sexy::Color& theColor
+push //int theNumPoints
+push //Sexy::FPoint theFPoints[]
+push //Graphics* this
+}
+align 10,CC
+
+DrawCircleFilledF:
+push ebp
+mov ebp,esp
+sub esp,10
+push ebx
+push esi
+push edi
+fld [ebp+14]
+fldz
+fcomip st(0),st(1)
+fstp st(0)
+ja DrawCircleFilledF_End
+mov esi,[ebp+08]
+mov edi,[ebp+1C]
+lea eax,[edi+02]
+shl eax,03
+push eax
+call 61C130
+add esp,04
+test eax,eax
+je DrawCircleFilledF_End
+mov ebx,eax
+fld [ebp+0C]
+fstp [ebx]
+fld [ebp+10]
+fstp [ebx+04]
+fld1
+fadd st(0)
+fmul qword [M_PI]
+fidiv [ebp+1C]
+fstp [ebp-04]
+mov [ebp-08],00000000
+DrawCircleFilledF_Loop:
+mov eax,[ebp-08]
+inc eax
+shl eax,03
+
+fld [ebp-04]
+fimul [ebp-08]
+fcos
+fmul [ebp+14]
+fadd [ebp+0C]
+fstp [ebx+eax]
+
+fld [ebp-04]
+fimul [ebp-08]
+fsin
+fmul [ebp+14]
+fadd [ebp+10]
+fstp [ebx+eax+04]
+
+inc [ebp-08]
+cmp [ebp-08],edi
+jne DrawCircleFilledF_Loop
+
+mov eax,1
+shl eax,03
+lea edx,[edi+01]
+shl edx,03
+fld [ebx+eax]
+fstp [ebx+edx]
+fld [ebx+eax+04]
+fstp [ebx+edx+04]
+
+push [ebp+20]//Sexy::Image& TriangleWhiteTexture
+push [ebp+18]//Sexy::Color& theColor
+lea eax,[edi+02]
+push eax//int theNumPoints
+push ebx//Sexy::FPoint theFPoints[]
+push esi//Graphics* this
+call DrawPolygonFilledF
+push ebx
+call 61C19A
+add esp,04
+DrawCircleFilledF_End:
+pop edi
+pop esi
+pop ebx
+mov esp,ebp
+pop ebp
+ret 1C
+{
+push //Sexy::Image& TriangleWhiteTexture
+push //int theNumSegments
+push //const Sexy::Color& theColor
+push //float theRadius
+push //float theCenterY
+push //float theCenterX
+push //Graphics* this
+}
+align 10,CC
+
+align 04,00
+M_PI:
+dq (double)3.14159265359
+
+[DISABLE]
+dealloc(DrawRound)
+unregistersymbol(DrawRound)
+unregistersymbol(DrawCircle)
+unregistersymbol(DrawCircleFilledF)

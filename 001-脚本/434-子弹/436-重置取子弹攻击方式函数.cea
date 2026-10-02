@@ -1,0 +1,63 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+originalcode:
+push esi
+push ebx
+xor ebx,ebx
+mov esi,eax
+mov ecx,eax
+mov eax,edi
+call 46D1F0
+test al,al
+je short az1
+or ebx,2
+az1:
+push edi
+call IsProjectileLeft
+mov dl,al
+mov ecx,esi
+call 52BEE0
+cmp al,dl
+jne short az3
+cmp [edi+58],1
+jne short az2
+az3:
+or ebx,1
+az2:
+mov eax,[edi+5C]
+cmp eax,1
+je short az4
+cmp eax,5
+{je short az4
+cmp eax,E}
+jne short exit
+az4:
+or ebx,4
+exit:
+mov eax,ebx
+pop ebx
+pop esi
+ret
+
+46D230:
+jmp newmem
+nop
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+46D230:
+mov ecx,[edi+5C]
+push esi
+xor esi,esi
+//Alt: db 8B 4F 5C 56 31 F6

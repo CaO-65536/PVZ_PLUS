@@ -1,0 +1,131 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+define(SeedChooserScreen_NextPageButton_Offest,D40)
+define(SeedChooserScreen_Page_Offest,D44)
+registersymbol(SeedChooserScreen_NextPageButton_Offest)
+registersymbol(SeedChooserScreen_Page_Offest)
+
+newmem:
+mov byte ptr [eax+00000118],01
+
+mov [ebp+SeedChooserScreen_Page_Offest],0
+
+push 00000130
+call 0061C130
+add esp,04
+cmp eax,ebx
+je +0B
+push 6B
+mov esi,eax
+call 00447C60
+jmp +02
+xor eax,eax
+push 11
+push String1
+lea ecx,[esp+1C]
+mov [ebp+SeedChooserScreen_NextPageButton_Offest],eax
+mov edi,0000000F
+mov [ecx+18],edi
+mov [ecx+14],ebx
+mov [ecx+4],bl
+call 00404330
+mov byte ptr [esp+3C],03
+mov ecx,[ebp+SeedChooserScreen_NextPageButton_Offest]
+push ecx
+lea edx,[esp+18]
+call 00448470
+mov [esp+3C],bl
+cmp dword ptr [esp+2C],10
+jb +0D
+mov edx,[esp+18]
+push edx
+call 0061C19A
+add esp,04
+mov edi,[ebp+SeedChooserScreen_NextPageButton_Offest]
+mov ecx,[006A77BC]
+mov [edi+000000A4],ecx
+mov [edi+000000A8],ecx
+mov [edi+000000AC],ecx
+mov ecx,[edi+000000A0]
+mov esi,[006A79F4]//mov esi,[006A77F8]
+cmp ecx,ebx
+je +08
+mov eax,[ecx]
+mov edx,[eax]
+push 01
+call edx
+mov eax,[esi]
+mov edx,[eax+2C]
+mov ecx,esi
+call edx
+mov edx,000000F0
+mov [edi+000000A0],eax
+push ebx
+lea ecx,[edx+0F]
+lea eax,[esp+18]
+call 005643D0
+mov edx,[eax]
+mov ecx,[ebp+SeedChooserScreen_NextPageButton_Offest]
+mov [ecx+1C],edx
+mov edx,[eax+04]
+add ecx,1C
+mov [ecx+04],edx
+mov edx,[eax+08]
+mov [ecx+08],edx
+mov eax,[eax+0C]
+mov [ecx+0C],eax
+mov edx,000000C8
+push 000000FF
+mov ecx,edx
+lea eax,[esp+18]
+call 005643D0
+mov ecx,[ebp+SeedChooserScreen_NextPageButton_Offest]
+mov edx,[eax]
+mov [ecx+2C],edx
+mov edx,[eax+04]
+add ecx,2C
+mov [ecx+04],edx
+mov edx,[eax+08]
+mov [ecx+08],edx
+mov eax,[eax+0C]
+mov [ecx+0C],eax
+mov eax,[ebp+SeedChooserScreen_NextPageButton_Offest]
+mov [eax+08],000001D1+HALFEXSCREENWIDTH
+mov [eax+0C],0000005A
+mov [eax+10],00000082
+mov [eax+14],00000032
+
+originalcode:
+mov edi,0000000F
+push 00000130
+
+exit:
+jmp 0048367B//returnhere
+
+align 04,00
+String1:
+db '[NEXTPAGE_BUTTON]' 00
+
+44FDD8:
+push 00000D40*3
+48366F:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+unregistersymbol(SeedChooserScreen_NextPageButton_Offest)
+unregistersymbol(SeedChooserScreen_Page_Offest)
+44FDD8:
+push 00000D40
+48366F:
+db 68 30 01 00 00
+//push 00000130

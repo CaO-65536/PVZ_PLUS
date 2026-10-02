@@ -1,0 +1,38 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+lea eax,[ebx+00004818]
+mov ecx,00000040//QuarterOfPlayerInfoAdditianalPartSize
+While:
+mov edi,[eax+edx]
+mov [eax],edi
+add eax,04
+sub ecx,01
+jne short While
+
+
+originalcode:
+mov eax,[esi+00000300]
+
+exit:
+jmp returnhere
+
+46AA95:
+jmp newmem
+nop
+returnhere:
+
+
+
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+46AA95:
+db 8B 86 00 03 00 00
+//mov eax,[esi+00000300]

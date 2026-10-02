@@ -1,0 +1,41 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+label(returnhere)
+label(originalcode)
+label(exit)
+
+newmem:
+cmp ecx,31
+jne short originalcode
+mov eax,[IMAGE_REANIM_EXPLODE_O_NUT_CRACKED1]
+mov edx,[IMAGE_REANIM_EXPLODE_O_NUT_CRACKED2]
+jmp 004644D2
+
+originalcode:
+cmp ecx,32
+je returnhere//short exit
+cmp ecx,03
+jne 4644D9
+
+exit:
+jmp returnhere
+
+0046F6BA:
+jmp 0046F715
+4644C2:
+jmp newmem
+returnhere:
+
+
+ 
+ 
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+0046F6BA:
+jne 0046F715
+4644C2:
+cmp ecx,03
+jne 4644D9
+//Alt: db 83 F9 03 75 12

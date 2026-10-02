@@ -1,0 +1,31 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(newmem,2048)
+
+newmem:
+mov edx,00668D10
+call 4745B0
+test al,al
+je 005275B6
+fld [num1]
+push ecx
+fstp [esp]
+mov ecx,esi
+call 473B70
+test al,al
+je 005275B6
+jmp 0052745F
+
+num1:
+dd (float)0.49
+
+527457:
+jmp newmem
+nop 3
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(newmem)
+527457:
+test eax,eax
+jne 005275B6
+//Alt: db 85 C0 0F 85 57 01 00 00

@@ -1,0 +1,51 @@
+[ENABLE]
+//code from here to '[DISABLE]' will be used to enable the cheat
+alloc(DrawImageMirror,1024)
+registersymbol(DrawImageMirror)
+
+DrawImageMirror:
+push ebp
+mov ebp,esp
+push edi
+push esi
+mov esi,eax
+sub esp,20
+push [ebp+10]
+lea edi,[esp+04]
+xor eax,eax
+mov [edi],eax
+mov [edi+04],eax
+mov eax,ebx
+call 588A10
+mov [edi+08],eax
+mov [edi+08+10],eax
+mov eax,ebx
+call 588A20
+mov [edi+0C],eax
+mov [edi+0C+10],eax
+push edi
+add edi,10
+mov eax,[ebp+08]
+mov [edi],eax
+mov eax,[ebp+0C]
+mov [edi+04],eax
+mov eax,esi
+call 587490
+add esp,20
+pop esi
+pop edi
+mov esp,ebp
+pop ebp
+ret C
+{
+push //bool mirror
+push //int theY
+push //int theX
+mov ebx,//Image* theImage
+mov eax,//Graphics* this
+}
+
+[DISABLE]
+//code from here till the end of the code will be used to disable the cheat
+dealloc(DrawImageMirror)
+unregistersymbol(DrawImageMirror)

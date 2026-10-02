@@ -1,0 +1,113 @@
+[ENABLE]
+define(ProjectilesClassSize,100)
+registersymbol(ProjectilesClassSize)
+41DF96:
+push ProjectilesClassSize-4
+0041C9C4:
+ADD EAX,ProjectilesClassSize
+0041C9E8:
+ADD EAX,ProjectilesClassSize
+00481DA3:
+ADD EAX,ProjectilesClassSize
+00481DC8:
+ADD EAX,ProjectilesClassSize
+0041E60E:
+ADD ESI,ProjectilesClassSize
+0041E63A:
+ADD ESI,ProjectilesClassSize
+0041BC28:
+ADD EDI,ProjectilesClassSize
+0041BC4E:
+ADD EDI,ProjectilesClassSize
+0041BC3A:
+IMUL EAX,EAX,ProjectilesClassSize
+0041DF7C:
+IMUL EAX,EAX,ProjectilesClassSize
+0041E617:
+IMUL EAX,EAX,ProjectilesClassSize
+0041C9CF:
+IMUL ECX,ECX,ProjectilesClassSize
+0041E632:
+IMUL ECX,ECX,ProjectilesClassSize
+00481DAE:
+IMUL ECX,ECX,ProjectilesClassSize
+0041DF8E:
+IMUL ESI,ESI,ProjectilesClassSize
+0048244C:
+IMUL ESI,ESI,ProjectilesClassSize
+0041BC46:
+test [edi+ProjectilesClassSize-4],edx
+0041C9E0:
+test [eax+ProjectilesClassSize-4],edi
+0041DF82:
+mov edx,[eax+ecx+ProjectilesClassSize-4]
+0041DFAC:
+mov [esi+ProjectilesClassSize-4],eax
+0041BCBC:
+movzx ecx,word ptr [edi+ProjectilesClassSize-4]
+0041BCCF:
+mov [edi+ProjectilesClassSize-4],eax
+0041E623:
+test [esi+ProjectilesClassSize-4],FFFF0000
+0041E68F:
+movzx ecx,word ptr [esi+ProjectilesClassSize-4]
+0041E69C:
+mov [esi+ProjectilesClassSize-4],eax
+00481DC0:
+test [eax+ProjectilesClassSize-4],edx
+[DISABLE]
+unregistersymbol(ProjectilesClassSize)
+41DF96:
+push 00000090
+0041C9C4:
+ADD EAX,00000094
+0041C9E8:
+ADD EAX,00000094
+00481DA3:
+ADD EAX,00000094
+00481DC8:
+ADD EAX,00000094
+0041E60E:
+ADD ESI,00000094
+0041E63A:
+ADD ESI,00000094
+0041BC28:
+ADD EDI,00000094
+0041BC4E:
+ADD EDI,00000094
+0041BC3A:
+IMUL EAX,EAX,00000094
+0041DF7C:
+IMUL EAX,EAX,00000094
+0041E617:
+IMUL EAX,EAX,00000094
+0041C9CF:
+IMUL ECX,ECX,00000094
+0041E632:
+IMUL ECX,ECX,00000094
+00481DAE:
+IMUL ECX,ECX,00000094
+0041DF8E:
+IMUL ESI,ESI,00000094
+0048244C:
+IMUL ESI,ESI,00000094
+0041BC46:
+test [edi+00000090],edx
+0041C9E0:
+test [eax+00000090],edi
+0041DF82:
+mov edx,[eax+ecx+00000090]
+0041DFAC:
+mov [esi+00000090],eax
+0041BCBC:
+movzx ecx,word ptr [edi+00000090]
+0041BCCF:
+mov [edi+00000090],eax
+0041E623:
+test [esi+00000090],FFFF0000
+0041E68F:
+movzx ecx,word ptr [esi+00000090]
+0041E69C:
+mov [esi+00000090],eax
+00481DC0:
+test [eax+00000090],edx

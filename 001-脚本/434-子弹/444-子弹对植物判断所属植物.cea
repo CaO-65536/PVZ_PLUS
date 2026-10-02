@@ -1,0 +1,82 @@
+[ENABLE]
+0046CAA0:
+sub esp,10+10
+0046CAA5:
+mov ebp,[esp+1C+10]
+0046CABE:
+mov [esp+24+10],00000000
+0046CAD3:
+lea esi,[esp+24+10]
+0046CAE7:
+mov esi,[esp+24+10]
+0046CBC3:
+add esp,10+10
+0046CC1C:
+add esp,10+10
+0046CC28:
+add esp,10+10
+alloc(newmem,2048)
+
+newmem:
+mov ecx,[ebp+90]
+mov edx,[ebp+4]
+add edx,AC
+call 41DF00
+test eax,eax
+je short NotFromPlant
+cmp eax,esi
+je 0046CAD0
+NotFromPlant:
+lea eax,[esp+20]
+mov ecx,esi
+call 467EF0
+mov edi,eax
+lea ecx,[esp+10]
+call 41C820
+cmp eax,08
+jng 0046CAD0
+lea edi,[edi+04]
+lea ecx,[esp+14]
+call 41C820
+cmp eax,08
+jng 0046CAD0
+{cmp [ebp+58],1
+je 0046CB5D
+push esi
+call GetPlantHeightOffsetOfFlowerPots
+neg eax
+push ecx
+fld [ebp+4C]
+fsub [ebp+34]
+fistp [esp]
+pop ecx
+add eax,[edi+08]
+cmp ecx,eax
+jg 0046CAD0}
+jmp 0046CB5D
+
+46CB17:
+jmp newmem
+nop
+[DISABLE]
+0046CAA0:
+sub esp,10
+0046CAA5:
+mov ebp,[esp+1C]
+0046CABE:
+mov [esp+24],00000000
+0046CAD3:
+lea esi,[esp+24]
+0046CAE7:
+mov esi,[esp+24]
+0046CBC3:
+add esp,10
+0046CC1C:
+add esp,10
+0046CC28:
+add esp,10
+dealloc(newmem)
+46CB17:
+lea eax,[esp+10]
+mov ecx,esi
+//Alt: db 8D 44 24 10 8B CE
